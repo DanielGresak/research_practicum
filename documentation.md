@@ -3,6 +3,7 @@
 
 1. [Setup and Docker](#set-up)
 2. [Django](#django)
+3. [Testing](#testing)
 ## Set up
 
 1. Download Docker
@@ -37,3 +38,14 @@ Anytime you are downloading a new dependency, you will need to add it to require
 
 ## Django
 
+## Testing
+
+Application testing is important when making changes to the application to make sure we don't inadvertantly create bugs in the application. 
+
+To do this, make sure you're in the root directory and run the following command:
+
+```
+python manage.py test
+```
+
+This will run all tests in the testing folder and give the results within the console. This will be run locally for now. I will look into running it through the Docker container.
