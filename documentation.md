@@ -4,6 +4,7 @@
 1. [Setup and Docker](#set-up)
 2. [Django](#django)
 3. [Testing](#testing)
+4. [Virtual Machine](#virtual-machine)
 ## Set up
 
 1. Download Docker
@@ -49,3 +50,23 @@ python manage.py test
 ```
 
 This will run all tests in the testing folder and give the results within the console. This will be run locally for now. I will look into running it through the Docker container.
+
+## Virtual Machine
+
+1. To connect to the virtual machine with VS code, we first need to download the private key and store it in 
+/Users/\<username>/.ssh
+(You can show hidden directories by typing Command + Shift + . )
+
+2. Open VS code and download the extension 'Remote Development'.
+3. Press the green icon at the very bottom left of the screen, and then in the dropdown press on 'Open SSH configuration file.
+4. Edit the configuration file to look like the following:
+
+```
+Host ubuntuVM16
+    HostName ipa-017.ucd.ie
+    User student
+    IdentityFile <Path to private key>
+```
+5.  Save the file and then in the same dropdown, click on 'Connect to host'
+6. Choose the host named 'ubuntuVM16' and then type in the passphrase. 
+
