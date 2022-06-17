@@ -5,6 +5,7 @@
 2. [Django](#django)
 3. [Testing](#testing)
 4. [Virtual Machine](#virtual-machine)
+
 ## Set up
 
 1. Download Docker
@@ -52,12 +53,10 @@ python manage.py test
 This will run all tests in the testing folder and give the results within the console. This will be run locally for now. I will look into running it through the Docker container.
 
 ## Virtual Machine
+### Connecting VS-Code to the VM using SSH
 
-1. To connect to the virtual machine with VS code, we first need to download the private key and store it in 
-/Users/\<username>/.ssh
-(You can show hidden directories by typing Command + Shift + . )
-
-2. Open VS code and download the extension 'Remote Development'.
+1. To connect to the virtual machine with VS code, we first need to download the private key "vm-team-16-tt.key" and store it in /Users/\<username>/.ssh (For Mac users: show hidden directories by pressing Command + Shift + . )
+2. Open VS code and install the extension 'Remote Development'.
 3. Press the green icon at the very bottom left of the screen, and then in the dropdown press on 'Open SSH configuration file.
 4. Edit the configuration file to look like the following:
 
@@ -67,6 +66,20 @@ Host ubuntuVM16
     User student
     IdentityFile <Path to private key>
 ```
-5.  Save the file and then in the same dropdown, click on 'Connect to host'
-6. Choose the host named 'ubuntuVM16' and then type in the passphrase. 
+5. Save the file and then in the same dropdown, click on 'Connect to host'
+6. Choose the host named 'ubuntuVM16' and then type in the passphrase.
+
+### Solved: issues for Mac users when hooking up VS-Code with the VM 
+The passphrase is requested every time VS-Code is opened. To solve this issue let's first enable the login terminal to get more information about the underlying problem:
+1. In VS-Code go to View -> Command Palette
+2. Type in SSH and you'll see some settings options for SSH appear
+3. Select "Remote-SSH: Settings" (a page opens up with loads of settings for SSH)
+4. Scroll down to towards the end and look for a setting "Remote.SSH: Show Login Terminal"
+5. Tick this option
+6. Try to connect again to the VM and see what's being outputed in the login terminal. You might see something like this:
+![SSH login error on Mac](/doc_images/Mac_ssh_key_issue.jpeg)
+7. Go to /Users/\<username>/.ssh directory and right click on the private key "vm-team-16-tt.key" and open "Get Info". In "Sharing & Permissions" only assign the "read & write" privelege to your own user set all other listed users to "No Access". In my case I had to delete the "staff" group as it wouldn't allow me to assign "No Access" to this group.
+8. Now the problem should be solved and you're good to go. 
+
+
 
