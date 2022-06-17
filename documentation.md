@@ -37,6 +37,14 @@ More information on docker-compose can be found [here.](https://docs.docker.com/
 
 Anytime you are downloading a new dependency, you will need to add it to requirements.txt and run the command in section 3. <mark> TBC </mark>
 
+If you want to run the application in deployment mode, use the following command:
+
+```
+docker-compose -f docker-compose-deploy.yml up --build
+```
+
+Then go to localhost:8080
+
 ## Django
 
 ## Testing
