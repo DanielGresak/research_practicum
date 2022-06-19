@@ -52,6 +52,21 @@ python manage.py test
 
 This will run all tests in the testing folder and give the results within the console. This will be run locally for now. I will look into running it through the Docker container.
 
+## Django Extension in VS-Code
+The following Django Extension aims to speed up coding by highlighting code snippets in Django-html. 
+![Django extension install](/doc_images/Django_extension_install.png) 
+While this extension is unquestionably useful, it has it flaws; in fact, it violates the
+HTML autocomplete function in VS-Code, meaning that the intellisense feature known from VS-Code stops working. Luckily there is a workaround, and to fix this issue proceed as follows:
+1. Install Django extension as shown above
+2. Open the **Workspace** settings.json in VS-Code
+3. Type the following code into the settings.json and save:
+![Django extension settings](/doc_images/Django_VSCode_settings_json.png)     
+4. Go to Preferences --> Settings and search for "emmet include"
+5. Add the the following item as shown in screenhot
+![Django extension emmet](/doc_images/Django_extension_emmet.png) 
+6. From now on, the VS-Code intellisense should work as usual.
+
+
 ## Virtual Machine
 ### Connecting VS-Code to the VM using SSH
 
