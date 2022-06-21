@@ -1,12 +1,12 @@
 version: '3.8'
 services:
   app:
-    build: .
-    volumes: 
-      - .:/django
+    build:
+      context: .
     ports:
-      - 8000:8000
-    image: app:django
-    container_name: django_container
-    command: python manage.py runserver 0.0.0.0:8000
-    
+      - "8000:8000"
+    volumes:
+      - ./core:/core
+    command: sh -c "python manage.py runserver 0.0.0.0:8000"
+    environment:
+      - DEBUG=1
