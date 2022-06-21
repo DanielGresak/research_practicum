@@ -8,3 +8,6 @@ venv/
 /dataSources/
 /dataSources.local.xml
 /*.idea/
+/.DS_Store
+/.ipynb_checkpoints/
+core/__pycache__/
