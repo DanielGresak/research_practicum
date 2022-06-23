@@ -38,6 +38,7 @@ if ALLOWED_HOSTS_ENV:
 # Application definition
 
 INSTALLED_APPS = [
+    'routes',
     'core',
     'django.contrib.admin',
     'django.contrib.auth',
