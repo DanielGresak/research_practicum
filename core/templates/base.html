@@ -11,11 +11,12 @@
     
     <!-- <link rel="icon" href="./favicon.ico" type="image/x-icon"> -->
     
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    {% block css %} {% endblock %}
   </head>
   <body>
     <main>
+      <h1 class="yellow">yello</h1>
         {% block content %}
         
         
@@ -23,6 +24,6 @@
 
     </main>
     <!-- <script src="jquery-3.6.0.min.js"></script> -->
-	<script src="{% static 'javascript/main.js' %}"></script>
+    <script src="{% static 'javascript/main.js' %}"></script>
   </body>
 </html>

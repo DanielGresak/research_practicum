@@ -62,7 +62,7 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR/'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -125,7 +125,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/static/'
 MEDIA_URL = '/static/media/'
-STATICFILES_DIRS=[os.path.join(BASE_DIR,'core/static')]
+STATICFILES_DIRS=[os.path.join(BASE_DIR,'static')]
 # STATIC_ROOT=os.path.join(BASE_DIR, 'static')
 STATIC_ROOT = '/vol/web/static'
 MEDIA_ROOT = '/vol/web/media'
