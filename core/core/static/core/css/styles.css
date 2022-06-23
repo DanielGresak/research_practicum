@@ -7,7 +7,7 @@ html, main {
   
 #map {
     height: 650px;
-    width: 800px;
+    width: 900px;
   }
 .flex-container {
   display: flex;
@@ -45,4 +45,10 @@ html, main {
   height: 650px;
   width: 300px;
   background-color: darkgrey;
+}
+
+.searchbar {
+  height: 650px;
+  width: 300px;
+  background-color: whitesmoke;
 }
