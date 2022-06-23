@@ -9,6 +9,7 @@ html, main {
     height: 650px;
     width: 900px;
   }
+  
 .flex-container {
   display: flex;
 }
@@ -21,7 +22,6 @@ html, main {
 .vertical-menu {
   width: 150px;
   height: 800px;
-  
 }
 
 .vertical-menu a {
