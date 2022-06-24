@@ -3,3 +3,5 @@ venv/
 *.pyc
 .ipynb_checkpoints/
 .idea/
+.vscode
+.env

@@ -9,7 +9,7 @@ $(".vertical-menu a").click(function(){
         $(this).removeClass("active") // unhighlight the item
         $(".appbar").animate({width: 'toggle'}); // Collapse or uncollapse the appbar
     }
-    else{
+    else {
         if ($(".vertical-menu a").hasClass("active")){ // If any of the icons are active (other than the one clicked)
             $(".vertical-menu a").removeClass("active"); // Unhighlight all icons
             $(this).toggleClass('active'); // Highlight this icon

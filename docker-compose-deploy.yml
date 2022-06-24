@@ -7,8 +7,9 @@ services:
     volumes:
       - static_data:/vol/web
     environment:
-      - SECRET_KEY=samplesecretkey123
-      - ALLOWED_HOSTS=127.0.0.1,localhost,31.187.28.185
+      - SECRET_KEY=${SECRET_KEY}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+      - GOOGLE_MAPS_KEY=${GOOGLE_MAPS_KEY}
 
   proxy:
     build:
