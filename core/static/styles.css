@@ -1,0 +1,72 @@
+html, main {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+#map {
+    height: 650px;
+    width: 900px;
+  }
+  
+.flex-container {
+  display: flex;
+}
+
+.heading {
+  width: 100%;
+  height: 100px;
+  background-color: rgb(73, 73, 73);
+}
+.vertical-menu {
+  width: 150px;
+  height: 800px;
+}
+
+.vertical-menu a {
+  background-color: #eee; 
+  color: black; 
+  display: block; 
+  padding: 12px; 
+  text-decoration: none; 
+  text-align: center;
+  
+}
+
+.vertical-menu a i {
+  font-size: 4em;
+  padding-bottom: 0.5em;
+  padding-top: 0.2em;
+  
+}
+
+.vertical-menu a:hover {
+  background-color: #ccc;
+}
+
+.vertical-menu a.active {
+  background-color: #0f04aa; 
+  color: white;
+}
+
+.appbar {
+  height: 650px;
+  width: 300px;
+  background-color: darkgrey;
+}
+
+.searchbar {
+  height: 650px;
+  width: 300px;
+  background-color: whitesmoke;
+}
+
+
+form {
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
+
