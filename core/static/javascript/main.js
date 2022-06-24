@@ -1,28 +1,26 @@
 
-$(".appbar").hide();
+/* dynamic main page component behaviour. */
+
+$(".appbar").hide(); // Hiding appbar on loading
+
 /* When an icon is clicked */
 $(".vertical-menu a").click(function(){
-    if ($(this).hasClass("active")){
-        $(this).removeClass("active")
-        $(".appbar").animate({width: 'toggle'});
+    if ($(this).hasClass("active")){ // If the clicked item is highlighted
+        $(this).removeClass("active") // unhighlight the item
+        $(".appbar").animate({width: 'toggle'}); // Collapse or uncollapse the appbar
     }
     else{
-        if ($(".vertical-menu a").hasClass("active")){
-            $(".vertical-menu a").removeClass("active");
-            
-            $(this).toggleClass('active');
+        if ($(".vertical-menu a").hasClass("active")){ // If any of the icons are active (other than the one clicked)
+            $(".vertical-menu a").removeClass("active"); // Unhighlight all icons
+            $(this).toggleClass('active'); // Highlight this icon
         } 
         else {
-            $(".vertical-menu a").removeClass("active");
-            $(".appbar").animate({width: 'toggle'});
-            $(this).toggleClass('active');
+            $(".vertical-menu a").removeClass("active"); 
+            $(".appbar").animate({width: 'toggle'}); // Toggle appbar
+            $(this).toggleClass('active'); // Make the clicked icon active
         }
-
     }
-    
 })
-
-
 
 let map;
 //var apikey = 'https://maps.googleapis.com/maps/api/directions/json?origin=Disneyland&destination=Universal+Studios+Hollywood&key=AIzaSyBEulkjFc2UqiZiYyTqCTeYBG_BvpzI4ek';

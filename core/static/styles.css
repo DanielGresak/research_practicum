@@ -14,11 +14,15 @@ html, main {
   display: flex;
 }
 
+/* Header/logo area CSS */
 .heading {
   width: 100%;
   height: 100px;
   background-color: rgb(73, 73, 73);
 }
+
+/* Toolbar CSS */
+
 .vertical-menu {
   width: 150px;
   height: 800px;
@@ -31,14 +35,12 @@ html, main {
   padding: 12px; 
   text-decoration: none; 
   text-align: center;
-  
 }
 
 .vertical-menu a i {
   font-size: 4em;
   padding-bottom: 0.5em;
   padding-top: 0.2em;
-  
 }
 
 .vertical-menu a:hover {
@@ -50,11 +52,15 @@ html, main {
   color: white;
 }
 
+/* Appbar CSS */
+
 .appbar {
   height: 650px;
   width: 300px;
   background-color: darkgrey;
 }
+
+/* Searchbar CSS */
 
 .searchbar {
   height: 650px;
@@ -62,6 +68,7 @@ html, main {
   background-color: whitesmoke;
 }
 
+/* Form CSS */
 
 form {
     display: inline-block;
