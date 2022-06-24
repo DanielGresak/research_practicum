@@ -12,6 +12,9 @@ $(".vertical-menu a").click(function(){
     else {
         if ($(".vertical-menu a").hasClass("active")){ // If any of the icons are active (other than the one clicked)
             $(".vertical-menu a").removeClass("active"); // Unhighlight all icons
+            // check with team and remove if not liked
+            $(".appbar").animate({width: 'toggle'}); // Collapse or uncollapse the appbar
+            $(".appbar").animate({width: 'toggle'}); // Collapse or uncollapse the appbar
             $(this).toggleClass('active'); // Highlight this icon
         } 
         else {
