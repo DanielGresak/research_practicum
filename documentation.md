@@ -60,6 +60,18 @@ python manage.py test
 
 This will run all tests in the testing folder and give the results within the console. This will be run locally for now. I will look into running it through the Docker container.
 
+To test within docker container, run the following command.
+
+```
+docker-compose up -d
+```
+
+Then run:
+
+```
+docker exec -ti researchpracticum-app-1 sh -c "python manage.py test"
+```
+
 ## Django Extension in VS-Code
 The following Django Extension aims to speed up coding by highlighting code snippets in Django-html. 
 ![Django extension install](/doc_images/Django_extension_install.png) 
