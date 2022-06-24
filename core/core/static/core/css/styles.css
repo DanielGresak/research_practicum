@@ -61,3 +61,12 @@ html, main {
   width: 300px;
   background-color: whitesmoke;
 }
+
+
+form {
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
+
