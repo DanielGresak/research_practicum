@@ -9,9 +9,9 @@ $(".vertical-menu a").click(function(){
     else{
         if ($(".vertical-menu a").hasClass("active")){
             $(".vertical-menu a").removeClass("active");
-            
+
             $(this).toggleClass('active');
-        } 
+        }
         else {
             $(".vertical-menu a").removeClass("active");
             $(".appbar").animate({width: 'toggle'});
@@ -19,9 +19,8 @@ $(".vertical-menu a").click(function(){
         }
 
     }
-    
-})
 
+})
 
 
 let map;
@@ -31,24 +30,37 @@ let map;
 function initMap() {
     var directionsService = new google.maps.DirectionsService();
     var directionsRenderer = new google.maps.DirectionsRenderer();
+    // create autocomplete objects for all input
+    var options = {
+        types: ['(cities)']
+    }
+    var input1 = document.getElementById('search_start')
+    var autocomplete1 = new google.maps.places.Autocomplete(input1, options)
+
+    var input2 = document.getElementById('search_destination')
+    var autocomplete2 = new google.maps.places.Autocomplete(input2, options)
+    // create map and set map options
     map = new google.maps.Map(document.getElementById("map"), {
     center: { lat: 53.3498, lng: -6.2603 },
     zoom: 11,
     });
     directionsRenderer.setMap(map);
-    calcRoute(directionsService, directionsRenderer)
+    document.getElementById("btn").addEventListener('click', event => {
+        calcRoute(directionsService, directionsRenderer);
+});
+
 }
 
-// refer from https://developers.google.com/maps/documentation/javascript/directions?hl=en#TravelModes
+
 function calcRoute(directionsService, directionsRenderer) {
     var request = {
-        origin: {lat: 53.3068, lng:-6.2229}, // start location
-        destination: {lat:53.3449, lng:-6.2601}, // end location
+        origin: document.getElementById('search_start').value, // start location
+        destination: document.getElementById('search_destination').value, // end location
         travelMode: 'TRANSIT', // -> public transport
         transitOptions: {
             //departureTime: new Date(), the time of departure, default now
             modes: ['BUS'],
-            //routingPreference:'FEWER_TRANSFERS'/'LESS_WALKING' 
+            //routingPreference:'FEWER_TRANSFERS'/'LESS_WALKING'
         },
         //waypoints: DirectionsWaypoint, the points the route will pass throuth
         //optimizeWaypoints: Boolean,
@@ -58,6 +70,7 @@ function calcRoute(directionsService, directionsRenderer) {
     };
     directionsService.route(request, function(result, status){
         if(status == 'OK'){
+            // display routes
             directionsRenderer.setDirections(result);
         }
         else{
@@ -65,5 +78,9 @@ function calcRoute(directionsService, directionsRenderer) {
         }
         });
 }
+
+
 window.initMap = initMap;
+
+
 
