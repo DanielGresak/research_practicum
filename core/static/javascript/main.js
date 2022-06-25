@@ -9,9 +9,9 @@ $(".vertical-menu a").click(function(){
     else{
         if ($(".vertical-menu a").hasClass("active")){
             $(".vertical-menu a").removeClass("active");
-            
+
             $(this).toggleClass('active');
-        } 
+        }
         else {
             $(".vertical-menu a").removeClass("active");
             $(".appbar").animate({width: 'toggle'});
@@ -19,9 +19,8 @@ $(".vertical-menu a").click(function(){
         }
 
     }
-    
-})
 
+})
 
 
 let map;
@@ -31,12 +30,30 @@ let map;
 function initMap() {
     var directionsService = new google.maps.DirectionsService();
     var directionsRenderer = new google.maps.DirectionsRenderer();
+    // create autocomplete objects for all input
+    var options = {
+        types: ['(cities)']
+    }
+    var input1 = document.getElementById('search_start')
+    var autocomplete1 = new google.maps.places.Autocomplete(input1, options)
+
+    var input2 = document.getElementById('search_destination')
+    var autocomplete2 = new google.maps.places.Autocomplete(input2, options)
+    // create map and set map options
     map = new google.maps.Map(document.getElementById("map"), {
     center: { lat: 53.3498, lng: -6.2603 },
     zoom: 11,
     });
     directionsRenderer.setMap(map);
-    calcRoute(directionsService, directionsRenderer, map)
+    document.getElementById("btn").addEventListener('click', event =>{
+        calcRoute(directionsService, directionsRenderer, map);
+        var busInfohtml = "<div class = 'busInfo'>\
+                    </div>";
+        //console.log($(".searchbar").html());
+        $(".searchbar").replaceWith(busInfohtml);
+        
+    });
+    
 }
 
 // the function that renders all the routes on the map.
@@ -84,12 +101,21 @@ function getBusInfo(routes){
 
 // refer from https://developers.google.com/maps/documentation/javascript/directions?hl=en#TravelModes
 function calcRoute(directionsService, directionsRenderer, map) {
+    var originString = $("#search_start").val();
+    var destString = $("#search_destination").val();
+    var startTime = $("#time_of_travel").val();
+    console.log(originString+" "+destString+ " "+startTime);
+
+    var mydate = new Date(startTime);
+    var resultTime = mydate.getTime();
+    console.log(resultTime);
+
     var request = {
-        origin: {lat: 53.3068, lng:-6.2229}, // start location, now is ucd
-        destination: {lat:53.3449, lng:-6.2601}, // end location, now is temple bar
+        origin: originString, // start location, now is ucd
+        destination: destString, // end location, now is temple bar
         travelMode: "TRANSIT", // -> public transport
         transitOptions: {
-            departureTime: new Date(1656343442000), //Epoch time in miliseconds, now this value stands for 27th June 16:24
+            departureTime: new Date(resultTime), //Epoch time in miliseconds, now this value stands for 27th June 16:24
             modes: ["BUS"],
             //routingPreference:'FEWER_TRANSFERS'/'LESS_WALKING' 
         },
@@ -127,7 +153,26 @@ function calcRoute(directionsService, directionsRenderer, map) {
                                         <p class = 'busDetail' id = 'carbonEmissionSaved'>Carbon emission saved:</p>\
                                     </div>")
             }
-            
+            $(".busInfo").append("<button id='busInfoBtn'>Back</button>");
+            var html = "<form id='form1'>\
+                            <p>From:</p>\
+                            <div class='input'>\
+                                <input id='search_start' type='text' class='form-control' placeholder='Enter your position' >\
+                            </div>\
+                            <p>To:</p>\
+                            <div class='input'>\
+                                <input id='search_destination' type='text' class='form-control' placeholder='Enter your destination' >\
+                            </div>\
+                            <p>When:</p>\
+                            <div class='input'>\
+                                <input id='time_of_travel' type='datetime-local' class='form-control' >\
+                            </div>\
+                            </form><br><br>";
+            $("#busInfoBtn").click(function(){
+                $(".busInfo").replaceWith("<div class='searchbar'>"+html+"</div>");
+                $(".searchbar").append("<button id='btn'>Click me</button>");
+            });
+
             // when click on a bus info window, extract the route index and only display the according route on the map
             $(".oneBus").mousedown(function() {
                 var stringToArray = $(this).text().match(/\b(\w+)\b/g);
@@ -158,4 +203,6 @@ function calcRoute(directionsService, directionsRenderer, map) {
 //display more than one routes on the map
 //https://stackoverflow.com/questions/2466215/google-maps-api-directionsrendereroptions-not-working
 window.initMap = initMap;
+
+
 
