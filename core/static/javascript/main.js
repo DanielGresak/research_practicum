@@ -42,44 +42,54 @@ function initMap() {
 // the function that renders all the routes on the map.
 // parameter: result, the parameter from the directionsService.route()
 // parameter: map, the map
+//return the directionRender[]
 function renderDirections(result, gmap){
     var totalRoutes = result["routes"].length;
     const directionRenders = [];
-    const color = ["yellow", "green", "red", "blue", "gray"];
+    const color = ["yellow", "green", "blue", "red"];// the color for the routes
     for(let i = 0; i < totalRoutes; i++){
-        directionRenders[i] = new google.maps.DirectionsRenderer({
+            directionRenders[i] = new google.maps.DirectionsRenderer({
             directions: result,
             routeIndex: i,
             map: gmap,
             polylineOptions:{
-                strokeColor: color[i], 
+                strokeColor: color[i],
+                strokeOpacity: 0.6, 
             }
-        });
-    } 
+        });}
+    
+    //change color of the stroke https://stackoverflow.com/questions/9311498/change-the-color-of-the-polyline-in-directionsrenderer
+    return directionRenders;
 }
 
-// this function will return one or more bus numbers of a given routes
+// this function will return a directionary contains the bus routes and arriving time
+// in case of transfering, the key and value will be an array(more than one buses)
 // routes is from result["routes"][index]
-function getBusNumber(routes){
-    var busRoutes = [];
+function getBusInfo(routes){
+    var busRoutes = {};
+    var routeNumber = [];
+    var arrivingTime = [];
     var steps = routes["legs"][0]["steps"];
     var numberSteps = steps.length;
     for (let i = 0; i < numberSteps; i++){
-        if (steps[i]["transit"] !== undefined){
-            busRoutes.push(steps[i]["transit"]["line"]["short_name"]);
+        if (steps[i]["transit"] !== undefined){// find the step for the bus instead of working
+            routeNumber.push(steps[i]["transit"]["line"]["short_name"]);
+            arrivingTime.push(steps[i]["transit"]["arrival_time"]["text"]);
         }
     }
+    busRoutes[routeNumber] = arrivingTime;
     return busRoutes;
 }
+
 
 // refer from https://developers.google.com/maps/documentation/javascript/directions?hl=en#TravelModes
 function calcRoute(directionsService, directionsRenderer, map) {
     var request = {
-        origin: {lat: 53.3068, lng:-6.2229}, // start location
-        destination: {lat:53.3449, lng:-6.2601}, // end location
+        origin: {lat: 53.3068, lng:-6.2229}, // start location, now is ucd
+        destination: {lat:53.3449, lng:-6.2601}, // end location, now is temple bar
         travelMode: "TRANSIT", // -> public transport
         transitOptions: {
-            //departureTime: new Date(), the time of departure, default now
+            departureTime: new Date(1656343442000), //Epoch time in miliseconds, now this value stands for 27th June 16:24
             modes: ["BUS"],
             //routingPreference:'FEWER_TRANSFERS'/'LESS_WALKING' 
         },
@@ -92,35 +102,56 @@ function calcRoute(directionsService, directionsRenderer, map) {
     directionsService.route(request, function(result, status){
         if(status == "OK"){
 
-            // display all the possible routes on the map
-            renderDirections(result, map);
+            // display all the possible routes on the map in different colors
+            const directionRenderers = renderDirections(result, map);
 
-            // pass the bus numbers of every route to the busInfoBar and display it.
+            // total number of possible routes
             var totalNumberOfRoutes = result["routes"].length// total number of routes
 
+        
             for(let route = 0; route < totalNumberOfRoutes; route++){
+                var busRoutes = getBusInfo(result["routes"][route]); // the bus number and arriving time pair(directionary)
+                var busNumber = Object.keys(busRoutes); // bus number
+                var arrivingTime = busRoutes[busNumber];// arriving time of this bus
+                var busNumString = "";
+                var busArrivingString = "";
+                busNumber.forEach(number =>{ busNumString += number});// will be optimized later on for the bus transfering case
+                arrivingTime.forEach(number =>{ busArrivingString += number});//will be optimized later on for the bus transfering case
+                
+                // add a bus info child window for every bus/route
                 $(".busInfo").append("<div class = 'oneBus'>\
-                                        <p class = 'busHeader'>"+"BUS "+getBusNumber(result["routes"][route])+"</p>\
-                                        <p class = 'busDetail' id = 'arrivingTime'>Arriving time:</p>\
+                                        <p class = 'busHeader'>"+"Bus route "+(route+1)+": "+busNumString+"</p>\
+                                        <p class = 'busDetail' id = 'arrivingTime'>Arriving time: <span id ='time'>"+ busArrivingString+"</span></p>\
                                         <p class = 'busDetail' id = 'totalTravelTime'>Total travel time:</p>\
                                         <p class = 'busDetail' id = 'busFare'>Bus fare:</p>\
                                         <p class = 'busDetail' id = 'carbonEmissionSaved'>Carbon emission saved:</p>\
                                     </div>")
             }
             
-            
+            // when click on a bus info window, extract the route index and only display the according route on the map
+            $(".oneBus").mousedown(function() {
+                var stringToArray = $(this).text().match(/\b(\w+)\b/g);
+                var busIndex = stringToArray[2]-1;//extracting the route index
 
-            //console.log(totalNumberOfRoutes);
-            //directionsRenderer.setDirections(result);
-            //directionsRenderer.setRouteIndex(1);
-            //directionsRenderer.setRouteIndex(2);
-            console.log(result["routes"][1]);
-            //console.log(result["routes"][busRouteIndex]["legs"][0]["steps"][1]["transit"]["line"]["short_name"]);// --> to get the bus number of this route
+                //for the on clicked route, set the color to red
+                var polylineOnClick = new google.maps.Polyline({
+                    strokeColor: "red",
+                    strokeOpacity: 0.6,
+                })
+
+                // only show the selected route
+                for (let stroke = 0; stroke < directionRenderers.length; stroke++){
+                    directionRenderers[stroke].setOptions({map:null, directions: result, routeIndex:stroke});
+                }
+                directionRenderers[busIndex].setOptions({polylineOptions:polylineOnClick, map:map, directions: result, routeIndex:busIndex});
+             });
         }
         else{
             console.log(status);
         }
         });
+
+        
 }
 //
 //https://stackoverflow.com/questions/35050401/display-multiple-routes-between-two-points-on-google-maps
