@@ -46,12 +46,9 @@ function initMap() {
     });
     directionsRenderer.setMap(map);
     document.getElementById("btn").addEventListener('click', event =>{
+        $(".busInfo").css("display", "inline");
         calcRoute(directionsService, directionsRenderer, map);
-        var busInfohtml = "<div class = 'busInfo'>\
-                    </div>";
-        //console.log($(".searchbar").html());
-        $(".searchbar").replaceWith(busInfohtml);
-        
+        $(".searchbar").css("display", "none");
     });
     
 }
@@ -153,24 +150,16 @@ function calcRoute(directionsService, directionsRenderer, map) {
                                         <p class = 'busDetail' id = 'carbonEmissionSaved'>Carbon emission saved:</p>\
                                     </div>")
             }
+            //add a back button, go back to the search bar
             $(".busInfo").append("<button id='busInfoBtn'>Back</button>");
-            var html = "<form id='form1'>\
-                            <p>From:</p>\
-                            <div class='input'>\
-                                <input id='search_start' type='text' class='form-control' placeholder='Enter your position' >\
-                            </div>\
-                            <p>To:</p>\
-                            <div class='input'>\
-                                <input id='search_destination' type='text' class='form-control' placeholder='Enter your destination' >\
-                            </div>\
-                            <p>When:</p>\
-                            <div class='input'>\
-                                <input id='time_of_travel' type='datetime-local' class='form-control' >\
-                            </div>\
-                            </form><br><br>";
+            
             $("#busInfoBtn").click(function(){
-                $(".busInfo").replaceWith("<div class='searchbar'>"+html+"</div>");
-                $(".searchbar").append("<button id='btn'>Click me</button>");
+                for (let stroke = 0; stroke < directionRenderers.length; stroke++){
+                    directionRenderers[stroke].setOptions({map:null});
+                }// clear the previous map render
+                $(".busInfo").empty();//clear all the child element, so user can search again
+                $(".busInfo").css("display", "none");// hide the info bar
+                $(".searchbar").css("display", "block");//show the searchbar
             });
 
             // when click on a bus info window, extract the route index and only display the according route on the map

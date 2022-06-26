@@ -62,6 +62,7 @@ html, main {
   background-color: whitesmoke;
 }
 .busInfo{
+  display: none;
   height: 650px;
   width: 300px;
   background-color: whitesmoke;
@@ -84,6 +85,11 @@ html, main {
 .busDetail{
 padding-left: 3px;
 margin: 4px;
+}
+
+#busInfoBtn{
+  margin-left: 35%;
+  margin-top: 20px;
 }
 
 #time{
