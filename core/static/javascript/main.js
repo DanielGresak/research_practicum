@@ -4,10 +4,15 @@
 $(".appbar").hide(); // Hiding appbar on loading
 
 /* When an icon is clicked */
+
+
 $(".vertical-menu a").click(function(){
     if ($(this).hasClass("active")){ // If the clicked item is highlighted
         $(this).removeClass("active") // unhighlight the item
         $(".appbar").animate({width: 'toggle'}); // Collapse or uncollapse the appbar
+        
+        
+
     }
     else {
         if ($(".vertical-menu a").hasClass("active")){ // If any of the icons are active (other than the one clicked)
@@ -153,7 +158,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
                                     </div>")
             }
             //add a back button, go back to the search bar
-            $(".busInfo").append("<button id='busInfoBtn'>Back</button>");
+            $(".busInfo").append("<button id='busInfoBtn' class='btn btn-dark'>Back</button>");
             
             $("#busInfoBtn").click(function(){
                 for (let stroke = 0; stroke < directionRenderers.length; stroke++){

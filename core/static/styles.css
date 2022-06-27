@@ -6,8 +6,8 @@ html, main {
   }
   
 #map {
-    height: 650px;
-    width: 900px;
+  height: 85vh;
+  width: 65vw;
   }
   
 .flex-container {
@@ -17,30 +17,41 @@ html, main {
 /* Header/logo area CSS */
 .heading {
   width: 100%;
-  height: 100px;
+  height: 15vh;
   background-color: rgb(73, 73, 73);
+}
+
+.heading-text{
+  font-family: 'Indie Flower', cursive;
+  color: white;
+  font-weight: 600;
+  padding: 25px;
 }
 
 /* Toolbar CSS */
 
 .vertical-menu {
-  width: 150px;
-  height: 800px;
+  display: flex;
+  flex-direction:column;
+  align-items:stretch;
+  height: 85vh;
+  width: 8vw;
 }
 
 .vertical-menu a {
   background-color: #eee; 
   color: black; 
-  display: block; 
+  /* display: block;  */
   padding: 12px; 
   text-decoration: none; 
   text-align: center;
+  flex: 1;
 }
 
 .vertical-menu a i {
-  font-size: 4em;
-  padding-bottom: 0.5em;
-  padding-top: 0.2em;
+  font-size: 3em;
+  line-height: 12vh;
+  vertical-align: middle;
 }
 
 .vertical-menu a:hover {
@@ -48,29 +59,32 @@ html, main {
 }
 
 .vertical-menu a.active {
-  background-color: #0f04aa; 
+  background-color: black; 
   color: white;
 }
 
 /* Appbar CSS */
 
 .appbar {
-  height: 650px;
-  width: 300px;
+  height: 85vh;
+  width: 30vw;
   background-color: darkgrey;
+  margin: 0;
+  padding: 0;
 }
 
 /* Searchbar CSS */
 
 .searchbar {
-  height: 650px;
-  width: 300px;
+  height: 85vh;
+  width: 30vw;
   background-color: whitesmoke;
 }
 .busInfo{
+  padding: 10px;
   display: none;
-  height: 650px;
-  width: 300px;
+  height: 85vh;
+  width: 30vw;
   background-color: whitesmoke;
 }
 .oneBus{
@@ -103,9 +117,13 @@ margin: 4px;
 }
 
 form {
+    padding: 15px;
     display: inline-block;
     margin-left: auto;
     margin-right: auto;
     text-align: left;
 }
 
+.form-btn {
+  margin-left: 15px;
+}
