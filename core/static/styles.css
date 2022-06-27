@@ -131,3 +131,40 @@ form {
 .location-btn {
   margin: 10px;
 }
+
+
+/* VERY RUDIMENTAL @MEDIA */
+@media screen and (max-width: 600px) {
+  .appbar {
+    width: 80vw;
+  }
+
+  .heading {
+    height: 10vh;
+  }
+
+  .searchbar {
+    width: 80vw;
+  }
+
+  .vertical-menu {
+    width: 20vw;
+  }
+  .busInfo {
+    width: 80vw;
+  }
+
+  #map {
+    display: none;
+  }
+
+  .vertical-menu a i {
+    font-size: 2rem;
+    /* line-height: 0; */
+    vertical-align: middle;
+  }
+
+  .vertical-menu a {
+    max-height: 11vh;
+  }
+}

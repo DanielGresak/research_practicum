@@ -9,18 +9,15 @@ $(".appbar").hide(); // Hiding appbar on loading
 $(".vertical-menu a").click(function(){
     if ($(this).hasClass("active")){ // If the clicked item is highlighted
         $(this).removeClass("active") // unhighlight the item
-        $(".appbar").animate({width: 'toggle'}); // Collapse or uncollapse the appbar
-        
-        
-        
+        $(".appbar").animate({width: ['toggle']}); // Collapse or uncollapse the appbar
 
     }
     else {
         if ($(".vertical-menu a").hasClass("active")){ // If any of the icons are active (other than the one clicked)
             $(".vertical-menu a").removeClass("active"); // Unhighlight all icons
-            // check with team and remove if not liked
-            $(".appbar").animate({width: 'toggle'}); // Collapse or uncollapse the appbar
-            $(".appbar").animate({width: 'toggle'}); // Collapse or uncollapse the appbar
+            // // check with team and remove if not liked
+            // $(".appbar").animate({width: 'toggle'}); // Collapse or uncollapse the appbar
+            // $(".appbar").animate({width: 'toggle'}); // Collapse or uncollapse the appbar
             $(this).toggleClass('active'); // Highlight this icon
         } 
         else {
@@ -192,7 +189,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
             console.log(status);
         }
         });
-
+ 
         
 }
 //
