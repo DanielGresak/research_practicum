@@ -10,3 +10,6 @@ services:
     command: sh -c "python manage.py runserver 0.0.0.0:8000"
     environment:
       - DEBUG=1
+      - SECRET_KEY=${SECRET_KEY}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+      - GOOGLE_MAPS_KEY=${GOOGLE_MAPS_KEY}

@@ -44,7 +44,7 @@ If you want to run the application in deployment mode, use the following command
 docker-compose -f docker-compose-deploy.yml up --build
 ```
 
-Then go to localhost:8080
+Then go to localhost (no need for specifying port as it is running on port 80)
 
 ## Django
 
@@ -58,7 +58,19 @@ To do this, make sure you're in the root directory and run the following command
 python manage.py test
 ```
 
-This will run all tests in the testing folder and give the results within the console. This will be run locally for now. I will look into running it through the Docker container.
+This will run all tests in the testing folder and give the results within the console. This will be run locally.
+
+To test within docker container, run the following command.
+
+```
+docker-compose up -d
+```
+
+Then run:
+
+```
+docker exec -ti researchpracticum-app-1 sh -c "python manage.py test"
+```
 
 ## Django Extension in VS-Code
 The following Django Extension aims to speed up coding by highlighting code snippets in Django-html. 

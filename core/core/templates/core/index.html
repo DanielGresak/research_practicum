@@ -3,11 +3,9 @@
 
 
 
-
+<!-- Not used at the moment DG -->
 {% block css %} 
-
     <link rel="stylesheet" href= "{% static 'core/css/styles.css' %}">
-
 {% endblock css %}
 
 {% block appbar %}
@@ -29,7 +27,8 @@
 {% block map %}
 <div class="flex-container">
 <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAT34bLhGEEweJ1Gf7hFh0RyXROTn1vuEs&callback=initMap&v=weekly&libraries=geometry&libraries=places">
+        src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_KEY }}&callback=initMap&v=weekly&v=weekly&libraries=geometry&libraries=places">
+
 </script>
 </div>
 <div id="map"></div>
