@@ -67,8 +67,40 @@ html, main {
   width: 300px;
   background-color: whitesmoke;
 }
+.busInfo{
+  display: none;
+  height: 650px;
+  width: 300px;
+  background-color: whitesmoke;
+}
+.oneBus{
+  font-size:xx-small;
+  margin: 2px 5px 2px 5px;
+  border:1px solid #ccc;
+}
 
-/* Form CSS */
+.busHeader{
+  font-size: x-small;
+  color: #161;
+  background-color: #ccc;
+  width: 100%;
+  padding: 5px 10px 5px 10px;
+  margin:0px;
+}
+
+.busDetail{
+padding-left: 3px;
+margin: 4px;
+}
+
+#busInfoBtn{
+  margin-left: 35%;
+  margin-top: 20px;
+}
+
+#time{
+  color: red;
+}
 
 form {
     display: inline-block;
