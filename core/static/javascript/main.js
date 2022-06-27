@@ -12,6 +12,7 @@ $(".vertical-menu a").click(function(){
         $(".appbar").animate({width: 'toggle'}); // Collapse or uncollapse the appbar
         
         
+        
 
     }
     else {
@@ -198,7 +199,23 @@ function calcRoute(directionsService, directionsRenderer, map) {
 //https://stackoverflow.com/questions/35050401/display-multiple-routes-between-two-points-on-google-maps
 //display more than one routes on the map
 //https://stackoverflow.com/questions/2466215/google-maps-api-directionsrendereroptions-not-working
+
+// Get users location
+//https://www.w3schools.com/html/html5_geolocation.asp
 window.initMap = initMap;
 
 
 
+
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else { 
+    console.log("Geolocation is not supported by this browser.")
+  }
+}
+
+function showPosition(position) {
+    console.log("Latitude: " + position.coords.latitude + 
+  "Longitude: " + position.coords.longitude);
+}
