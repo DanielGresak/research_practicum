@@ -218,4 +218,6 @@ function getLocation() {
 function showPosition(position) {
     console.log("Latitude: " + position.coords.latitude + 
   "Longitude: " + position.coords.longitude);
+    var position = position.coords.latitude + ", " + position.coords.longitude;
+  $("#search_start").val(position);
 }
