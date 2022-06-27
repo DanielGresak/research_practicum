@@ -39,9 +39,18 @@ function initMap() {
     var directionsService = new google.maps.DirectionsService();
     var directionsRenderer = new google.maps.DirectionsRenderer();
     // create autocomplete objects for all input
+    var dublinBounds = new google.maps.LatLngBounds(
+        new google.maps.LatLng(53.271937, -6.409767),
+        new google.maps.LatLng(53.406819, -6.063698)
+    );
+    //options to restrict api to only dublin city
     var options = {
-        types: ['(cities)']
-    }
+    bounds: dublinBounds,
+    types: ["geocode"],
+    componentRestrictions: { country: "ie" },
+    strictBounds: true,
+    };
+
     var input1 = document.getElementById('search_start')
     var autocomplete1 = new google.maps.places.Autocomplete(input1, options)
 
