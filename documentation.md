@@ -46,6 +46,13 @@ docker-compose -f docker-compose-deploy.yml up --build
 
 Then go to localhost (no need for specifying port as it is running on port 80)
 
+To rebuild the docker-compose-deploy file:
+
+```
+docker compose -f docker-compose-deploy.yml build --no-cache
+
+```
+
 ## Django
 
 ## Testing
