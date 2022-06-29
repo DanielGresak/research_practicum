@@ -4,17 +4,20 @@
 $(".appbar").hide(); // Hiding appbar on loading
 
 /* When an icon is clicked */
+
+
 $(".vertical-menu a").click(function(){
     if ($(this).hasClass("active")){ // If the clicked item is highlighted
         $(this).removeClass("active") // unhighlight the item
-        $(".appbar").animate({width: 'toggle'}); // Collapse or uncollapse the appbar
+        $(".appbar").animate({width: ['toggle']}); // Collapse or uncollapse the appbar
+
     }
     else {
         if ($(".vertical-menu a").hasClass("active")){ // If any of the icons are active (other than the one clicked)
             $(".vertical-menu a").removeClass("active"); // Unhighlight all icons
-            // check with team and remove if not liked
-            $(".appbar").animate({width: 'toggle'}); // Collapse or uncollapse the appbar
-            $(".appbar").animate({width: 'toggle'}); // Collapse or uncollapse the appbar
+            // // check with team and remove if not liked
+            // $(".appbar").animate({width: 'toggle'}); // Collapse or uncollapse the appbar
+            // $(".appbar").animate({width: 'toggle'}); // Collapse or uncollapse the appbar
             $(this).toggleClass('active'); // Highlight this icon
         } 
         else {
@@ -33,9 +36,18 @@ function initMap() {
     var directionsService = new google.maps.DirectionsService();
     var directionsRenderer = new google.maps.DirectionsRenderer();
     // create autocomplete objects for all input
+    var dublinBounds = new google.maps.LatLngBounds(
+        new google.maps.LatLng(53.271937, -6.409767),
+        new google.maps.LatLng(53.406819, -6.063698)
+    );
+    //options to restrict api to only dublin city
     var options = {
-        types: ['(cities)']
-    }
+    bounds: dublinBounds,
+    types: ["geocode"],
+    componentRestrictions: { country: "ie" },
+    strictBounds: true,
+    };
+
     var input1 = document.getElementById('search_start')
     var autocomplete1 = new google.maps.places.Autocomplete(input1, options)
 
@@ -153,7 +165,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
                                     </div>")
             }
             //add a back button, go back to the search bar
-            $(".busInfo").append("<button id='busInfoBtn'>Back</button>");
+            $(".busInfo").append("<button id='busInfoBtn' class='btn btn-dark'>Back</button>");
             
             $("#busInfoBtn").click(function(){
                 for (let stroke = 0; stroke < directionRenderers.length; stroke++){
@@ -186,14 +198,32 @@ function calcRoute(directionsService, directionsRenderer, map) {
             console.log(status);
         }
         });
-
+ 
         
 }
 //
 //https://stackoverflow.com/questions/35050401/display-multiple-routes-between-two-points-on-google-maps
 //display more than one routes on the map
 //https://stackoverflow.com/questions/2466215/google-maps-api-directionsrendereroptions-not-working
+
+// Get users location
+//https://www.w3schools.com/html/html5_geolocation.asp
 window.initMap = initMap;
 
 
 
+
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else { 
+    console.log("Geolocation is not supported by this browser.")
+  }
+}
+
+function showPosition(position) {
+    console.log("Latitude: " + position.coords.latitude + 
+  "Longitude: " + position.coords.longitude);
+    var position = position.coords.latitude + ", " + position.coords.longitude;
+  $("#search_start").val(position);
+}
