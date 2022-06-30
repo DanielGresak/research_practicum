@@ -3,6 +3,7 @@
 
 $(".appbar").hide(); // Hiding appbar on loading
 
+$(".busInfo").hide();
 /* When an icon is clicked */
 
 
@@ -27,6 +28,12 @@ $(".vertical-menu a").click(function(){
         }
     }
 })
+
+$(".dot-div").click(function(){
+    $(".vertical-menu").animate({width: 'toggle'});
+})
+
+
 
 let map;
 //var apikey = 'https://maps.googleapis.com/maps/api/directions/json?origin=Disneyland&destination=Universal+Studios+Hollywood&key=AIzaSyBEulkjFc2UqiZiYyTqCTeYBG_BvpzI4ek';
@@ -144,7 +151,8 @@ function calcRoute(directionsService, directionsRenderer, map) {
 
             // total number of possible routes
             var totalNumberOfRoutes = result["routes"].length// total number of routes
-
+            $(".busInfo").show();
+            $(".searchbar").hide();
         
             for(let route = 0; route < totalNumberOfRoutes; route++){
                 var busRoutes = getBusInfo(result["routes"][route]); // the bus number and arriving time pair(directionary)
@@ -172,8 +180,10 @@ function calcRoute(directionsService, directionsRenderer, map) {
                     directionRenderers[stroke].setOptions({map:null});
                 }// clear the previous map render
                 $(".busInfo").empty();//clear all the child element, so user can search again
-                $(".busInfo").css("display", "none");// hide the info bar
+                // $(".busInfo").css("display", "none");// hide the info bar
                 $(".searchbar").css("display", "block");//show the searchbar
+                $(".busInfo").hide();
+                $(".searchbar").show();
             });
 
             // when click on a bus info window, extract the route index and only display the according route on the map

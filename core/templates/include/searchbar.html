@@ -1,23 +1,31 @@
-<div class="searchbar">
+<div class="searchbar flex-item">
 
 
     <form id="form1">
-            <p>From:</p>
+          <div class="search-div">
+            <p class="search-text">From:</p>
+
+            
             <div class="input">
-              <input id="search_start" type="text" class="form-control" placeholder="Enter your position" >
+              <input id="search_start" type="text" class="form-control search-input" placeholder="Enter your position" >
               <button type="button" class="btn btn-outline-secondary btn-sm location-btn" onclick="getLocation()">Get My Location</button>
-            </div>
+           </div>
+          </div>
 
-            <p>To:</p>
+          <div class="search-div">
+            <p class="search-text">To:</p>
             <div class="input">
-              <input id="search_destination" type="text" class="form-control" placeholder="Enter your destination" >
+              <input id="search_destination" type="text" class="form-control search-input" placeholder="Enter your destination" >
             </div>
+          </div>
 
-            <p>When:</p>
+          <div class="search-div">
+            <p class="search-text">When:</p>
             <div class="input">
-              <input id="time_of_travel" type="datetime-local" class="form-control" >
+              <input id="time_of_travel" type="datetime-local" class="form-control search-input" >
             </div>
-
+            </div>
+          
     </form><br><br>
 
 

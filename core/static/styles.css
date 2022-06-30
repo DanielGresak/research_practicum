@@ -3,6 +3,8 @@ html, main {
     width: 100%;
     margin: 0;
     padding: 0;
+    font-family: 'Indie Flower', cursive;
+    font-weight: 900;
   }
   
 #map {
@@ -16,7 +18,7 @@ html, main {
 
 /* Header/logo area CSS */
 .heading {
-  width: 100%;
+  width: 100vw;
   height: 15vh;
   background-color: rgb(73, 73, 73);
 }
@@ -26,6 +28,19 @@ html, main {
   color: white;
   font-weight: 600;
   padding: 25px;
+  display: inline-block;
+  /* float: left; */
+}
+
+.dot-div {
+  float: right;
+  width: 15vw;
+  height: 15vh;
+  
+}
+
+.dots {
+  display: none;
 }
 
 /* Toolbar CSS */
@@ -49,7 +64,7 @@ html, main {
 }
 
 .vertical-menu a i {
-  font-size: 3em;
+  font-size: xx-large;
   line-height: 12vh;
   vertical-align: middle;
 }
@@ -88,13 +103,13 @@ html, main {
   background-color: whitesmoke;
 }
 .oneBus{
-  font-size:xx-small;
+  font-size:x-small;
   margin: 2px 5px 2px 5px;
   border:1px solid #ccc;
 }
 
 .busHeader{
-  font-size: x-small;
+  font-size: -small;
   color: #161;
   background-color: #ccc;
   width: 100%;
@@ -134,9 +149,14 @@ form {
 
 
 /* VERY RUDIMENTAL @MEDIA */
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 1000px) {
+
+
   .appbar {
     width: 80vw;
+    height: 90vh;
+    z-index: 1;
+    position: absolute;
   }
 
   .heading {
@@ -144,27 +164,102 @@ form {
   }
 
   .searchbar {
-    width: 80vw;
+    /* height: 45vw; */
+    
+    width: 100vw;
+    background-color: whitesmoke;
   }
 
   .vertical-menu {
     width: 20vw;
+    /* position: absolute; */
+    position: fixed;
+    right: 0%;
+    /* left: 80vw; */
+    height: 100vh;
+    z-index: 2;
+    background-color:  #eee;
   }
+
   .busInfo {
-    width: 80vw;
+    height: 45vh;
+    width: 100vw;
   }
 
   #map {
-    display: none;
+    height: 45vh;
+    width: 100vw;
+    position: fixed !important; 
+    bottom:0%;
+   
   }
 
   .vertical-menu a i {
     font-size: 2rem;
-    /* line-height: 0; */
     vertical-align: middle;
   }
 
   .vertical-menu a {
     max-height: 11vh;
   }
+
+  .dots {
+    display: inline-block;
+  }
+
+  .heading-text{
+    font-family: 'Indie Flower', cursive;
+    color: white;
+    font-weight: 300;
+    padding: 10px;
+    padding-top: 20px;
+    display: inline-block;
+    font-size: x-large;
+    /* float: left; */
+  }
+  
+  .flex-item:nth-of-type(2) { 
+    order: 4; 
+  }
+
+  .flex-container {
+    flex-direction: column;
+    height: 90vh;
+  }
+
+  .search-input {
+    display: block;
+    float: right;
+    flex: 0 0 70%;
+
+  }
+  .location-btn {
+    position:absolute;
+    top: 43vh;
+    left: 10px;
+  }
+  
+  .search-text {
+    flex: 0 0 30%;
+    float: left;
+ 
+  }
+  
+  .search-div {
+    /* display: block; */
+    display: flex;
+    height: 30px;
+    margin: 10px;
+    justify-content:space-between
+  }
+
+  #form1 {
+    display: flex;
+    flex-direction: column;
+    width: 80vw;
+    float: left;
+  }
+
+ 
+
 }
