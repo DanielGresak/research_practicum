@@ -40,6 +40,14 @@ $(".vertical-menu a").click(function(){
 
 $(".dot-div").click(function(){
     $(".vertical-menu").animate({width: 'toggle'});
+    if ($(".vertical-menu a").hasClass("active")){
+        item_to_hide = $(".active").data("value") // Getting data value to know which app to hide
+        $("." + item_to_hide).hide(600, "swing")
+        $(".active").removeClass("active")
+        $(".appbar").animate({width: ['toggle']}); // Hiding appbar
+
+    }
+
 })
 
 
