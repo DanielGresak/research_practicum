@@ -69,8 +69,12 @@ html, main {
   vertical-align: middle;
 }
 
-.vertical-menu a:hover {
-  background-color: #ccc;
+@media screen and (min-width: 1000px) {
+  .vertical-menu a:hover {
+    background-color: #ccc;
+  }
+
+ 
 }
 
 .vertical-menu a.active {
@@ -109,7 +113,7 @@ html, main {
 }
 
 .busHeader{
-  font-size: -small;
+  font-size: small;
   color: #161;
   background-color: #ccc;
   width: 100%;
@@ -147,6 +151,12 @@ form {
   margin: 10px;
 }
 
+/* Weather CSS */
+
+.weather-icon {
+  color: white;
+
+}
 
 /* VERY RUDIMENTAL @MEDIA */
 @media screen and (max-width: 1000px) {
@@ -198,13 +208,20 @@ form {
     font-size: 2rem;
     vertical-align: middle;
   }
+  .vertical-menu a.active:hover {
+    color: white;
+  }
 
   .vertical-menu a {
     max-height: 11vh;
   }
 
+
   .dots {
     display: inline-block;
+    color: white;
+    padding-top: 33px;
+    padding-left: 10px;
   }
 
   .heading-text{
@@ -261,6 +278,7 @@ form {
     float: left;
   }
 
+ 
  
 
 }

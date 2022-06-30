@@ -16,6 +16,7 @@ $(".vertical-menu a").click(function(){
         item_clicked = $(this).data("value") // Getting data value to know which app to show
         $("." + item_clicked).hide()
     }
+    
     else {
         if ($(".vertical-menu a").hasClass("active")){ // If any of the icons are active (other than the one clicked)
             item_to_hide = $(".active").data("value") // Getting data value to know which app to hide
@@ -39,6 +40,7 @@ $(".vertical-menu a").click(function(){
 })
 
 $(".dot-div").click(function(){
+    
     $(".vertical-menu").animate({width: 'toggle'});
     if ($(".vertical-menu a").hasClass("active")){
         item_to_hide = $(".active").data("value") // Getting data value to know which app to hide
