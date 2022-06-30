@@ -3,6 +3,8 @@
 
 $(".appbar").hide(); // Hiding appbar on loading
 
+$(".app-bar-app").hide();
+
 $(".busInfo").hide();
 /* When an icon is clicked */
 
@@ -11,20 +13,27 @@ $(".vertical-menu a").click(function(){
     if ($(this).hasClass("active")){ // If the clicked item is highlighted
         $(this).removeClass("active") // unhighlight the item
         $(".appbar").animate({width: ['toggle']}); // Collapse or uncollapse the appbar
-
+        item_clicked = $(this).data("value") // Getting data value to know which app to show
+        $("." + item_clicked).hide()
     }
     else {
         if ($(".vertical-menu a").hasClass("active")){ // If any of the icons are active (other than the one clicked)
+            item_to_hide = $(".active").data("value") // Getting data value to know which app to hide
+            $("." + item_to_hide).hide(600, "swing")
             $(".vertical-menu a").removeClass("active"); // Unhighlight all icons
             // // check with team and remove if not liked
             // $(".appbar").animate({width: 'toggle'}); // Collapse or uncollapse the appbar
             // $(".appbar").animate({width: 'toggle'}); // Collapse or uncollapse the appbar
             $(this).toggleClass('active'); // Highlight this icon
+            item_clicked = $(this).data("value") // Getting data value to know which app to show
+            $("." + item_clicked).show(600, "swing")
         } 
         else {
             $(".vertical-menu a").removeClass("active"); 
             $(".appbar").animate({width: 'toggle'}); // Toggle appbar
             $(this).toggleClass('active'); // Make the clicked icon active
+            item_clicked = $(this).data("value") // Getting data value to know which app to show
+            $("." + item_clicked).show()
         }
     }
 })
