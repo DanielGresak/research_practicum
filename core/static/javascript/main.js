@@ -1,14 +1,15 @@
 
 /* dynamic main page component behaviour. */
 
-$(".appbar").hide(); // Hiding appbar on loading
+/* HIDING COMPONENTS ON LOAD */
+
+$(".appbar").hide(); 
 
 $(".app-bar-app").hide();
 
 $(".busInfo").hide();
-/* When an icon is clicked */
 
-
+/* TOOLBAR CLICK FUNCTIONALITY */
 $(".vertical-menu a").click(function(){
     if ($(this).hasClass("active")){ // If the clicked item is highlighted
         $(this).removeClass("active") // unhighlight the item
@@ -22,9 +23,6 @@ $(".vertical-menu a").click(function(){
             item_to_hide = $(".active").data("value") // Getting data value to know which app to hide
             $("." + item_to_hide).hide(600, "swing")
             $(".vertical-menu a").removeClass("active"); // Unhighlight all icons
-            // // check with team and remove if not liked
-            // $(".appbar").animate({width: 'toggle'}); // Collapse or uncollapse the appbar
-            // $(".appbar").animate({width: 'toggle'}); // Collapse or uncollapse the appbar
             $(this).toggleClass('active'); // Highlight this icon
             item_clicked = $(this).data("value") // Getting data value to know which app to show
             $("." + item_clicked).show(600, "swing")
@@ -39,8 +37,9 @@ $(".vertical-menu a").click(function(){
     }
 })
 
-$(".dot-div").click(function(){
-    
+/* HAMBURGER BUTTON FUNCTIONALITY - MOBILE */
+
+$(".dot-div").click(function(){    
     $(".vertical-menu").animate({width: 'toggle'});
     if ($(".vertical-menu a").hasClass("active")){
         item_to_hide = $(".active").data("value") // Getting data value to know which app to hide
@@ -52,11 +51,9 @@ $(".dot-div").click(function(){
 
 })
 
-
+/* MAP RENDERING */
 
 let map;
-//var apikey = 'https://maps.googleapis.com/maps/api/directions/json?origin=Disneyland&destination=Universal+Studios+Hollywood&key=AIzaSyBEulkjFc2UqiZiYyTqCTeYBG_BvpzI4ek';
-
 
 function initMap() {
     var directionsService = new google.maps.DirectionsService();
@@ -92,6 +89,8 @@ function initMap() {
     });
     
 }
+
+/* DIRECTIONS FUNCTIONALITY */
 
 // the function that renders all the routes on the map.
 // parameter: result, the parameter from the directionsService.route()
@@ -240,7 +239,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
 window.initMap = initMap;
 
 
-
+/* GET CURRENT LOCATION FUNCTIONALITY */
 
 function getLocation() {
   if (navigator.geolocation) {
