@@ -17,6 +17,7 @@ html, main {
 }
 
 /* Header/logo area CSS */
+
 .heading {
   width: 100vw;
   height: 15vh;
@@ -29,7 +30,6 @@ html, main {
   font-weight: 600;
   padding: 25px;
   display: inline-block;
-  /* float: left; */
 }
 
 .dot-div {
@@ -56,7 +56,6 @@ html, main {
 .vertical-menu a {
   background-color: #eee; 
   color: black; 
-  /* display: block;  */
   padding: 12px; 
   text-decoration: none; 
   text-align: center;
@@ -73,8 +72,6 @@ html, main {
   .vertical-menu a:hover {
     background-color: #ccc;
   }
-
- 
 }
 
 .vertical-menu a.active {
@@ -155,37 +152,34 @@ form {
 
 .weather-icon {
   color: white;
-
 }
 
-/* VERY RUDIMENTAL @MEDIA */
+/* MOBILE WEBSITE */
+
 @media screen and (max-width: 1000px) {
-
-
-  .appbar {
-    width: 80vw;
-    height: 90vh;
-    z-index: 1;
-    position: absolute;
-  }
-
   .heading {
     height: 10vh;
   }
 
-  .searchbar {
-    /* height: 45vw; */
-    
+  .heading-text{
+    font-family: 'Indie Flower', cursive;
+    color: white;
+    font-weight: 300;
+    padding: 10px;
+    padding-top: 20px;
+    display: inline-block;
+    font-size: x-large;
+  }
+
+  .searchbar {  
     width: 100vw;
     background-color: whitesmoke;
   }
 
   .vertical-menu {
     width: 20vw;
-    /* position: absolute; */
     position: fixed;
     right: 0%;
-    /* left: 80vw; */
     height: 100vh;
     z-index: 2;
     background-color:  #eee;
@@ -201,13 +195,13 @@ form {
     width: 100vw;
     position: fixed !important; 
     bottom:0%;
-   
   }
 
   .vertical-menu a i {
     font-size: 2rem;
     vertical-align: middle;
   }
+
   .vertical-menu a.active:hover {
     color: white;
   }
@@ -216,7 +210,6 @@ form {
     max-height: 11vh;
   }
 
-
   .dots {
     display: inline-block;
     color: white;
@@ -224,17 +217,6 @@ form {
     padding-left: 10px;
   }
 
-  .heading-text{
-    font-family: 'Indie Flower', cursive;
-    color: white;
-    font-weight: 300;
-    padding: 10px;
-    padding-top: 20px;
-    display: inline-block;
-    font-size: x-large;
-    /* float: left; */
-  }
-  
   .flex-item:nth-of-type(2) { 
     order: 4; 
   }
@@ -248,23 +230,27 @@ form {
     display: block;
     float: right;
     flex: 0 0 70%;
-
   }
+
+  .appbar {
+    width: 80vw;
+    height: 90vh;
+    z-index: 1;
+    position: absolute;
+  }
+
   .location-btn {
     position:absolute;
     top: 43vh;
     left: 10px;
-    
   }
   
   .search-text {
     flex: 0 0 30%;
     float: left;
- 
   }
   
   .search-div {
-    /* display: block; */
     display: flex;
     height: 30px;
     margin: 10px;
@@ -278,13 +264,8 @@ form {
     float: left;
   }
 
-
   .oneBus {
     width: 35%;
     float: left;
   }
-
- 
- 
-
 }
