@@ -3,11 +3,13 @@ html, main {
     width: 100%;
     margin: 0;
     padding: 0;
+    font-family: 'Indie Flower', cursive;
+    font-weight: 900;
   }
   
 #map {
-    height: 650px;
-    width: 900px;
+  height: 85vh;
+  width: 65vw;
   }
   
 .flex-container {
@@ -16,71 +18,102 @@ html, main {
 
 /* Header/logo area CSS */
 .heading {
-  width: 100%;
-  height: 100px;
+  width: 100vw;
+  height: 15vh;
   background-color: rgb(73, 73, 73);
+}
+
+.heading-text{
+  font-family: 'Indie Flower', cursive;
+  color: white;
+  font-weight: 600;
+  padding: 25px;
+  display: inline-block;
+  /* float: left; */
+}
+
+.dot-div {
+  float: right;
+  width: 15vw;
+  height: 15vh;
+  
+}
+
+.dots {
+  display: none;
 }
 
 /* Toolbar CSS */
 
 .vertical-menu {
-  width: 150px;
-  height: 800px;
+  display: flex;
+  flex-direction:column;
+  align-items:stretch;
+  height: 85vh;
+  width: 8vw;
 }
 
 .vertical-menu a {
   background-color: #eee; 
   color: black; 
-  display: block; 
+  /* display: block;  */
   padding: 12px; 
   text-decoration: none; 
   text-align: center;
+  flex: 1;
 }
 
 .vertical-menu a i {
-  font-size: 4em;
-  padding-bottom: 0.5em;
-  padding-top: 0.2em;
+  font-size: xx-large;
+  line-height: 12vh;
+  vertical-align: middle;
 }
 
-.vertical-menu a:hover {
-  background-color: #ccc;
+@media screen and (min-width: 1000px) {
+  .vertical-menu a:hover {
+    background-color: #ccc;
+  }
+
+ 
 }
 
 .vertical-menu a.active {
-  background-color: #0f04aa; 
+  background-color: black; 
   color: white;
 }
 
 /* Appbar CSS */
 
 .appbar {
-  height: 650px;
-  width: 300px;
+  height: 85vh;
+  width: 30vw;
   background-color: darkgrey;
+  margin: 0;
+  padding: 0;
 }
 
 /* Searchbar CSS */
 
 .searchbar {
-  height: 650px;
-  width: 300px;
+  height: 85vh;
+  width: 30vw;
   background-color: whitesmoke;
 }
 .busInfo{
+  padding: 10px;
   display: none;
-  height: 650px;
-  width: 300px;
+  height: 85vh;
+  width: 30vw;
   background-color: whitesmoke;
 }
 .oneBus{
-  font-size:xx-small;
+  font-size:x-small;
   margin: 2px 5px 2px 5px;
   border:1px solid #ccc;
 }
 
 .busHeader{
-  font-size: x-small;
+  font-size: small;
   color: #161;
   background-color: #ccc;
   width: 100%;
@@ -103,9 +136,155 @@ margin: 4px;
 }
 
 form {
+    padding: 15px;
     display: inline-block;
     margin-left: auto;
     margin-right: auto;
     text-align: left;
 }
 
+.form-btn {
+  margin-left: 15px;
+}
+
+.location-btn {
+  margin: 10px;
+}
+
+/* Weather CSS */
+
+.weather-icon {
+  color: white;
+
+}
+
+/* VERY RUDIMENTAL @MEDIA */
+@media screen and (max-width: 1000px) {
+
+
+  .appbar {
+    width: 80vw;
+    height: 90vh;
+    z-index: 1;
+    position: absolute;
+  }
+
+  .heading {
+    height: 10vh;
+  }
+
+  .searchbar {
+    /* height: 45vw; */
+    
+    width: 100vw;
+    background-color: whitesmoke;
+  }
+
+  .vertical-menu {
+    width: 20vw;
+    /* position: absolute; */
+    position: fixed;
+    right: 0%;
+    /* left: 80vw; */
+    height: 100vh;
+    z-index: 2;
+    background-color:  #eee;
+  }
+
+  .busInfo {
+    height: 45vh;
+    width: 100vw;
+  }
+
+  #map {
+    height: 45vh;
+    width: 100vw;
+    position: fixed !important; 
+    bottom:0%;
+   
+  }
+
+  .vertical-menu a i {
+    font-size: 2rem;
+    vertical-align: middle;
+  }
+  .vertical-menu a.active:hover {
+    color: white;
+  }
+
+  .vertical-menu a {
+    max-height: 11vh;
+  }
+
+
+  .dots {
+    display: inline-block;
+    color: white;
+    padding-top: 26px;
+    padding-left: 10px;
+  }
+
+  .heading-text{
+    font-family: 'Indie Flower', cursive;
+    color: white;
+    font-weight: 300;
+    padding: 10px;
+    padding-top: 20px;
+    display: inline-block;
+    font-size: x-large;
+    /* float: left; */
+  }
+  
+  .flex-item:nth-of-type(2) { 
+    order: 4; 
+  }
+
+  .flex-container {
+    flex-direction: column;
+    height: 90vh;
+  }
+
+  .search-input {
+    display: block;
+    float: right;
+    flex: 0 0 70%;
+
+  }
+  .location-btn {
+    position:absolute;
+    top: 43vh;
+    left: 10px;
+    
+  }
+  
+  .search-text {
+    flex: 0 0 30%;
+    float: left;
+ 
+  }
+  
+  .search-div {
+    /* display: block; */
+    display: flex;
+    height: 30px;
+    margin: 10px;
+    justify-content:space-between
+  }
+
+  #form1 {
+    display: flex;
+    flex-direction: column;
+    width: 80vw;
+    float: left;
+  }
+
+
+  .oneBus {
+    width: 35%;
+    float: left;
+  }
+
+ 
+ 
+
+}
