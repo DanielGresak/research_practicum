@@ -84,14 +84,14 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
 
-    "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": os.environ.get("DATABASE_NAME"),
-        "USER": os.environ.get("DATABASE_USER"),
-        "PASSWORD": os.environ.get("DATABASE_PASSWORD"),
-        "HOST": "comp47360db.cfvnihyewvd4.eu-west-1.rds.amazonaws.com",
-        "PORT": "3306"
-        }
+    # "default": {
+    #     "ENGINE": "django.db.backends.mysql",
+    #     "NAME": os.environ.get("DATABASE_NAME"),
+    #     "USER": os.environ.get("DATABASE_USER"),
+    #     "PASSWORD": os.environ.get("DATABASE_PASSWORD"),
+    #     "HOST": "comp47360db.cfvnihyewvd4.eu-west-1.rds.amazonaws.com",
+    #     "PORT": "3306"
+    #     }
 }
 
 

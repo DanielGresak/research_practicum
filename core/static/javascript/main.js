@@ -3,6 +3,9 @@
 
 $(".appbar").hide(); // Hiding appbar on loading
 
+$(".app-bar-app").hide();
+
+$(".busInfo").hide();
 /* When an icon is clicked */
 
 
@@ -10,23 +13,46 @@ $(".vertical-menu a").click(function(){
     if ($(this).hasClass("active")){ // If the clicked item is highlighted
         $(this).removeClass("active") // unhighlight the item
         $(".appbar").animate({width: ['toggle']}); // Collapse or uncollapse the appbar
-
+        item_clicked = $(this).data("value") // Getting data value to know which app to show
+        $("." + item_clicked).hide()
     }
+    
     else {
         if ($(".vertical-menu a").hasClass("active")){ // If any of the icons are active (other than the one clicked)
+            item_to_hide = $(".active").data("value") // Getting data value to know which app to hide
+            $("." + item_to_hide).hide(600, "swing")
             $(".vertical-menu a").removeClass("active"); // Unhighlight all icons
             // // check with team and remove if not liked
             // $(".appbar").animate({width: 'toggle'}); // Collapse or uncollapse the appbar
             // $(".appbar").animate({width: 'toggle'}); // Collapse or uncollapse the appbar
             $(this).toggleClass('active'); // Highlight this icon
+            item_clicked = $(this).data("value") // Getting data value to know which app to show
+            $("." + item_clicked).show(600, "swing")
         } 
         else {
             $(".vertical-menu a").removeClass("active"); 
             $(".appbar").animate({width: 'toggle'}); // Toggle appbar
             $(this).toggleClass('active'); // Make the clicked icon active
+            item_clicked = $(this).data("value") // Getting data value to know which app to show
+            $("." + item_clicked).show()
         }
     }
 })
+
+$(".dot-div").click(function(){
+    
+    $(".vertical-menu").animate({width: 'toggle'});
+    if ($(".vertical-menu a").hasClass("active")){
+        item_to_hide = $(".active").data("value") // Getting data value to know which app to hide
+        $("." + item_to_hide).hide(600, "swing")
+        $(".active").removeClass("active")
+        $(".appbar").animate({width: ['toggle']}); // Hiding appbar
+
+    }
+
+})
+
+
 
 let map;
 //var apikey = 'https://maps.googleapis.com/maps/api/directions/json?origin=Disneyland&destination=Universal+Studios+Hollywood&key=AIzaSyBEulkjFc2UqiZiYyTqCTeYBG_BvpzI4ek';
@@ -144,7 +170,8 @@ function calcRoute(directionsService, directionsRenderer, map) {
 
             // total number of possible routes
             var totalNumberOfRoutes = result["routes"].length// total number of routes
-
+            $(".busInfo").show();
+            $(".searchbar").hide();
         
             for(let route = 0; route < totalNumberOfRoutes; route++){
                 var busRoutes = getBusInfo(result["routes"][route]); // the bus number and arriving time pair(directionary)
@@ -172,8 +199,10 @@ function calcRoute(directionsService, directionsRenderer, map) {
                     directionRenderers[stroke].setOptions({map:null});
                 }// clear the previous map render
                 $(".busInfo").empty();//clear all the child element, so user can search again
-                $(".busInfo").css("display", "none");// hide the info bar
+                // $(".busInfo").css("display", "none");// hide the info bar
                 $(".searchbar").css("display", "block");//show the searchbar
+                $(".busInfo").hide();
+                $(".searchbar").show();
             });
 
             // when click on a bus info window, extract the route index and only display the according route on the map
