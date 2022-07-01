@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import os
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,7 +21,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', 'changeme')
+SECRET_KEY = os.getenv('SECRET_KEY', 'changeme')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(int(os.environ.get('DEBUG', 0)))
@@ -38,14 +40,15 @@ if ALLOWED_HOSTS_ENV:
 # Application definition
 
 INSTALLED_APPS = [
-    'routes',
-    'core',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'routes',
+    'core',
+    'weather.apps.WeatherConfig', # We explictely define our customised app configuration because it includes our interval background updater
 ]
 
 MIDDLEWARE = [
@@ -83,15 +86,14 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
-
-    # "default": {
-    #     "ENGINE": "django.db.backends.mysql",
-    #     "NAME": os.environ.get("DATABASE_NAME"),
-    #     "USER": os.environ.get("DATABASE_USER"),
-    #     "PASSWORD": os.environ.get("DATABASE_PASSWORD"),
-    #     "HOST": "comp47360db.cfvnihyewvd4.eu-west-1.rds.amazonaws.com",
-    #     "PORT": "3306"
-    #     }
+    "default": {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": os.environ.get("DATABASE_NAME"),
+        "USER": os.environ.get("DATABASE_USER"),
+        "PASSWORD": os.environ.get("DATABASE_PASSWORD"),
+        "HOST": "comp47360db.cfvnihyewvd4.eu-west-1.rds.amazonaws.com",
+        "PORT": "3306"
+        }
 }
 
 
