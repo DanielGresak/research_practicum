@@ -4,8 +4,10 @@ from datetime import datetime
 
 # Create your models here.
 class Forecast(models.Model):
-    # Timestamp - Use local timestamp instead provided timestamp from openWeather.com
-    dt = models.DateTimeField(auto_now_add=True) 
+    # Timestamp - Time of data forecasted, unix, UTC 
+    dt = models.DateTimeField() 
+    # Timestamp text - Timestamp as string "yyyy-mm-dd hh:mm:ss"
+    dt_txt = models.CharField(max_length=50)
     # Temperature
     temp = models.FloatField(default=0.0)
     # Min. temperature
