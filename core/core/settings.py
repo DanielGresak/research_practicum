@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'routes',
     'core',
     'weather.apps.WeatherConfig', # We explictely define our customised app configuration because it includes our interval background updater
+    'carbonCalculator',
 ]
 
 MIDDLEWARE = [

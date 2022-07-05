@@ -188,6 +188,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
                                         <p class = 'busDetail' id = 'totalTravelTime'>Total travel time:</p>\
                                         <p class = 'busDetail' id = 'busFare'>Bus fare:</p>\
                                         <p class = 'busDetail' id = 'carbonEmissionSaved'>Carbon emission saved:</p>\
+                                        <button onclick='postCO2(" + 1 +")'>Add to emisions</button>\
                                     </div>")
             }
             //add a back button, go back to the search bar
@@ -254,4 +255,19 @@ function showPosition(position) {
   "Longitude: " + position.coords.longitude);
     var position = position.coords.latitude + ", " + position.coords.longitude;
   $("#search_start").val(position);
+}
+
+
+/* GETTING UP TO DATE CO2 INFORMATION */
+$.get("http://localhost:8000/carbon/get/", function(data, status){
+    $(".co2-saved").text(data["co2_saved"])
+})
+
+function postCO2(toAdd){
+    $.post("http://localhost:8000/carbon/", {'value': toAdd}).done(function(response){
+        alert("Your trip has been added to your emmisions saved")
+    })
+    $.get("http://localhost:8000/carbon/get/", function(data, status){
+    $(".co2-saved").text(data["co2_saved"])
+})
 }
