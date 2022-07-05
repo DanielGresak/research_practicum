@@ -5,9 +5,9 @@ from datetime import datetime
 # Create your models here.
 class Forecast(models.Model):
     # Timestamp - Time of data forecasted, unix, UTC 
-    dt = models.DateTimeField() 
+    dt = models.BigIntegerField() 
     # Timestamp text - Timestamp as string "yyyy-mm-dd hh:mm:ss"
-    dt_txt = models.CharField(max_length=50)
+    dt_txt = models.CharField(max_length=50, default="")
     # Temperature
     temp = models.FloatField(default=0.0)
     # Min. temperature
