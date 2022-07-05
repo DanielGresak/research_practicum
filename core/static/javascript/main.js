@@ -119,19 +119,28 @@ function renderDirections(result, gmap){
 // in case of transfering, the key and value will be an array(more than one buses)
 // routes is from result["routes"][index]
 function getBusInfo(routes){
+    var busInfo = []
     var busRoutes = {};
     var routeNumber = [];
     var arrivingTime = [];
     var steps = routes["legs"][0]["steps"];
     var numberSteps = steps.length;
+    var meters = 0
     for (let i = 0; i < numberSteps; i++){
         if (steps[i]["transit"] !== undefined){// find the step for the bus instead of working
             routeNumber.push(steps[i]["transit"]["line"]["short_name"]);
             arrivingTime.push(steps[i]["transit"]["arrival_time"]["text"]);
+            meters += steps[i]["distance"]["value"]
         }
     }
+    
+    // busRoutes["distance"] = meters
     busRoutes[routeNumber] = arrivingTime;
-    return busRoutes;
+    busInfo.push(busRoutes);
+    
+    busInfo.push({distance: meters})
+    console.log(busInfo);
+    return busInfo;
 }
 
 
@@ -171,9 +180,12 @@ function calcRoute(directionsService, directionsRenderer, map) {
             var totalNumberOfRoutes = result["routes"].length// total number of routes
             $(".busInfo").show();
             $(".searchbar").hide();
-        
+            
             for(let route = 0; route < totalNumberOfRoutes; route++){
-                var busRoutes = getBusInfo(result["routes"][route]); // the bus number and arriving time pair(directionary)
+                console.log(result)
+                var info = getBusInfo(result["routes"][route]);
+                var busRoutes = info[0] // the bus number and arriving time pair(directionary)
+                var distance = info[1]["distance"]
                 var busNumber = Object.keys(busRoutes); // bus number
                 var arrivingTime = busRoutes[busNumber];// arriving time of this bus
                 var busNumString = "";
@@ -188,7 +200,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
                                         <p class = 'busDetail' id = 'totalTravelTime'>Total travel time:</p>\
                                         <p class = 'busDetail' id = 'busFare'>Bus fare:</p>\
                                         <p class = 'busDetail' id = 'carbonEmissionSaved'>Carbon emission saved:</p>\
-                                        <button onclick='postCO2(" + 1 +")'>Add to emisions</button>\
+                                        <button onclick='postCO2(" + distance +")'>Add to emisions</button>\
                                     </div>")
             }
             //add a back button, go back to the search bar
@@ -263,11 +275,14 @@ $.get("http://localhost:8000/carbon/get/", function(data, status){
     $(".co2-saved").text(data["co2_saved"])
 })
 
+/* FUNCTION FOR POST REQUEST TO ADD CO2 INFORMATION */
 function postCO2(toAdd){
     $.post("http://localhost:8000/carbon/", {'value': toAdd}).done(function(response){
         alert("Your trip has been added to your emmisions saved")
+    }).then(function(){
+        $.get("http://localhost:8000/carbon/get/", function(data, status){
+        $(".co2-saved").text(data["co2_saved"])
+    
+        })
     })
-    $.get("http://localhost:8000/carbon/get/", function(data, status){
-    $(".co2-saved").text(data["co2_saved"])
-})
 }
