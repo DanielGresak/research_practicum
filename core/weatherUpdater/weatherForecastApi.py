@@ -56,7 +56,7 @@ def update_weather_forecast():
             # For each entity create a dictionary and store the extraxt values that are desired
             entity_dict = {}
             entity_dict["dt"] = entity["dt"] # datetime as integer in UTC format (seconds) 
-            entity_dict["dt_text"] = entity["dt_txt"] # datetime as string
+            entity_dict["dt_txt"] = entity["dt_txt"] # datetime as string
             entity_dict["temp"] = entity["main"]["temp"]
             entity_dict["temp_min"] = entity["main"]["temp_min"]
             entity_dict["temp_max"] = entity["main"]["temp_max"]
@@ -74,10 +74,14 @@ def update_weather_forecast():
 
             # Update object in database if it already exists, otherwise create a new one
             # It 'dt' - timestamp - already exists, then udpate with object with the latest forecast information 
+
+            # print("Printing dict ", i, "\n", entity_dict)
             obj, created = Forecast.objects.update_or_create(
                 dt=entity_dict["dt"], defaults=entity_dict)
+
             # Returns a tuple of (object, created), 
             # where object is the created or updated object and created is a boolean specifying whether a new object was created.
+
             print("Object:", obj) # 
             print("Object was created:", created)
 
