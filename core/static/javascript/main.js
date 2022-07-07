@@ -308,6 +308,11 @@ $("#login-button").click(function(){
         encode: true,
         success: function(msg) {
             alert("Logged In" + msg)
+        },
+        "statusCode": {
+            401: function (xhr, error, thrown) {
+              alert("Email or Password Incorrect")
+            }
         }
     }).then(function(){
         $(".logout").show()
@@ -328,6 +333,11 @@ $("#register-button").click(function(){
         encode: true,
         success: function(msg) {
             alert("register" + msg)
+        },
+        "statusCode": {
+            401: function (xhr, error, thrown) {
+              alert("Email already exists on our system and password is incorrect.")
+            }
         }
     }).then(function(){
         $(".logout").show()
@@ -343,7 +353,8 @@ $("#logout-button").click(function(){
         dataType: 'json',
         success: function(msg) {
             alert("logged out" + msg)
-        }
+        },
+        
     }).then(function(){
         $(".logout").hide()
         $(".login").show()

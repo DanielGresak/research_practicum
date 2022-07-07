@@ -154,6 +154,14 @@ form {
   color: white;
 }
 
+
+/* Auth CSS */
+
+.btn-auth-change {
+  float: right;
+  margin-right: 3vw;
+}
+
 /* MOBILE WEBSITE */
 
 @media screen and (max-width: 1000px) {
