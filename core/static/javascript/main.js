@@ -283,10 +283,10 @@ $.get("http://localhost:8000/carbon/get/", function(data, status){
 
 /* FUNCTION FOR POST REQUEST TO ADD CO2 INFORMATION */
 function postCO2(toAdd){
-    $.post("http://localhost:8000/carbon/", {'value': toAdd}).done(function(response){
+    $.post("carbon/", {'value': toAdd}).done(function(response){
         alert("Your trip has been added to your emmisions saved")
     }).then(function(){
-        $.get("http://localhost:8000/carbon/get/", function(data, status){
+        $.get("carbon/get/", function(data, status){
         $(".co2-saved").text(data["co2_saved"])
     
         })
