@@ -1,6 +1,9 @@
-<div class="app-bar-app weather">
-<h1 style="text-align:center;color:white;"> It's probably raining. </h1>
+{% load static %}
 
+<div class="app-bar-app weather">
+<h1 style="text-align:center;color:white;">Weather Forecast</h1>
+
+<!--
 <i class="fa-solid fa-sun weather-icon fa-3x"></i>
 <i class="fa-solid fa-cloud weather-icon fa-3x"></i>
 <i class="fa-solid fa-cloud-rain weather-icon fa-3x"></i>
@@ -9,6 +12,26 @@
 <i class="fa-solid fa-cloud-sun weather-icon fa-3x"></i>
 <i class="fa-solid fa-poo-storm weather-icon fa-3x"></i>
 <i class="fa-solid fa-smog weather-icon fa-3x"></i>
+-->
 
+<table id="forecast-table"></table>
 
 </div>
+
+{% block javascript %}
+<script src="{% static 'weather/javascript/weather.js' %}"></script>
+<script>
+    $(document).ready(function (){
+
+        console.log("javascript is being executed...")
+
+        const URL = "{% url 'ajax_forecast' %}";
+
+        getForecast(URL);
+
+    });
+</script>
+
+{% endblock javascript %}
+
+

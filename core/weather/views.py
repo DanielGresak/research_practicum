@@ -15,7 +15,7 @@ def forecaset_models_json(request):
     """Weather forecast API that returns the forecast as JSON"""
 
     # Get a QuerySet of dictionaries according to the provided values
-    query_set = Forecast.objects.all().values("dt", "dt_text", "temp", "temp_min", "temp_max", "weather_main", "weather_icon", "pop")
+    query_set = Forecast.objects.all().values("dt", "dt_txt", "temp", "temp_min", "temp_max", "weather_main", "weather_icon", "pop")
 
     # Convert the QuerySet to a list of dictionaries
     forecast_list = list(query_set)
