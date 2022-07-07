@@ -76,7 +76,7 @@ docker-compose up -d
 Then run:
 
 ```
-docker exec -ti researchpracticum-app-1 sh -c "python manage.py test"
+docker exec -ti researchpracticum_app_1 sh -c "python manage.py test"
 ```
 
 ## Django Extension in VS-Code

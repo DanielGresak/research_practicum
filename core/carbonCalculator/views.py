@@ -16,6 +16,8 @@ this is based in the UK so would obviously need to be taken with a grain of salt
 a caviat on the page too.
 https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2019
 Here is the study on this.
+
+calculation is based off average car and local bus under transport land work.
 """
 
 @csrf_exempt
@@ -23,15 +25,17 @@ def CarbonCalculator(request):
     if request.method == 'POST':
         distance = int(request.POST.get('value', False))
 
-        saved = calculate(distance)
+        saved_emissions = calculate_emissions(distance)
 
         print(request.POST)
         if 'co2' in request.session:
-            request.session['co2'] += saved 
+            request.session['co2'] += saved_emissions 
         else:
-            request.session['co2'] = saved
+            #Set session expiry to 50 years
+            request.session.set_expiry(1576800000)
+            request.session['co2'] = saved_emissions
     else:
-        raise BadRequest('Invalid request.')
+        raise BadRequest('Invalid request. Request must be post.')
     return HttpResponse(status=204)
 
 
@@ -47,6 +51,6 @@ def ReturningCarbonData(request):
 
     return JsonResponse(responseData)
 
-def calculate(distance):
+def calculate_emissions(distance):
     saved = int(98 * (distance / 1000))
     return saved

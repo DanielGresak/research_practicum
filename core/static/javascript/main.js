@@ -272,7 +272,7 @@ function showPosition(position) {
 
 /* GETTING UP TO DATE CO2 INFORMATION */
 $.get("http://localhost:8000/carbon/get/", function(data, status){
-    $(".co2-saved").text(data["co2_saved"])
+    $(".co2-saved").text(data["co2_saved"] + " grams of co2.")
 })
 
 /* FUNCTION FOR POST REQUEST TO ADD CO2 INFORMATION */
