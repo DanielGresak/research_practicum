@@ -9,6 +9,12 @@ $(".app-bar-app").hide();
 
 $(".busInfo").hide();
 
+// $(".regsiter").hide();
+
+$(".login").hide();
+
+$(".logout").hide();
+
 /* TOOLBAR CLICK FUNCTIONALITY */
 $(".vertical-menu a").click(function(){
     if ($(this).hasClass("active")){ // If the clicked item is highlighted
@@ -286,3 +292,71 @@ function postCO2(toAdd){
         })
     })
 }
+
+/* AUTHENTICATION */
+
+$("#login-button").click(function(){
+    var registerData = {
+        userEmail: $("#register-email").val(),
+        userPassword: $("#register-password").val()
+    }
+    $.ajax({
+        type: "POST",
+        url: "login",
+        data: registerData,
+        dataType: "json",
+        encode: true,
+        success: function(msg) {
+            alert("Logged In" + msg)
+        }
+    }).then(function(){
+        $(".logout").show()
+        $(".login").hide()
+    })
+})
+
+$("#register-button").click(function(){
+    var registerData = {
+        userEmail: $("#register-email").val(),
+        userPassword: $("#register-password").val()
+    }
+    $.ajax({
+        type: "POST",
+        url: "register",
+        data: registerData,
+        dataType: "json",
+        encode: true,
+        success: function(msg) {
+            alert("register" + msg)
+        }
+    }).then(function(){
+        $(".logout").show()
+        $(".register").hide()
+    })
+})
+
+$("#logout-button").click(function(){
+    console.log("clicked")
+    $.ajax({
+        type: "GET",
+        url: "logout",
+        dataType: 'json',
+        success: function(msg) {
+            alert("logged out" + msg)
+        }
+    }).then(function(){
+        $(".logout").hide()
+        $(".login").show()
+    })
+})
+
+$("#login-to-reg").click(function(){
+    $(".register").show()
+    $(".login").hide()
+})
+
+
+$("#reg-to-login").click(function(){
+    $(".register").hide()
+    $(".login").show()
+})

@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'core',
     'weather.apps.WeatherConfig', # We explictely define our customised app configuration because it includes our interval background updater
     'carbonCalculator',
+    "users",
 ]
 
 MIDDLEWARE = [
