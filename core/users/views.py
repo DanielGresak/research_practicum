@@ -12,8 +12,9 @@ def registerUser(request):
         user_email = request.POST.get("userEmail")
         user_password = request.POST.get("userPassword")
         if username_exists(user_email):
-            user = authenticate(email=user_email, username=user_email, password=user_password)
-            if user is not None:
+            user = authenticate(request, username=user_email, password=user_password)
+            if user is not None and user.is_authenticated:
+                login(request, user)
                 return HttpResponse(status=204)
             else:
                 return HttpResponse(status=401)
@@ -27,7 +28,9 @@ def loginUser(request):
     if request.method == 'POST':
         user_email = request.POST.get("userEmail")
         user_password = request.POST.get("userPassword")
-        user = authenticate(email=user_email, username=user_email, password=user_password)
+        user = authenticate(request, username=user_email, password=user_password)
+        if request.user.is_authenticated:
+            return HttpResponse(status=401)
         if user is not None and user.is_authenticated:
             
             login(request, user)
@@ -40,6 +43,7 @@ def loginUser(request):
 def logoutUser(request):
     
     logout(request)
+    
     return HttpResponse(status=204)
 
 def username_exists(username):

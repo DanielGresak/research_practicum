@@ -297,8 +297,8 @@ function postCO2(toAdd){
 
 $("#login-button").click(function(){
     var registerData = {
-        userEmail: $("#register-email").val(),
-        userPassword: $("#register-password").val()
+        userEmail: $("#login-email").val(),
+        userPassword: $("#login-password").val()
     }
     $.ajax({
         type: "POST",
