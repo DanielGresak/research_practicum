@@ -8,6 +8,7 @@
     <link rel="stylesheet" href= "{% static 'core/css/styles.css' %}">
 {% endblock css %}
 
+<div class="flex-container">
 {% block appbar %}
     {% include 'include/appbar.html' %}
 {% endblock appbar %}
@@ -25,12 +26,15 @@
 {% endblock busInfobar %}
 
 {% block map %}
-<div class="flex-container">
+<div id="map">
+
+</div>
+
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_KEY }}&callback=initMap&v=weekly&v=weekly&libraries=geometry&libraries=places">
 
 </script>
-</div>
-<div id="map"></div>
+
+
 
 {% endblock map %}

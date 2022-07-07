@@ -1,44 +1,76 @@
 
 /* dynamic main page component behaviour. */
 
-$(".appbar").hide(); // Hiding appbar on loading
+/* HIDING COMPONENTS ON LOAD */
 
-/* When an icon is clicked */
+$(".appbar").hide(); 
 
+$(".app-bar-app").hide();
 
+$(".busInfo").hide();
+
+/* TOOLBAR CLICK FUNCTIONALITY */
 $(".vertical-menu a").click(function(){
     if ($(this).hasClass("active")){ // If the clicked item is highlighted
         $(this).removeClass("active") // unhighlight the item
         $(".appbar").animate({width: ['toggle']}); // Collapse or uncollapse the appbar
-
+        item_clicked = $(this).data("value") // Getting data value to know which app to show
+        $("." + item_clicked).hide()
     }
+    
     else {
         if ($(".vertical-menu a").hasClass("active")){ // If any of the icons are active (other than the one clicked)
+            item_to_hide = $(".active").data("value") // Getting data value to know which app to hide
+            $("." + item_to_hide).hide(600, "swing")
             $(".vertical-menu a").removeClass("active"); // Unhighlight all icons
-            // // check with team and remove if not liked
-            // $(".appbar").animate({width: 'toggle'}); // Collapse or uncollapse the appbar
-            // $(".appbar").animate({width: 'toggle'}); // Collapse or uncollapse the appbar
             $(this).toggleClass('active'); // Highlight this icon
+            item_clicked = $(this).data("value") // Getting data value to know which app to show
+            $("." + item_clicked).show(600, "swing")
         } 
         else {
             $(".vertical-menu a").removeClass("active"); 
             $(".appbar").animate({width: 'toggle'}); // Toggle appbar
             $(this).toggleClass('active'); // Make the clicked icon active
+            item_clicked = $(this).data("value") // Getting data value to know which app to show
+            $("." + item_clicked).show()
         }
     }
 })
 
-let map;
-//var apikey = 'https://maps.googleapis.com/maps/api/directions/json?origin=Disneyland&destination=Universal+Studios+Hollywood&key=AIzaSyBEulkjFc2UqiZiYyTqCTeYBG_BvpzI4ek';
+/* HAMBURGER BUTTON FUNCTIONALITY - MOBILE */
 
+$(".dot-div").click(function(){    
+    $(".vertical-menu").animate({width: 'toggle'});
+    if ($(".vertical-menu a").hasClass("active")){
+        item_to_hide = $(".active").data("value") // Getting data value to know which app to hide
+        $("." + item_to_hide).hide(600, "swing")
+        $(".active").removeClass("active")
+        $(".appbar").animate({width: ['toggle']}); // Hiding appbar
+
+    }
+
+})
+
+/* MAP RENDERING */
+
+let map;
 
 function initMap() {
     var directionsService = new google.maps.DirectionsService();
     var directionsRenderer = new google.maps.DirectionsRenderer();
     // create autocomplete objects for all input
+    var dublinBounds = new google.maps.LatLngBounds(
+        new google.maps.LatLng(53.271937, -6.409767),
+        new google.maps.LatLng(53.406819, -6.063698)
+    );
+    //options to restrict api to only dublin city
     var options = {
-        types: ['(cities)']
-    }
+    bounds: dublinBounds,
+    types: ["geocode"],
+    componentRestrictions: { country: "ie" },
+    strictBounds: true,
+    };
+
     var input1 = document.getElementById('search_start')
     var autocomplete1 = new google.maps.places.Autocomplete(input1, options)
 
@@ -57,6 +89,8 @@ function initMap() {
     });
     
 }
+
+/* DIRECTIONS FUNCTIONALITY */
 
 // the function that renders all the routes on the map.
 // parameter: result, the parameter from the directionsService.route()
@@ -135,7 +169,8 @@ function calcRoute(directionsService, directionsRenderer, map) {
 
             // total number of possible routes
             var totalNumberOfRoutes = result["routes"].length// total number of routes
-
+            $(".busInfo").show();
+            $(".searchbar").hide();
         
             for(let route = 0; route < totalNumberOfRoutes; route++){
                 var busRoutes = getBusInfo(result["routes"][route]); // the bus number and arriving time pair(directionary)
@@ -163,8 +198,10 @@ function calcRoute(directionsService, directionsRenderer, map) {
                     directionRenderers[stroke].setOptions({map:null});
                 }// clear the previous map render
                 $(".busInfo").empty();//clear all the child element, so user can search again
-                $(".busInfo").css("display", "none");// hide the info bar
+                // $(".busInfo").css("display", "none");// hide the info bar
                 $(".searchbar").css("display", "block");//show the searchbar
+                $(".busInfo").hide();
+                $(".searchbar").show();
             });
 
             // when click on a bus info window, extract the route index and only display the according route on the map
@@ -202,7 +239,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
 window.initMap = initMap;
 
 
-
+/* GET CURRENT LOCATION FUNCTIONALITY */
 
 function getLocation() {
   if (navigator.geolocation) {
