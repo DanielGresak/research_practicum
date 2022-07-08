@@ -3,33 +3,61 @@ import os
 import json
 import requests
 from django.core.serializers.json import DjangoJSONEncoder
-from weather.models import Forecast
+from weather.models import Forecast, CurrentWeather
+from requests.exceptions import HTTPError
+
 
 # Define global constants
 LATITUDE = 53.350140 # Latitude of Dublin
 LONGITUDE = -6.266155 # Longitude of Dublin
-FORECAST_URL = "http://api.openweathermap.org/data/2.5/forecast"
+FORECAST_URL = "http://api.openweathermap.org/data/2.5/forecast?"
+WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather?"
+UNITS = "metric" # Units in metrics to get temperature in Celcius
 TIMESTAMP_CNT = 40 #  The number of timestamps which will be returned in the API response (every 3 hours for 5 days makes up 40 timestamps)
 
 
-def _query_forecast():
-    """Function that calls the OpenWeather 5 day weather forecaset API and returns the result as JSON"""
+def query_weather_data(url, **kwargs):
+    """Function that calls the OpenWeather API and returns the result as JSON
 
+    It can be used for either querying the current weather or the 5 day forecast.
+    For querying the 5 day forecast, pass the optional argument 'cnt'.
+    
+    OPTIONAL ARGUMENTS: 
+    cnt = The number of forecast timestamps, which will be returned in the API response.
+    """
+
+    # Get API key for OpenWeather API
     api_key = os.environ.get("OPEN_WEATHER_API")
-    units = "metric" # Units in metrics to get temperature in Celcius
 
-    # Example: api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&cnt={cnt}&units={units}&appid={API key}
-    req = requests.get("{0}?lat={1}&lon={2}&cnt={3}&units={4}&appid={5}".format(FORECAST_URL, LATITUDE, LONGITUDE, TIMESTAMP_CNT, units, api_key))
+    # Check if keyword 'cnt' is passed as argument
+    if "cnt" in kwargs:
+        cnt = kwargs["cnt"]
+        # Check if datatype of the argument is integer
+        if isinstance(cnt, int):
+            # Create the string for the 'forecast' API call
+            # Example: api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&cnt={cnt}&units={units}&appid={API key}
+            req_url = "{0}lat={1}&lon={2}&cnt={3}&units={4}&appid={5}".format(url, LATITUDE, LONGITUDE, cnt, UNITS, api_key)
+        else:
+            # Todo error logging
+            print("Error - The provided argument 'units' in function 'query_forecast' must be of datatype integer!")
+            response_json = None
+    else:
+        # Create the string for the 'current weather' API call
+        # Example: api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&units={units}&appid={API key}
+        req_url = "{0}lat={1}&lon={2}&units={3}&appid={4}".format(url, LATITUDE, LONGITUDE, UNITS, api_key)
 
     try:
-        req.raise_for_status()
-        result_json = req.json()
-    except:
+        # Make API request
+        response = requests.get(req_url)
+        response.raise_for_status()
+        response_json = response.json()
+    except HTTPError as exc:
+        error_code = exc.response.status_code
         # Todo: implement error logging
-        print("Error - Calling forecast API failed!")
-        result_json = None
+        print(f'Error code: {error_code} ; Calling WeatherOpen API has failed!')
+        response_json = None
     
-    return result_json
+    return response_json
 
 
 def update_weather_forecast():
@@ -74,8 +102,6 @@ def update_weather_forecast():
 
             # Update object in database if it already exists, otherwise create a new one
             # It 'dt' - timestamp - already exists, then udpate with object with the latest forecast information 
-
-            # print("Printing dict ", i, "\n", entity_dict)
             obj, created = Forecast.objects.update_or_create(
                 dt=entity_dict["dt"], defaults=entity_dict)
 
@@ -100,10 +126,53 @@ def update_weather_forecast():
             print("Error - Deleting outdated forecast entities failed!\n")
 
     # Query latest weather forecast data 
-    forecast_json = _query_forecast()
+    forecast_json = query_weather_data(FORECAST_URL, cnt=TIMESTAMP_CNT)
     if forecast_json is not None:
         update_create_forecast()
         delete_outdated_forecast()
             
 
+def update_current_weather():
+    """Function that updates the current weather in the database
+    
+    - By adding each response from OpenWeather to the database 
+    """
+    # Query current weather data 
+    current_weather_json = query_weather_data(WEATHER_URL)
+    if current_weather_json is not None:     
+        # For each entity create a dictionary and store the extraxt values that are desired
+        entity_dict = {}
+        entity_dict["dt"] = current_weather_json["dt"] # datetime as integer in UTC format (seconds)
+        entity_dict["weather_id"] = current_weather_json["weather"][0]["id"]
+        entity_dict["weather_main"] = current_weather_json["weather"][0]["main"]
+        entity_dict["weather_description"] = current_weather_json["weather"][0]["description"]
+        entity_dict["weather_icon"] = current_weather_json["weather"][0]["icon"]
+        entity_dict["main_temp"] = current_weather_json["main"]["temp"]
+        entity_dict["main_temp_min"] = current_weather_json["main"]["temp_min"]
+        entity_dict["main_temp_max"] = current_weather_json["main"]["temp_max"]
+        entity_dict["humidity"] = current_weather_json["main"]["humidity"]
+        entity_dict["wind_speed"] = current_weather_json["wind"]["speed"]
+        entity_dict["clouds"] = current_weather_json["clouds"]["all"]
+        # If we don't receive some of the parameters in our API response,
+        # it means that these weather phenomena are just not happened for the time of measurement for the city or location chosen. 
+        # Only really measured or calculated data is displayed in API response
+        if "rain" in current_weather_json:          
+            entity_dict["rain_1h"] = current_weather_json["rain"]["1h"]
+            entity_dict["rain_3h"] = current_weather_json["rain"]["3h"]
+        else:
+            entity_dict["rain_1h"] = 0
+            entity_dict["rain_3h"] = 0
 
+        try:
+            # Update object in database if it already exists, otherwise create a new one
+            # It 'dt' - timestamp - already exists, then simply udpate the object 
+            # Returns a tuple of (object, created), 
+            # where object is the created or updated object and created is a boolean specifying whether a new object was created.
+            obj, created = CurrentWeather.objects.update_or_create(
+                dt=entity_dict["dt"], defaults=entity_dict)
+
+            print("Object:", obj) # 
+            print("Object was created:", created)
+        except:
+            # Todo: Error logging
+            print("Error - Writing current weather information to database has failed!\n")
