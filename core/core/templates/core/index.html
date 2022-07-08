@@ -29,10 +29,22 @@
 <div id="map">
 
 </div>
-
+  {% if loggedIn == True %}
+<script>
+    $(".register").hide();
+    $(".logout").show();
+    $(".login").hide();
+</script>
+        {% else %}
+<script>
+    $(".register").show();
+    $(".logout").hide();
+    $(".login").hide();
+</script>
+        {% endif %}
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_KEY }}&callback=initMap&v=weekly&v=weekly&libraries=geometry&libraries=places">
-
+      
 </script>
 
 

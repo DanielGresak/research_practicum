@@ -26,21 +26,30 @@ def CarbonCalculator(request):
         distance = int(request.POST.get('value', False))
 
         saved_emissions = calculate_emissions(distance)
-
-        print(request.POST)
-        if 'co2' in request.session:
-            request.session['co2'] += saved_emissions 
+        if request.user.is_authenticated:
+            current_user_emissions = request.user.profile
+            
+            if current_user_emissions.emissions is not None:
+                current_user_emissions.emissions += saved_emissions
+                current_user_emissions.save()
         else:
-            #Set session expiry to 50 years
-            request.session.set_expiry(1576800000)
-            request.session['co2'] = saved_emissions
+            if 'co2' in request.session:
+                request.session['co2'] += saved_emissions 
+            else:
+                #Set session expiry to 50 years
+                request.session.set_expiry(1576800000)
+                request.session['co2'] = saved_emissions
     else:
         raise BadRequest('Invalid request. Request must be post.')
     return HttpResponse(status=204)
 
 
 def ReturningCarbonData(request):
-    if 'co2' in request.session:
+    if request.user.is_authenticated:
+        current_user_emissions = request.user.profile
+        data = current_user_emissions.emissions
+        
+    elif 'co2' in request.session:
         data = request.session['co2'] 
     else:
         data = 0

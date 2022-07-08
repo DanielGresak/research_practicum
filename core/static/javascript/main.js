@@ -13,7 +13,7 @@ $(".busInfo").hide();
 
 $(".login").hide();
 
-$(".logout").hide();
+// $(".logout").hide();
 
 /* TOOLBAR CLICK FUNCTIONALITY */
 $(".vertical-menu a").click(function(){
@@ -277,7 +277,14 @@ function showPosition(position) {
 
 
 /* GETTING UP TO DATE CO2 INFORMATION */
-$.get("http://localhost:8000/carbon/get/", function(data, status){
+
+function updateEmissions(){
+    $.get("carbon/get/", function(data, status){
+        $(".co2-saved").text(data["co2_saved"] + " grams of co2.")
+    })
+}
+
+$.get("carbon/get/", function(data, status){
     $(".co2-saved").text(data["co2_saved"] + " grams of co2.")
 })
 
@@ -286,10 +293,9 @@ function postCO2(toAdd){
     $.post("carbon/", {'value': toAdd}).done(function(response){
         alert("Your trip has been added to your emmisions saved")
     }).then(function(){
-        $.get("carbon/get/", function(data, status){
-        $(".co2-saved").text(data["co2_saved"])
+        updateEmissions()
     
-        })
+      
     })
 }
 
@@ -315,8 +321,10 @@ $("#login-button").click(function(){
             }
         }
     }).then(function(){
+
         $(".logout").show()
         $(".login").hide()
+        updateEmissions()
     })
 })
 
@@ -342,6 +350,7 @@ $("#register-button").click(function(){
     }).then(function(){
         $(".logout").show()
         $(".register").hide()
+        updateEmissions()
     })
 })
 
@@ -358,6 +367,7 @@ $("#logout-button").click(function(){
     }).then(function(){
         $(".logout").hide()
         $(".login").show()
+        updateEmissions()
     })
 })
 
