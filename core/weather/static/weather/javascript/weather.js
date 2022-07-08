@@ -1,10 +1,10 @@
-function getForecast(url) {
+function getWeather(url) {
     $.ajax({
       url: url,
       type: "GET",
       dataType: "json",
       success: (data) => {
-        console.log("success entered")
+        console.log("successful query!")
         console.log(data);
         },
       error: (error) => {

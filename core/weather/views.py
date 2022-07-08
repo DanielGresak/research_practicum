@@ -2,8 +2,8 @@ import json
 from MySQLdb import Timestamp
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.views.generic import TemplateView
-from weather.models import Forecast
+from weather.models import Forecast, CurrentWeather
+from django.core.serializers import serialize
 
 # Create your views here.
 
@@ -11,19 +11,17 @@ from weather.models import Forecast
 # https://engineertodeveloper.com/how-to-return-a-json-response-in-django/
 # https://engineertodeveloper.com/how-to-use-ajax-with-django/
 
-def forecaset_models_json(request):
+def weather_data_json(request):
     """Weather forecast API that returns the forecast as JSON"""
 
-    # Get a QuerySet of dictionaries according to the provided values
-    query_set = Forecast.objects.all().values("dt", "dt_txt", "temp", "temp_min", "temp_max", "weather_main", "weather_icon", "pop")
-
+    # Get a QuerySets of dictionaries according to the provided values
+    forecast_query_set = Forecast.objects.all().values("dt", "dt_txt", "temp", "temp_min", "temp_max", "weather_main", "weather_icon", "pop")
     # Convert the QuerySet to a list of dictionaries
-    forecast_list = list(query_set)
-
+    forecast_list = list(forecast_query_set)
     # Convert list of dictionaries to JSON
-    data = json.dumps(forecast_list)
-    return HttpResponse(data, content_type="application/json")
-
+    forecast_data = json.dumps(forecast_list)
+    
+    return HttpResponse(forecast_data, content_type="application/json")
 
 
 # class ForecastPage(TemplateView):

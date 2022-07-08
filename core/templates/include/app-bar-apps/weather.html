@@ -226,8 +226,8 @@
 <script>
     // Wait for DOM being fully loaded before fetching the weather data
     $(document).ready(function (){
-        const URL = "{% url 'ajax_forecast' %}";
-        getForecast(URL);
+        const URL = "{% url 'ajax_weather' %}";
+        getWeather(URL);
     });
 </script>
 {% endblock javascript %}
