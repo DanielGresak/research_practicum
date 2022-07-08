@@ -4,125 +4,128 @@
     <link rel="stylesheet" href="{% static 'weather/styles.css' %}">
 {% endblock css %}
 
-<header class="weather-header">
-    <div class="header-section">
-        <h1 class="page-title">Dublin Weather</h1>
-    </div>
-</header>
 
-<div class="current-weather-container">
-    <div class="current-info">
+<div class="app-bar-app weather">
+    <header class="weather-header">
+        <div class="header-section">
+            <h1 class="page-title">Dublin Weather</h1>
+        </div>
+    </header>
+    
+    <div class="current-weather-container">
+        <div class="current-info">
 
-        <div class="date-container">
-            <div class="time" id="time">
-                12:30 <span id="am-pm">PM</span>
-            </div>
-            <div class="date" id="date">
-                Monday, 25 May
-            </div>
-
-            <div class="details" id="current-weather-details">
-                <div class="weather-detail">
-                    <div>Humidity</div>
-                    <div>949</div>
+            <div class="date-container">
+                <div class="time" id="time">
+                    12:30 <span id="am-pm">PM</span>
                 </div>
-                <div class="weather-detail">
-                    <div>Pressure</div>
-                    <div>235</div>
+                <div class="date" id="date">
+                    Monday, 25 May
                 </div>
-                <div class="weather-detail">
-                    <div>Wind Speed</div>
-                    <div>213</div>
+
+                <div class="details" id="current-weather-details">
+                    <div class="weather-detail">
+                        <div>Humidity</div>
+                        <div>949</div>
+                    </div>
+                    <div class="weather-detail">
+                        <div>Pressure</div>
+                        <div>235</div>
+                    </div>
+                    <div class="weather-detail">
+                        <div>Wind Speed</div>
+                        <div>213</div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="forecast-container">
-    <div class="forecast-element">
-        <div class="day">Tue</div>
-        <div class="time">18:00</div>
-        <div class="temp">17.5&#176;C</div>
-        <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
-        <div class="pop">30&#37;</div>
-    </div>
-    <div class="forecast-element">
-        <div class="day">Tue</div>
-        <div class="time">18:00</div>
-        <div class="temp">17.5&#176;C</div>
-        <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
-        <div class="pop">30&#37;</div>
-    </div>
-    <div class="forecast-element">
-        <div class="day">Tue</div>
-        <div class="time">18:00</div>
-        <div class="temp">17.5&#176;C</div>
-        <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
-        <div class="pop">30&#37;</div>
-    </div>
-    <div class="forecast-element">
-        <div class="day">Tue</div>
-        <div class="time">18:00</div>
-        <div class="temp">17.5&#176;C</div>
-        <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
-        <div class="pop">30&#37;</div>
-    </div>
-    <div class="forecast-element">
-        <div class="day">Tue</div>
-        <div class="time">18:00</div>
-        <div class="temp">17.5&#176;C</div>
-        <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
-        <div class="pop">30&#37;</div>
-    </div>
-    <div class="forecast-element">
-        <div class="day">Tue</div>
-        <div class="time">18:00</div>
-        <div class="temp">17.5&#176;C</div>
-        <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
-        <div class="pop">30&#37;</div>
-    </div>
-    <div class="forecast-element">
-        <div class="day">Tue</div>
-        <div class="time">18:00</div>
-        <div class="temp">17.5&#176;C</div>
-        <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
-        <div class="pop">30&#37;</div>
-    </div>
-    <div class="forecast-element">
-        <div class="day">Tue</div>
-        <div class="time">18:00</div>
-        <div class="temp">17.5&#176;C</div>
-        <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
-        <div class="pop">30&#37;</div>
-    </div>
-    <div class="forecast-element">
-        <div class="day">Tue</div>
-        <div class="time">18:00</div>
-        <div class="temp">17.5&#176;C</div>
-        <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
-        <div class="pop">30&#37;</div>
-    </div>
-    <div class="forecast-element">
-        <div class="day">Tue</div>
-        <div class="time">18:00</div>
-        <div class="temp">17.5&#176;C</div>
-        <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
-        <div class="pop">30&#37;</div>
-    </div>
-    <div class="forecast-element">
-        <div class="day">Tue</div>
-        <div class="time">18:00</div>
-        <div class="temp">17.5&#176;C</div>
-        <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
-        <div class="pop">30&#37;</div>
-    </div>
-    <div class="forecast-element">
-        <div class="day">Tue</div>
-        <div class="time">18:00</div>
-        <div class="temp">17.5&#176;C</div>
-        <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
-        <div class="pop">30&#37;</div>
+    <div class="forecast-container">
+        <div class="forecast-element">
+            <div class="day">Tue</div>
+            <div class="time">18:00</div>
+            <div class="temp">17.5&#176;C</div>
+            <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
+            <div class="pop">30&#37;</div>
+        </div>
+        <div class="forecast-element">
+            <div class="day">Tue</div>
+            <div class="time">18:00</div>
+            <div class="temp">17.5&#176;C</div>
+            <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
+            <div class="pop">30&#37;</div>
+        </div>
+        <div class="forecast-element">
+            <div class="day">Tue</div>
+            <div class="time">18:00</div>
+            <div class="temp">17.5&#176;C</div>
+            <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
+            <div class="pop">30&#37;</div>
+        </div>
+        <div class="forecast-element">
+            <div class="day">Tue</div>
+            <div class="time">18:00</div>
+            <div class="temp">17.5&#176;C</div>
+            <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
+            <div class="pop">30&#37;</div>
+        </div>
+        <div class="forecast-element">
+            <div class="day">Tue</div>
+            <div class="time">18:00</div>
+            <div class="temp">17.5&#176;C</div>
+            <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
+            <div class="pop">30&#37;</div>
+        </div>
+        <div class="forecast-element">
+            <div class="day">Tue</div>
+            <div class="time">18:00</div>
+            <div class="temp">17.5&#176;C</div>
+            <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
+            <div class="pop">30&#37;</div>
+        </div>
+        <div class="forecast-element">
+            <div class="day">Tue</div>
+            <div class="time">18:00</div>
+            <div class="temp">17.5&#176;C</div>
+            <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
+            <div class="pop">30&#37;</div>
+        </div>
+        <div class="forecast-element">
+            <div class="day">Tue</div>
+            <div class="time">18:00</div>
+            <div class="temp">17.5&#176;C</div>
+            <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
+            <div class="pop">30&#37;</div>
+        </div>
+        <div class="forecast-element">
+            <div class="day">Tue</div>
+            <div class="time">18:00</div>
+            <div class="temp">17.5&#176;C</div>
+            <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
+            <div class="pop">30&#37;</div>
+        </div>
+        <div class="forecast-element">
+            <div class="day">Tue</div>
+            <div class="time">18:00</div>
+            <div class="temp">17.5&#176;C</div>
+            <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
+            <div class="pop">30&#37;</div>
+        </div>
+        <div class="forecast-element">
+            <div class="day">Tue</div>
+            <div class="time">18:00</div>
+            <div class="temp">17.5&#176;C</div>
+            <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
+            <div class="pop">30&#37;</div>
+        </div>
+        <div class="forecast-element">
+            <div class="day">Tue</div>
+            <div class="time">18:00</div>
+            <div class="temp">17.5&#176;C</div>
+            <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
+            <div class="pop">30&#37;</div>
+        </div>
     </div>
 </div>
 
