@@ -1,6 +1,12 @@
 
 /* dynamic main page component behaviour. */
 
+
+
+/* https://stackoverflow.com/questions/54835849/django-how-to-send-csrf-token-with-ajax */
+let cookie = document.cookie
+let csrfToken = cookie.substring(cookie.indexOf('=') + 1)
+
 /* HIDING COMPONENTS ON LOAD */
 
 $(".appbar").hide(); 
@@ -9,11 +15,8 @@ $(".app-bar-app").hide();
 
 $(".busInfo").hide();
 
-// $(".regsiter").hide();
-
 $(".login").hide();
 
-// $(".logout").hide();
 
 /* TOOLBAR CLICK FUNCTIONALITY */
 $(".vertical-menu a").click(function(){
@@ -302,6 +305,8 @@ function postCO2(toAdd){
 /* AUTHENTICATION */
 
 $("#login-button").click(function(){
+    let cookie = document.cookie
+    let csrfToken = cookie.substring(cookie.indexOf('=') + 1)
     var registerData = {
         userEmail: $("#login-email").val(),
         userPassword: $("#login-password").val()
@@ -312,6 +317,9 @@ $("#login-button").click(function(){
         data: registerData,
         dataType: "json",
         encode: true,
+        headers: {
+            'X-CSRFToken': csrfToken
+        },
         success: function(msg) {
             alert("Logged In" + msg)
         },
@@ -329,6 +337,8 @@ $("#login-button").click(function(){
 })
 
 $("#register-button").click(function(){
+    let cookie = document.cookie
+    let csrfToken = cookie.substring(cookie.indexOf('=') + 1)
     var registerData = {
         userEmail: $("#register-email").val(),
         userPassword: $("#register-password").val()
@@ -339,6 +349,9 @@ $("#register-button").click(function(){
         data: registerData,
         dataType: "json",
         encode: true,
+        headers: {
+            'X-CSRFToken': csrfToken
+        },
         success: function(msg) {
             alert("register" + msg)
         },
@@ -360,6 +373,9 @@ $("#logout-button").click(function(){
         type: "GET",
         url: "logout",
         dataType: 'json',
+        headers: {
+            'X-CSRFToken': csrfToken
+        },
         success: function(msg) {
             alert("logged out" + msg)
         },
@@ -368,6 +384,7 @@ $("#logout-button").click(function(){
         $(".logout").hide()
         $(".login").show()
         updateEmissions()
+        
     })
 })
 

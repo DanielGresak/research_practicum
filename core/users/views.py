@@ -6,7 +6,6 @@ from django.http import HttpResponse, JsonResponse
 from users.models import Profile
 # from sympy import re
 
-@csrf_exempt
 def registerUser(request):
     
     if request.method == 'POST':
@@ -36,7 +35,7 @@ def registerUser(request):
             login(request, user)
             return HttpResponse(status=204)
 
-@csrf_exempt
+
 def loginUser(request):
     if request.method == 'POST':
         user_email = request.POST.get("userEmail")
@@ -50,7 +49,7 @@ def loginUser(request):
             return HttpResponse(status=401)
     return HttpResponse(status=404)
 
-@csrf_exempt
+
 def logoutUser(request):
     
     logout(request)

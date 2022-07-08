@@ -60,6 +60,7 @@ def ReturningCarbonData(request):
 
     return JsonResponse(responseData)
 
+
 def calculate_emissions(distance):
     saved = int(98 * (distance / 1000))
     return saved
