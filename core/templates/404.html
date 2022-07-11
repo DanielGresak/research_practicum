@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+<!-- 
+This 404.html is used in combination with the command "raise Http404()" in Python 
+https://docs.djangoproject.com/en/4.0/topics/http/views/#the-http404-exception
+-->
+
+{% block title %}
+    404 Error - Something went wrong!
+{% endblock title %}
+
+{% block content %}
+    <h1>No matching page could be found.</h1>
+{% endblock content %}
