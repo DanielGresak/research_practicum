@@ -25,4 +25,5 @@ urlpatterns = [
     path('', include('weather.urls')),
     path('', include('carbonCalculator.urls')),
     path('', include("users.urls")),
+
 ]
