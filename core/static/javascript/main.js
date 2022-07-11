@@ -307,67 +307,90 @@ function postCO2(toAdd){
 /* AUTHENTICATION */
 
 $("#login-button").click(function(){
-    let cookie = document.cookie
-    let csrfToken = cookie.substring(cookie.indexOf('=') + 1)
-    var registerData = {
-        userEmail: $("#login-email").val(),
-        userPassword: $("#login-password").val()
-    }
-    $.ajax({
-        type: "POST",
-        url: "login",
-        data: registerData,
-        dataType: "json",
-        encode: true,
-        headers: {
-            'X-CSRFToken': csrfToken
-        },
-        success: function(msg) {
-            alert("You have suvccfully logged in :) .")
-        },
-        "statusCode": {
-            401: function (xhr, error, thrown) {
-              alert("Email or Password Incorrect")
-            }
+    var emailField = document.getElementById("login-email")
+    if (!emailField.checkValidity()){
+        $("#login-email-validation-text").text("Please enter a valid email.")
+        $("#login-email-validation-text").css({ 'color': 'red'});
+        $("#login-email-validation-text").show()
+    } else {
+        $("#login-email-validation-text").hide()
+        let cookie = document.cookie
+        let csrfToken = cookie.substring(cookie.indexOf('=') + 1)
+        var registerData = {
+            userEmail: $("#login-email").val(),
+            userPassword: $("#login-password").val()
         }
-    }).then(function(){
+        $.ajax({
+            type: "POST",
+            url: "login",
+            data: registerData,
+            dataType: "json",
+            encode: true,
+            headers: {
+                'X-CSRFToken': csrfToken
+            },
+            success: function(msg) {
+                alert("You have suvccfully logged in :) .")
+            },
+            "statusCode": {
+                401: function (xhr, error, thrown) {
+                alert("Email or Password Incorrect")
+                }
+            }
+        }).then(function(){
 
-        $(".logout").show()
-        $(".login").hide()
-        updateEmissions()
-    })
+            $(".logout").show()
+            $(".login").hide()
+            updateEmissions()
+        })
+
+    }
+    
 })
 
 $("#register-button").click(function(){
-    let cookie = document.cookie
-    let csrfToken = cookie.substring(cookie.indexOf('=') + 1)
-    var registerData = {
-        userEmail: $("#register-email").val(),
-        userPassword: $("#register-password").val()
+    var emailField = document.getElementById("register-email")
+    if (!emailField.checkValidity()){
+        $("#register-email-validation-text").text("Please enter a valid email.")
+        $("#register-email-validation-text").css({ 'color': 'red'});
+        $("#register-email-validation-text").show()
     }
-    $.ajax({
-        type: "POST",
-        url: "register",
-        data: registerData,
-        dataType: "json",
-        encode: true,
-        headers: {
-            'X-CSRFToken': csrfToken
-        },
-        success: function(msg) {
-            alert("You have successfully registered and been logged in. ")
-        },
-        "statusCode": {
-            401: function (xhr, error, thrown) {
-              alert("Email already exists on our system and password is incorrect.")
-            }
+    else if ($("#register-password").val() == $("#confirm-register-password").val()){
+        $("#register-email-validation-text").hide()
+        $("#password-validation-text").hide()
+        let cookie = document.cookie
+        let csrfToken = cookie.substring(cookie.indexOf('=') + 1)
+        var registerData = {
+            userEmail: $("#register-email").val(),
+            userPassword: $("#register-password").val()
         }
-    }).then(function(){
-        $(".logout").show()
-        $(".register").hide()
-        updateEmissions()
-    })
-})
+        $.ajax({
+            type: "POST",
+            url: "register",
+            data: registerData,
+            dataType: "json",
+            encode: true,
+            headers: {
+                'X-CSRFToken': csrfToken
+            },
+            success: function(msg) {
+                alert("You have successfully registered and been logged in. ")
+            },
+            "statusCode": {
+                401: function (xhr, error, thrown) {
+                alert("Email already exists on our system and password is incorrect.")
+                }
+            }
+        }).then(function(){
+            $(".logout").show()
+            $(".register").hide()
+            updateEmissions()
+        })
+} else {
+    $("#password-validation-text").text("Passwords do not match.")
+    $("#password-validation-text").css({ 'color': 'red'});
+    $("#password-validation-text").show()
+}})
 
 $("#logout-button").click(function(){
     console.log("clicked")
@@ -401,3 +424,4 @@ $("#reg-to-login").click(function(){
     $(".register").hide()
     $(".login").show()
 })
+
