@@ -31,10 +31,11 @@ def weather_data_json(request):
         result_data = json.dumps(result_list)
 
         return HttpResponse(result_data, content_type="application/json")
-    except:
+    except Exception as e:
          # Instead of using "HttpResponseNotFound", use Http404 instead
         # To use this function a 404.html must be globally defined
         # https://docs.djangoproject.com/en/4.0/topics/http/views/#the-http404-exception
+        print(e)
         raise Http404()
 
 

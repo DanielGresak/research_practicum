@@ -83,6 +83,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
+# # Use nose to run all tests
+# TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+# # Use nose to run all tests
+# TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
