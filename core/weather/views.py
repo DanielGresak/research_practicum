@@ -1,36 +1,41 @@
+import json
 from MySQLdb import Timestamp
-from django.shortcuts import render
-from django.views.generic import TemplateView
-from weather.models import Forecast
+from django.http import HttpResponse, Http404
+from weather.models import Forecast, CurrentWeather
+from itertools import chain
 
 # Create your views here.
-class ForecastPage(TemplateView):
-    # Define the template name
-    template_name = 'weather_forecast.html'
 
-    def get(self, request, *args, **kwargs):
+# Example are given here: 
+# https://engineertodeveloper.com/how-to-return-a-json-response-in-django/
+# https://engineertodeveloper.com/how-to-use-ajax-with-django/
 
-        # Instantiate weather forecast object which latest entity (tuple)
-        # 'dt' is the datetime attribute
-        latest_entity = Forecast.objects.latest('dt')
+def weather_data_json(request):
+    """Weather forecast API that returns the forecast as JSON"""
 
-        timestamp = "{t.year}/{t.month:02d}/{t.day:02d} - {t.hour:02d}:{t.minute:02d}:{t.second:02d}".format(t=latest_entity.dt)
-        weather_icon = latest_entity.weather_icon
-        # pop - probability of precipitation. The values of the parameter vary between 0 and 1, where 0 is equal to 0%, 1 is equal to 100%
-        # So let's multiply it with 100 to display it in %
-        pop_percentage = latest_entity.pop * 100
+    try:
+        # Get a QuerySets of dictionaries according to the provided values
+        forecast_query_set = Forecast.objects.all().values("dt", "dt_txt", "temp", "temp_min", "temp_max", "weather_main", "weather_icon", "pop")
+        # Convert the QuerySet to a list of dictionaries
+        forecast_list = list(forecast_query_set)
 
-        # Let's create the dynamic content that will be displayed on the web page
-        content = {
-            'temp': latest_entity.temp,
-            'temp_min': latest_entity.temp_min,
-            'temp_max': latest_entity.temp_max,
-            'weather_main': latest_entity.weather_main,
-            'weather_description': latest_entity.weather_description,
-            'weather_icon': latest_entity.weather_icon,
-            'propability_of_precipitation': pop_percentage,
-            'timestamp': timestamp}
+        # Get last weather object of the current weather table, which is also the latest    
+        last_weather_obj = CurrentWeather.objects.filter(dt__gt=0).last()
+        # Query current weather data by filtering for timestamp value
+        # We'll be receiving a QuerySet that contains only one object. 
+        # However, we require a QuerySet so that we can actually chain the forecast and current weather information  
+        weather_query_set = CurrentWeather.objects.filter(dt=last_weather_obj.dt).values()
 
-        return render(request, self.template_name, content)
+        # Chain both QuerySets - forecast and current weather information 
+        result_list = list(chain(forecast_list, weather_query_set))
+        result_data = json.dumps(result_list)
+
+        return HttpResponse(result_data, content_type="application/json")
+    except:
+         # Instead of using "HttpResponseNotFound", use Http404 instead
+        # To use this function a 404.html must be globally defined
+        # https://docs.djangoproject.com/en/4.0/topics/http/views/#the-http404-exception
+        raise Http404()
+
 
 
