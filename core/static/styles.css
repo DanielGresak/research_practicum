@@ -118,13 +118,22 @@ html, main {
   margin:0px;
 }
 
+.selectRoute{
+  float: right;
+}
+
+
 .busDetail{
 padding-left: 3px;
 margin: 4px;
 }
 
 #busInfoBtn{
-  margin-left: 35%;
+  margin-left: 20%;
+  margin-top: 20px;
+}
+
+#confirm{
   margin-top: 20px;
 }
 
