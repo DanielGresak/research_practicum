@@ -287,9 +287,11 @@ function updateEmissions(){
     })
 }
 
-$.get("carbon/get/", function(data, status){
-    $(".co2-saved").text(data["co2_saved"] + " grams of co2.")
-})
+// $.get("carbon/get/", function(data, status){
+//     $(".co2-saved").text(data["co2_saved"] + " grams of co2.")
+// })
+
+updateEmissions()
 
 /* FUNCTION FOR POST REQUEST TO ADD CO2 INFORMATION */
 function postCO2(toAdd){
@@ -321,7 +323,7 @@ $("#login-button").click(function(){
             'X-CSRFToken': csrfToken
         },
         success: function(msg) {
-            alert("Logged In" + msg)
+            alert("You have suvccfully logged in :) .")
         },
         "statusCode": {
             401: function (xhr, error, thrown) {
@@ -353,7 +355,7 @@ $("#register-button").click(function(){
             'X-CSRFToken': csrfToken
         },
         success: function(msg) {
-            alert("register" + msg)
+            alert("You have successfully registered and been logged in. ")
         },
         "statusCode": {
             401: function (xhr, error, thrown) {
@@ -377,7 +379,7 @@ $("#logout-button").click(function(){
             'X-CSRFToken': csrfToken
         },
         success: function(msg) {
-            alert("logged out" + msg)
+            alert("You have successfully logged out.")
         },
         
     }).then(function(){
@@ -388,6 +390,7 @@ $("#logout-button").click(function(){
     })
 })
 
+/* CHANGING THE PAGE DEPENDING OF IN THE USER WANTS TO LOGIN OR REGISTER  */ 
 $("#login-to-reg").click(function(){
     $(".register").show()
     $(".login").hide()

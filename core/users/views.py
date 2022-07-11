@@ -42,7 +42,6 @@ def loginUser(request):
         user_password = request.POST.get("userPassword")
         user = authenticate(request, username=user_email, password=user_password)
         if user is not None and user.is_authenticated:
-            
             login(request, user)
             return HttpResponse(status=204)
         else:
