@@ -24,7 +24,7 @@ def weather_data_json(request):
         # Query current weather data by filtering for timestamp value
         # We'll be receiving a QuerySet that contains only one object. 
         # However, we require a QuerySet so that we can actually chain the forecast and current weather information  
-        weather_query_set = CurrentWeather.objects.filter(dt=last_weather_obj.dt).values()
+        weather_query_set = CurrentWeather.objects.filter(id=last_weather_obj.id).values()
 
         # Chain both QuerySets - forecast and current weather information 
         result_list = list(chain(forecast_list, weather_query_set))
