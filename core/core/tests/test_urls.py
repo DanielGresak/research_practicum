@@ -1,10 +1,12 @@
 from django.test import SimpleTestCase
 from django.urls import reverse, resolve
+
 from core.views import home
 from carbonCalculator.views import CarbonCalculator, ReturningCarbonData
-from users.views import loginUser, logoutUser, registerUser
+from users.views import loginUser, logoutUser, registerUser, delete_user
 from weather.views import weather_data_json
-
+from django.contrib.auth import login
+from django.contrib.auth.models import User
 # Test each page in urlpatterns
 class TestUrls(SimpleTestCase):
 
@@ -42,3 +44,18 @@ class TestUrls(SimpleTestCase):
         
         url = reverse('ajax_weather')
         self.assertEquals(resolve(url).func, weather_data_json)
+    
+    # def test_delete_user_url_is_resolved(self):
+    #     user = {
+    #         "userEmail": "temp@temp",
+    #         "userPassword": "123",
+    #     }
+    #     register_url = reverse('register')
+    #     self.client.post(register_url, user, format="text/html")
+    #     temp_user = User.objects.filter(email=user["userEmail"]).first()
+    #     temp_user.is_active = True
+    #     temp_user.save()
+    #     # self.client.post(self.login_url,user, format="text/html")
+    #     login(temp_user)
+    #     url = reverse('delete_user')
+    #     self.assertEquals(resolve(url).func, delete_user)

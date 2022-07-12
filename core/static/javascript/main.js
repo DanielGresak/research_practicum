@@ -449,18 +449,13 @@ $("#delete-button").click(function(){
                 alert("Account not found.")
                 }
             }
-            
         }).then(function(){
             $(".logout").hide()
             $(".login").show()
-            updateEmissions()
-            
+            updateEmissions() 
         })
-
     }
     else {
         alert("Account not deleted.")
     }
-    
-
 })

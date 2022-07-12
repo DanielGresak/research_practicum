@@ -48,8 +48,8 @@ class FrontEndTestCase(LiveServerTestCase):
         emissions_toolbar.click()
         time.sleep(1)
         emissions_text = selenium.find_element(By.CLASS_NAME, "co2-saved")
-        print("printing ", emissions_text.text)
-        self.assertNotEqual(emissions_text.text, "0 grams of co2.")
+        # print("printing ", emissions_text.text)
+        self.assertNotEqual(emissions_text.text, "No savings yet, take a trip and save some emissions!")
 
 
     # def test_login(self):
