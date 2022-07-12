@@ -209,7 +209,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
                                         <p class = 'busDetail' id = 'totalTravelTime'>Total travel time:</p>\
                                         <p class = 'busDetail' id = 'busFare'>Bus fare:</p>\
                                         <p class = 'busDetail' id = 'carbonEmissionSaved'>Carbon emission saved:</p>\
-                                        <button onclick='postCO2(" + distance +")'>Add to emisions</button>\
+                                        <button class='emissions-btn' onclick='postCO2(" + distance +")'>Add to emisions</button>\
                                     </div>")
             }
             //add a back button, go back to the search bar
