@@ -3,7 +3,7 @@ venv/
 *.pyc
 .ipynb_checkpoints/
 .idea/
-.vscode
+# .vscode
 .env
 
 # Created by https://www.gitignore.io
