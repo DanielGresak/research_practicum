@@ -156,12 +156,15 @@ def update_current_weather():
         # If we don't receive some of the parameters in our API response,
         # it means that these weather phenomena are just not happened for the time of measurement for the city or location chosen. 
         # Only really measured or calculated data is displayed in API response
-        if "rain" in current_weather_json:          
-            entity_dict["rain_1h"] = current_weather_json["rain"]["1h"]
-            entity_dict["rain_3h"] = current_weather_json["rain"]["3h"]
-        else:
-            entity_dict["rain_1h"] = 0
-            entity_dict["rain_3h"] = 0
+        if "rain" in current_weather_json:
+            if "1h" in current_weather_json["rain"]:          
+                entity_dict["rain_1h"] = current_weather_json["rain"]["1h"]
+            else:
+                entity_dict["rain_1h"] = 0
+            if "3h" in current_weather_json["rain"]:          
+                entity_dict["rain_3h"] = current_weather_json["rain"]["3h"]
+            else:
+                entity_dict["rain_3h"] = 0
 
         try:
             # Update object in database if it already exists, otherwise create a new one
