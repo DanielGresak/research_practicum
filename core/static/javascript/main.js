@@ -283,7 +283,12 @@ function showPosition(position) {
 
 function updateEmissions(){
     $.get("carbon/get/", function(data, status){
-        $(".co2-saved").text(data["co2_saved"] + " grams of co2.")
+        if (data["co2_saved"] == 0){
+            $(".co2-saved").text("No savings yet, take a trip and save some emissions!")
+        }
+        else {
+            $(".co2-saved").text(data["co2_saved"] + " gs of co2 saved!")
+        }
     })
 }
 
@@ -425,3 +430,37 @@ $("#reg-to-login").click(function(){
     $(".login").show()
 })
 
+
+$("#delete-button").click(function(){
+    let confirmAction = confirm("Are you sure you want to delete your account with us?")
+    if (confirmAction){
+        $.ajax({
+            type: "GET",
+            url: "delete",
+            dataType: 'json',
+            headers: {
+                'X-CSRFToken': csrfToken
+            },
+            success: function(msg) {
+                alert("Account is deleted!")
+            },
+            "statusCode": {
+                404: function (xhr, error, thrown) {
+                alert("Account not found.")
+                }
+            }
+            
+        }).then(function(){
+            $(".logout").hide()
+            $(".login").show()
+            updateEmissions()
+            
+        })
+
+    }
+    else {
+        alert("Account not deleted.")
+    }
+    
+
+})
