@@ -22,6 +22,7 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='homepage'),
-    path('', include('weather.urls'))
+    path('', include('weather.urls')),
+    path('data/', views.data, name='stopsData')
     # path('weather/', include('weather.urls'))
 ]

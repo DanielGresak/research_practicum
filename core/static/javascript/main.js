@@ -135,7 +135,7 @@ function getBusInfo(routes){
             routeInfo["driving_distance"]=steps[i]["distance"]["value"];
             routeInfo["num_stops"]=steps[i]["transit"]["num_stops"];
             routeInfo["travel_time"]=steps[i]["duration"]["value"];// travel time in second.
-            routeInfo["direction"]=getDirection(routes["bounds"]["Ra"], routes["bounds"]["wb"]);
+            routeInfo["direction"]=getDirection(steps[i]["transit"]["line"]["short_name"],steps[i]["transit"]["departure_stop"]["name"], steps[i]["transit"]["arrival_stop"]["name"]);
             thisRoute[steps[i]["transit"]["line"]["short_name"]]=routeInfo;
             busRoutes.push(thisRoute);
         }
@@ -143,26 +143,32 @@ function getBusInfo(routes){
     return busRoutes;
 }
 
-function getDirection(Ra, wb){
-    const start_la = Ra[0];// the latitude of the departure -6
-    const end_la = Ra[1];//the latitude of the destination
-    const start_lo = wb[0]; // longitude of the departure 53
-    const end_lo = wb[1]; // longitude of the destination
-
-    if(Math.abs(start_la - end_la) > Math.abs(start_lo-end_lo)){// east-west
-        if (start_la > end_la){ // to west
-            return 2
-        }else{
-            return 1
+function getDirection(line, departure, arrival){
+    //console.log("departure stop: "+departure);
+    var departureStop = ""+departure.replace(/[^0-9.]/g, "");
+    var arrivalStop = ""+arrival.replace(/[^0-9.]/g, "");
+    //console.log("departure gagagaga stop: "+departureStop);
+    //console.log("arrival gagagagaga stop : "+arrivalStop);
+    //console.log("line: "+line);
+    var bound;
+    $.ajax({
+        url: "./data",
+        async: false,
+        dataType: "json",
+        success: function(json){
+            if(line in json){
+                if((jQuery.inArray(departureStop,json[line]["outbound"]) !== -1) || (jQuery.inArray(arrivalStop,json[line]["outbound"]) !== -1)){
+                    bound= 2;
+                }
+                else if((jQuery.inArray(departureStop,json[line]["inbound"]) !== -1) || (jQuery.inArray(arrivalStop,json[line]["inbound"]) !== -1)){
+                    bound= 1;
+                }
+                else{bound = 0}
+            }
+            else{bound = 0} 
         }
-    }
-    else{// south-north
-        if (start_lo > end_lo){
-            return 2 // to south
-        }else{
-            return 1
-        }
-    }
+    })
+    return bound;
 }
 
 // return the travel time of a route
@@ -237,7 +243,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
                     busTravelTime=busTravelTime+travelTime(routeNumber, r[routeNumber]["direction"], r[routeNumber]["num_stops"])+"; "
                     //console.log(routeNumber+" "+r[routeNumber]["last_stop"]);
                     //console.log(routeNumber+" "+r[routeNumber]["driving_distance"]);
-                    console.log("end_location"+routeNumber+"   "+r[routeNumber]["direction"]);
+                    //console.log("end_location"+routeNumber+"   "+r[routeNumber]["direction"]);
                 }
                 console.log("total driving distance:"+drivingDistance);
                 busNumString = busNumString.slice(0, -3);
