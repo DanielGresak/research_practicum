@@ -431,6 +431,7 @@ $("#reg-to-login").click(function(){
 })
 
 
+/* DELETE ACCOUNT FUNCTIONALITY */
 $("#delete-button").click(function(){
     let confirmAction = confirm("Are you sure you want to delete your account with us?")
     if (confirmAction){
