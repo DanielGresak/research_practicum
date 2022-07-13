@@ -274,7 +274,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
                                         <p class = 'busDetail' id = 'totalTravelTime'>Total travel time:"+busTravelTime+"</p>\
                                         <p class = 'busDetail' id = 'busFare'>Bus fare:</p>\
                                         <p class = 'busDetail' id = 'carbonEmissionSaved'>Carbon emission saved:</p>\
-                                        <button class='emissions-btn' onclick='postCO2(" + distance +")'>Add to emisions</button>\
+                                        <button class='emissions-btn' onclick='postCO2(" + drivingDistance +")'>Add to emisions</button>\
                                     </div>")
             }
 
