@@ -3,6 +3,7 @@ services:
   app:
     build:
       context: .
+      dockerfile: ./Dockerfile
     ports:
       - "8000:8000"
     volumes:
@@ -16,3 +17,4 @@ services:
       - DATABASE_NAME=${DATABASE_NAME}
       - DATABASE_USER=${DATABASE_USER}
       - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - OPEN_WEATHER_API=${OPEN_WEATHER_API}
