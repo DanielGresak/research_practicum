@@ -1,6 +1,12 @@
 
 /* dynamic main page component behaviour. */
 
+
+
+/* https://stackoverflow.com/questions/54835849/django-how-to-send-csrf-token-with-ajax */
+let cookie = document.cookie
+let csrfToken = cookie.substring(cookie.indexOf('=') + 1)
+
 /* HIDING COMPONENTS ON LOAD */
 
 $(".appbar").hide(); 
@@ -8,6 +14,9 @@ $(".appbar").hide();
 $(".app-bar-app").hide();
 
 $(".busInfo").hide();
+
+$(".login").hide();
+
 
 /* TOOLBAR CLICK FUNCTIONALITY */
 $(".vertical-menu a").click(function(){
@@ -124,10 +133,19 @@ function renderDirections(result, gmap){
 
 // routes is from result["routes"][index]
 function getBusInfo(routes){
+<<<<<<< HEAD
     var busRoutes = [];
+=======
+    var busInfo = []
+    var busRoutes = {};
+    var routeNumber = [];
+    var arrivingTime = [];
+>>>>>>> refs/remotes/origin/developement
     var steps = routes["legs"][0]["steps"];
     var numberSteps = steps.length;
+    var meters = 0
     for (let i = 0; i < numberSteps; i++){
+<<<<<<< HEAD
         if (steps[i]["transit"] !== undefined){// find the steps for the bus instead of walking
             routeInfo={};
             thisRoute={};
@@ -141,6 +159,22 @@ function getBusInfo(routes){
         }
     }
     return busRoutes;
+=======
+        if (steps[i]["transit"] !== undefined){// find the step for the bus instead of working
+            routeNumber.push(steps[i]["transit"]["line"]["short_name"]);
+            arrivingTime.push(steps[i]["transit"]["arrival_time"]["text"]);
+            meters += steps[i]["distance"]["value"]
+        }
+    }
+    
+    // busRoutes["distance"] = meters
+    busRoutes[routeNumber] = arrivingTime;
+    busInfo.push(busRoutes);
+    
+    busInfo.push({distance: meters})
+    console.log(busInfo);
+    return busInfo;
+>>>>>>> refs/remotes/origin/developement
 }
 
 function getDirection(line, departure, arrival){
@@ -222,6 +256,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
             var totalNumberOfRoutes = result["routes"].length// total number of routes
             $(".busInfo").show();
             $(".searchbar").hide();
+<<<<<<< HEAD
         
             // for all the suggested ways(routes) the google map provides:
             for(let route = 0; route < totalNumberOfRoutes; route++){
@@ -230,6 +265,16 @@ function calcRoute(directionsService, directionsRenderer, map) {
                 }
                 var busRoutes = getBusInfo(result["routes"][route]); // an array of routes(transfer) or a route(one go)
                 // if no need to transfer a bus, only one key will be in this dict
+=======
+            
+            for(let route = 0; route < totalNumberOfRoutes; route++){
+                console.log(result)
+                var info = getBusInfo(result["routes"][route]);
+                var busRoutes = info[0] // the bus number and arriving time pair(directionary)
+                var distance = info[1]["distance"]
+                var busNumber = Object.keys(busRoutes); // bus number
+                var arrivingTime = busRoutes[busNumber];// arriving time of this bus
+>>>>>>> refs/remotes/origin/developement
                 var busNumString = "";
                 var busArrivingString="";
                 var busTravelTime="";
@@ -265,6 +310,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
                                         <p class = 'busDetail' id = 'totalTravelTime'>Total travel time:"+busTravelTime+"</p>\
                                         <p class = 'busDetail' id = 'busFare'>Bus fare:</p>\
                                         <p class = 'busDetail' id = 'carbonEmissionSaved'>Carbon emission saved:</p>\
+                                        <button class='emissions-btn' onclick='postCO2(" + distance +")'>Add to emisions</button>\
                                     </div>")
             }
 
@@ -358,3 +404,186 @@ function showPosition(position) {
     var position = position.coords.latitude + ", " + position.coords.longitude;
   $("#search_start").val(position);
 }
+
+
+/* GETTING UP TO DATE CO2 INFORMATION */
+
+function updateEmissions(){
+    $.get("carbon/get/", function(data, status){
+        if (data["co2_saved"] == 0){
+            $(".co2-saved").text("No savings yet, take a trip and save some emissions!")
+        }
+        else {
+            $(".co2-saved").text(data["co2_saved"] + " gs of co2 saved!")
+        }
+    })
+}
+
+// $.get("carbon/get/", function(data, status){
+//     $(".co2-saved").text(data["co2_saved"] + " grams of co2.")
+// })
+
+updateEmissions()
+
+/* FUNCTION FOR POST REQUEST TO ADD CO2 INFORMATION */
+function postCO2(toAdd){
+    $.post("carbon/", {'value': toAdd}).done(function(response){
+        alert("Your trip has been added to your emmisions saved")
+    }).then(function(){
+        updateEmissions()
+    
+      
+    })
+}
+
+/* AUTHENTICATION */
+
+$("#login-button").click(function(){
+    var emailField = document.getElementById("login-email")
+    if (!emailField.checkValidity()){
+        $("#login-email-validation-text").text("Please enter a valid email.")
+        $("#login-email-validation-text").css({ 'color': 'red'});
+        $("#login-email-validation-text").show()
+    } else {
+        $("#login-email-validation-text").hide()
+        let cookie = document.cookie
+        let csrfToken = cookie.substring(cookie.indexOf('=') + 1)
+        var registerData = {
+            userEmail: $("#login-email").val(),
+            userPassword: $("#login-password").val()
+        }
+        $.ajax({
+            type: "POST",
+            url: "login",
+            data: registerData,
+            dataType: "json",
+            encode: true,
+            headers: {
+                'X-CSRFToken': csrfToken
+            },
+            success: function(msg) {
+                alert("You have suvccfully logged in :) .")
+            },
+            "statusCode": {
+                401: function (xhr, error, thrown) {
+                alert("Email or Password Incorrect")
+                }
+            }
+        }).then(function(){
+
+            $(".logout").show()
+            $(".login").hide()
+            updateEmissions()
+        })
+
+    }
+    
+})
+
+$("#register-button").click(function(){
+    var emailField = document.getElementById("register-email")
+    if (!emailField.checkValidity()){
+        $("#register-email-validation-text").text("Please enter a valid email.")
+        $("#register-email-validation-text").css({ 'color': 'red'});
+        $("#register-email-validation-text").show()
+    }
+    else if ($("#register-password").val() == $("#confirm-register-password").val()){
+        $("#register-email-validation-text").hide()
+        $("#password-validation-text").hide()
+        let cookie = document.cookie
+        let csrfToken = cookie.substring(cookie.indexOf('=') + 1)
+        var registerData = {
+            userEmail: $("#register-email").val(),
+            userPassword: $("#register-password").val()
+        }
+        $.ajax({
+            type: "POST",
+            url: "register",
+            data: registerData,
+            dataType: "json",
+            encode: true,
+            headers: {
+                'X-CSRFToken': csrfToken
+            },
+            success: function(msg) {
+                alert("You have successfully registered and been logged in. ")
+            },
+            "statusCode": {
+                401: function (xhr, error, thrown) {
+                alert("Email already exists on our system and password is incorrect.")
+                }
+            }
+        }).then(function(){
+            $(".logout").show()
+            $(".register").hide()
+            updateEmissions()
+        })
+} else {
+    $("#password-validation-text").text("Passwords do not match.")
+    $("#password-validation-text").css({ 'color': 'red'});
+    $("#password-validation-text").show()
+}})
+
+$("#logout-button").click(function(){
+    console.log("clicked")
+    $.ajax({
+        type: "GET",
+        url: "logout",
+        dataType: 'json',
+        headers: {
+            'X-CSRFToken': csrfToken
+        },
+        success: function(msg) {
+            alert("You have successfully logged out.")
+        },
+        
+    }).then(function(){
+        $(".logout").hide()
+        $(".login").show()
+        updateEmissions()
+        
+    })
+})
+
+/* CHANGING THE PAGE DEPENDING OF IN THE USER WANTS TO LOGIN OR REGISTER  */ 
+$("#login-to-reg").click(function(){
+    $(".register").show()
+    $(".login").hide()
+})
+
+
+$("#reg-to-login").click(function(){
+    $(".register").hide()
+    $(".login").show()
+})
+
+
+/* DELETE ACCOUNT FUNCTIONALITY */
+$("#delete-button").click(function(){
+    let confirmAction = confirm("Are you sure you want to delete your account with us?")
+    if (confirmAction){
+        $.ajax({
+            type: "GET",
+            url: "delete",
+            dataType: 'json',
+            headers: {
+                'X-CSRFToken': csrfToken
+            },
+            success: function(msg) {
+                alert("Account is deleted!")
+            },
+            "statusCode": {
+                404: function (xhr, error, thrown) {
+                alert("Account not found.")
+                }
+            }
+        }).then(function(){
+            $(".logout").hide()
+            $(".login").show()
+            updateEmissions() 
+        })
+    }
+    else {
+        alert("Account not deleted.")
+    }
+})

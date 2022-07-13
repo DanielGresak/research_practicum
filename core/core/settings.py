@@ -31,6 +31,8 @@ ALLOWED_HOSTS = [
     '0.0.0.0',
     'localhost',
     '127.0.0.1',
+    'http://ipa-017.ucd.ie/',
+    '*'
 ]
 ALLOWED_HOSTS_ENV = os.environ.get('ALLOWED_HOSTS')
 
@@ -49,6 +51,8 @@ INSTALLED_APPS = [
     'routes',
     'core',
     'weather.apps.WeatherConfig', # We explictely define our customised app configuration because it includes our interval background updater
+    'carbonCalculator',
+    "users",
 ]
 
 MIDDLEWARE = [
@@ -81,6 +85,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
+# # Use nose to run all tests
+# TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+# # Use nose to run all tests
+# TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
@@ -129,10 +138,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = '/static/static/'
+STATIC_URL = 'static/static/'
 MEDIA_URL = '/static/media/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR,'static')]
-# STATIC_ROOT=os.path.join(BASE_DIR, 'static')
+STATIC_ROOT=os.path.join(BASE_DIR, 'static')
 STATIC_ROOT = '/vol/web/static'
 MEDIA_ROOT = '/vol/web/media'
 

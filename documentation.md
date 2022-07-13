@@ -5,6 +5,7 @@
 2. [Django](#django)
 3. [Testing](#testing)
 4. [Virtual Machine](#virtual-machine)
+5. [Deployment](#deployment)
 
 ## Set up
 
@@ -59,25 +60,22 @@ docker compose -f docker-compose-deploy.yml build --no-cache
 
 Application testing is important when making changes to the application to make sure we don't inadvertantly create bugs in the application. 
 
-To do this, make sure you're in the root directory and run the following command:
+To do this, we first need the application working in the background so that we can test the front-end using selenium. Firstly, make sure you have selenium  and webdriver installed locally.
 
-```
-python manage.py test
-```
+The application can then be run in the background using `docker-compose up -d`.
 
-This will run all tests in the testing folder and give the results within the console. This will be run locally.
+Then make sure you're in the initial core directory.
+You can then run `python manage.py test`
 
-To test within docker container, run the following command.
+This will run all tests, you should also see a browser pop up briefly and go through the website a few times. 
 
-```
-docker-compose up -d
-```
-
+(Below won't work at the moment)
 Then run:
 
 ```
-docker exec -ti researchpracticum-app-1 sh -c "python manage.py test"
+docker exec -ti researchpracticum_app_1 sh -c "python manage.py test"
 ```
+
 
 ## Django Extension in VS-Code
 The following Django Extension aims to speed up coding by highlighting code snippets in Django-html. 
@@ -125,3 +123,29 @@ The passphrase is requested every time VS-Code is opened. To solve this issue le
 
 
 
+## Deployment
+
+To deploy the application on the ucd virtual machine, you first have to sign onto the UCD vm through your terminal
+
+This can be done by typing in:
+```
+ssh student@ipa-017.ucd.ie
+```
+
+And then putting in the password.
+
+You can then change into the research practicum directory.
+
+Check to see if the application is currently running. This can be done by inputting `docker ps`. If there is any containers running you can run `docker kill <container-name>`.
+
+At this stage if you would like you can pull any changes from git.
+
+Then you can run:
+
+```
+docker-compose -f docker-compose-deploy.yml up --build
+```
+
+This will run the application in the foreground. To run it in the background, just add `-d` at the end of the script above.
+
+Once this is done you can exit the vm anytime by typing exit and the application should still be running if you added the `-d`.
