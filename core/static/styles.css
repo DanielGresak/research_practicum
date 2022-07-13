@@ -154,6 +154,46 @@ form {
   color: white;
 }
 
+
+/* Auth CSS */
+
+.btn-auth-change {
+  float: right;
+  margin-right: 3vw;
+}
+
+/* input:valid {
+  background-color: ivory;
+  border: none;
+  outline: 2px solid deepskyblue;
+  border-radius: 5px;
+  accent-color: gold;
+}
+
+input + span {
+  position: relative;
+}
+
+input + span::before {
+  position: absolute;
+  right: -20px;
+  top: 5px;
+}
+
+input:invalid {
+  border: 2px solid red;
+}
+
+input:invalid + span::before {
+  content: '✖';
+  color: red;
+}
+
+input:valid + span::before {
+  content: '✓';
+  color: green;
+} */
+
 /* MOBILE WEBSITE */
 
 @media screen and (max-width: 1000px) {
