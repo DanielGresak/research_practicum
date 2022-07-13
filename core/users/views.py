@@ -7,6 +7,7 @@ from users.models import Profile
 from django.contrib.auth.decorators import login_required
 # from sympy import re
 
+@csrf_exempt
 def registerUser(request):
     
     if request.method == 'POST':
@@ -37,6 +38,7 @@ def registerUser(request):
             return HttpResponse(status=204)
 
 
+@csrf_exempt
 def loginUser(request):
     if request.method == 'POST':
         user_email = request.POST.get("userEmail")
@@ -60,6 +62,7 @@ def username_exists(username):
     return User.objects.filter(username=username).exists()
 
 # https://stackoverflow.com/questions/33715879/how-to-delete-user-in-django
+@csrf_exempt
 @login_required
 def delete_user(request):
     try:
