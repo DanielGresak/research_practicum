@@ -10,7 +10,6 @@ from selenium.webdriver.common.by import By
 class FrontEndTestCase(LiveServerTestCase):
 
     def setUp(self):
-        
         self.selenium = webdriver.Chrome(ChromeDriverManager().install())
         super(FrontEndTestCase, self).setUp()
 
