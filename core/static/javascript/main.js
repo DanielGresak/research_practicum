@@ -133,19 +133,10 @@ function renderDirections(result, gmap){
 
 // routes is from result["routes"][index]
 function getBusInfo(routes){
-<<<<<<< HEAD
     var busRoutes = [];
-=======
-    var busInfo = []
-    var busRoutes = {};
-    var routeNumber = [];
-    var arrivingTime = [];
->>>>>>> refs/remotes/origin/developement
     var steps = routes["legs"][0]["steps"];
     var numberSteps = steps.length;
-    var meters = 0
     for (let i = 0; i < numberSteps; i++){
-<<<<<<< HEAD
         if (steps[i]["transit"] !== undefined){// find the steps for the bus instead of walking
             routeInfo={};
             thisRoute={};
@@ -159,22 +150,6 @@ function getBusInfo(routes){
         }
     }
     return busRoutes;
-=======
-        if (steps[i]["transit"] !== undefined){// find the step for the bus instead of working
-            routeNumber.push(steps[i]["transit"]["line"]["short_name"]);
-            arrivingTime.push(steps[i]["transit"]["arrival_time"]["text"]);
-            meters += steps[i]["distance"]["value"]
-        }
-    }
-    
-    // busRoutes["distance"] = meters
-    busRoutes[routeNumber] = arrivingTime;
-    busInfo.push(busRoutes);
-    
-    busInfo.push({distance: meters})
-    console.log(busInfo);
-    return busInfo;
->>>>>>> refs/remotes/origin/developement
 }
 
 function getDirection(line, departure, arrival){
@@ -256,7 +231,6 @@ function calcRoute(directionsService, directionsRenderer, map) {
             var totalNumberOfRoutes = result["routes"].length// total number of routes
             $(".busInfo").show();
             $(".searchbar").hide();
-<<<<<<< HEAD
         
             // for all the suggested ways(routes) the google map provides:
             for(let route = 0; route < totalNumberOfRoutes; route++){
@@ -265,16 +239,6 @@ function calcRoute(directionsService, directionsRenderer, map) {
                 }
                 var busRoutes = getBusInfo(result["routes"][route]); // an array of routes(transfer) or a route(one go)
                 // if no need to transfer a bus, only one key will be in this dict
-=======
-            
-            for(let route = 0; route < totalNumberOfRoutes; route++){
-                console.log(result)
-                var info = getBusInfo(result["routes"][route]);
-                var busRoutes = info[0] // the bus number and arriving time pair(directionary)
-                var distance = info[1]["distance"]
-                var busNumber = Object.keys(busRoutes); // bus number
-                var arrivingTime = busRoutes[busNumber];// arriving time of this bus
->>>>>>> refs/remotes/origin/developement
                 var busNumString = "";
                 var busArrivingString="";
                 var busTravelTime="";
