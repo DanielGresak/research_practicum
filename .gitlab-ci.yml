@@ -17,7 +17,8 @@ Type-test:
     stage: test
     image: python:3.9-alpine
     script:
-        - bash -c "apt add python3 py3-pip"
+        - bash -c "apt install python3"
+        - bash -c "apt install python3-pip"
         - bash -c "pip3 install mypy"
         - bash -c "mypy core"
     allow_failure: true
@@ -26,7 +27,8 @@ Lint-test:
     stage: test
     image: python:3.9-alpine
     script:
-        - bash -c "apt add python3 py3-pip"
+        - bash -c "apt install python3"
+        - bash -c "apt install python3-pip"
         - bash -c "pip install flake8"
         - bash -c "flake8"
     allow_failure: true
