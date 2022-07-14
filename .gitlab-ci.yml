@@ -17,18 +17,16 @@ Type-test:
     stage: test
     image: python:3.9-alpine
     script:
-        - apk add py3-pip
-        - pip3 install mypy
-        - mypy core
+        - bash -c "pip3 install mypy"
+        - bash -c "mypy core"
     allow_failure: true
     
 Lint-test:
     stage: test
     image: python:3.9-alpine
     script:
-        - apk add py3-pip
-        - pip3 install flake8
-        - flake8
+        - bash -c "pip install flake8"
+        - bash -c "flake8"
     allow_failure: true
 
 deploy:
