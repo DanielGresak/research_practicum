@@ -1,0 +1,6 @@
+run_tests:
+    image: python:3.9-alpine
+    before_script:
+        - docker-compose up -d
+    script:
+        - docker exec -ti researchpracticum_app_1 sh -c "python manage.py test"
