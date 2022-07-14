@@ -5,7 +5,7 @@ venv/
 .idea/
 # .vscode
 .env
-
+env
 # Created by https://www.gitignore.io
 
 ### OSX ###

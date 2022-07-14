@@ -31,6 +31,8 @@ ALLOWED_HOSTS = [
     '0.0.0.0',
     'localhost',
     '127.0.0.1',
+    'http://ipa-017.ucd.ie/',
+    '*'
 ]
 ALLOWED_HOSTS_ENV = os.environ.get('ALLOWED_HOSTS')
 

@@ -124,32 +124,74 @@ function renderDirections(result, gmap){
     return directionRenders;
 }
 
-// this function will return a directionary contains the bus routes and arriving time
-// in case of transfering, the key and value will be an array(more than one buses)
+// this function will return an array contains the dicts of the bus routes and related details pairs
+// in case of transfering bus, more than one dict will be in this array
+
+// so the structure of this array is like [{47:{}}, {36:{}}..], the length of the array is the number of bus need to transfer
+// the bus route details dict contains the: arriving time of this bus, the draving distance, the headsign (last stop on this route) of this bus
+// and the number of stops this trip will cover.
+
 // routes is from result["routes"][index]
 function getBusInfo(routes){
-    var busInfo = []
-    var busRoutes = {};
-    var routeNumber = [];
-    var arrivingTime = [];
+    var busRoutes = [];
     var steps = routes["legs"][0]["steps"];
     var numberSteps = steps.length;
-    var meters = 0
     for (let i = 0; i < numberSteps; i++){
-        if (steps[i]["transit"] !== undefined){// find the step for the bus instead of working
-            routeNumber.push(steps[i]["transit"]["line"]["short_name"]);
-            arrivingTime.push(steps[i]["transit"]["arrival_time"]["text"]);
-            meters += steps[i]["distance"]["value"]
+        if (steps[i]["transit"] !== undefined){// find the steps for the bus instead of walking
+            routeInfo={};
+            thisRoute={};
+            routeInfo["arriving_time"]=steps[i]["transit"]["departure_time"]["text"];
+            routeInfo["driving_distance"]=steps[i]["distance"]["value"];
+            routeInfo["num_stops"]=steps[i]["transit"]["num_stops"];
+            routeInfo["travel_time"]=steps[i]["duration"]["value"];// travel time in second.
+            routeInfo["direction"]=getDirection(steps[i]["transit"]["line"]["short_name"],steps[i]["transit"]["departure_stop"]["name"], steps[i]["transit"]["arrival_stop"]["name"]);
+            thisRoute[steps[i]["transit"]["line"]["short_name"]]=routeInfo;
+            busRoutes.push(thisRoute);
         }
     }
-    
-    // busRoutes["distance"] = meters
-    busRoutes[routeNumber] = arrivingTime;
-    busInfo.push(busRoutes);
-    
-    busInfo.push({distance: meters})
-    console.log(busInfo);
-    return busInfo;
+    return busRoutes;
+}
+
+function getDirection(line, departure, arrival){
+    //console.log("departure stop: "+departure);
+    var departureStop = ""+departure.replace(/[^0-9.]/g, "");
+    var arrivalStop = ""+arrival.replace(/[^0-9.]/g, "");
+    //console.log("departure gagagaga stop: "+departureStop);
+    //console.log("arrival gagagagaga stop : "+arrivalStop);
+    //console.log("line: "+line);
+    var bound;
+    $.ajax({
+        url: "./data",
+        async: false,
+        dataType: "json",
+        success: function(json){
+            if(line in json){
+                if((jQuery.inArray(departureStop,json[line]["outbound"]) !== -1) || (jQuery.inArray(arrivalStop,json[line]["outbound"]) !== -1)){
+                    bound= 2;
+                }
+                else if((jQuery.inArray(departureStop,json[line]["inbound"]) !== -1) || (jQuery.inArray(arrivalStop,json[line]["inbound"]) !== -1)){
+                    bound= 1;
+                }
+                else{bound = 0}
+            }
+            else{bound = 0} 
+        }
+    })
+    return bound;
+}
+
+// return the travel time of a route
+function travelTime(route, direction, num_stops){
+    var d;
+    var travelTime;
+    if(direction === 1){
+        d="inbound";
+    }else{
+        d="outbound";
+    }
+    const model_name="route_"+route+"_"+d+".pkl";
+
+    return model_name;
 }
 
 
@@ -184,51 +226,69 @@ function calcRoute(directionsService, directionsRenderer, map) {
 
             // display all the possible routes on the map in different colors
             const directionRenderers = renderDirections(result, map);
-
+            console.log(result["routes"]);
             // total number of possible routes
             var totalNumberOfRoutes = result["routes"].length// total number of routes
             $(".busInfo").show();
             $(".searchbar").hide();
-            
+        
+            // for all the suggested ways(routes) the google map provides:
             for(let route = 0; route < totalNumberOfRoutes; route++){
-                console.log(result)
-                var info = getBusInfo(result["routes"][route]);
-                var busRoutes = info[0] // the bus number and arriving time pair(directionary)
-                var distance = info[1]["distance"]
-                var busNumber = Object.keys(busRoutes); // bus number
-                var arrivingTime = busRoutes[busNumber];// arriving time of this bus
+                if (result["routes"][route]["legs"][0]["steps"].length < 2){
+                    continue;
+                }
+                var busRoutes = getBusInfo(result["routes"][route]); // an array of routes(transfer) or a route(one go)
+                // if no need to transfer a bus, only one key will be in this dict
                 var busNumString = "";
-                var busArrivingString = "";
-                busNumber.forEach(number =>{ busNumString += number});// will be optimized later on for the bus transfering case
-                arrivingTime.forEach(number =>{ busArrivingString += number});//will be optimized later on for the bus transfering case
+                var busArrivingString="";
+                var busTravelTime="";
+                var drivingDistance=0;
+
+                for(const r of busRoutes) {
+                    const routeNumber = Object.keys(r);
+                    busNumString = busNumString+routeNumber+" -> ";
+                    busArrivingString=busArrivingString+r[routeNumber]["arriving_time"]+"; ";
+                    drivingDistance=drivingDistance+r[routeNumber]["driving_distance"];
+                    busTravelTime=busTravelTime+travelTime(routeNumber, r[routeNumber]["direction"], r[routeNumber]["num_stops"])+"; "
+                    //console.log(routeNumber+" "+r[routeNumber]["last_stop"]);
+                    //console.log(routeNumber+" "+r[routeNumber]["driving_distance"]);
+                    //console.log("end_location"+routeNumber+"   "+r[routeNumber]["direction"]);
+                }
+                console.log("total driving distance:"+drivingDistance);
+                busNumString = busNumString.slice(0, -3);
+                busArrivingString = busArrivingString.slice(0, -2);
+                busTravelTime = busTravelTime.slice(0, -2);
+                
+
+                //var busNumber = Object.keys(busRoutes); // bus number
+                //var arrivingTime = busRoutes[busNumber];// arriving time of this bus
+                
+                //var busArrivingString = "";
+                //busNumber.forEach(number =>{ busNumString += number});// will be optimized later on for the bus transfering case
+                //arrivingTime.forEach(number =>{ busArrivingString += number});//will be optimized later on for the bus transfering case
                 
                 // add a bus info child window for every bus/route
                 $(".busInfo").append("<div class = 'oneBus'>\
-                                        <p class = 'busHeader'>"+"Bus route "+(route+1)+": "+busNumString+"</p>\
-                                        <p class = 'busDetail' id = 'arrivingTime'>Arriving time: <span id ='time'>"+ busArrivingString+"</span></p>\
-                                        <p class = 'busDetail' id = 'totalTravelTime'>Total travel time:</p>\
+                                        <p class = 'busHeader'>"+"Bus route "+(route+1)+": "+busNumString+"<button class='selectRoute'>Select</button></p>\
+                                        <p class = 'busDetail' id = 'arrivingTime'>Arriving time:<span id ='time'>"+ busArrivingString+"</span></p>\
+                                        <p class = 'busDetail' id = 'totalTravelTime'>Total travel time:"+busTravelTime+"</p>\
                                         <p class = 'busDetail' id = 'busFare'>Bus fare:</p>\
                                         <p class = 'busDetail' id = 'carbonEmissionSaved'>Carbon emission saved:</p>\
-                                        <button class='emissions-btn' onclick='postCO2(" + distance +")'>Add to emisions</button>\
+                                        <button class='emissions-btn' onclick='postCO2(" + drivingDistance +")'>Add to emisions</button>\
                                     </div>")
             }
+
+            var selectedRoute=[];//each time select button is clicked, this var will be refreshed.
+            var confirmedRoute=[];// ------> this is the final confirmed route the user has selected.
             //add a back button, go back to the search bar
             $(".busInfo").append("<button id='busInfoBtn' class='btn btn-dark'>Back</button>");
-            
-            $("#busInfoBtn").click(function(){
-                for (let stroke = 0; stroke < directionRenderers.length; stroke++){
-                    directionRenderers[stroke].setOptions({map:null});
-                }// clear the previous map render
-                $(".busInfo").empty();//clear all the child element, so user can search again
-                // $(".busInfo").css("display", "none");// hide the info bar
-                $(".searchbar").css("display", "block");//show the searchbar
-                $(".busInfo").hide();
-                $(".searchbar").show();
-            });
 
-            // when click on a bus info window, extract the route index and only display the according route on the map
-            $(".oneBus").mousedown(function() {
-                var stringToArray = $(this).text().match(/\b(\w+)\b/g);
+            //confirm button confirms the route selected
+            $(".busInfo").append("<button id='confirm' class='btn btn-dark'>Confirm</button>");
+
+            //select button selects route and renders the related route on the  map
+            $(".selectRoute").mousedown(function(){
+                var stringToArray = $(this).parent().text().match(/\b(\w+)\b/g);
                 var busIndex = stringToArray[2]-1;//extracting the route index
 
                 //for the on clicked route, set the color to red
@@ -242,7 +302,38 @@ function calcRoute(directionsService, directionsRenderer, map) {
                     directionRenderers[stroke].setOptions({map:null, directions: result, routeIndex:stroke});
                 }
                 directionRenderers[busIndex].setOptions({polylineOptions:polylineOnClick, map:map, directions: result, routeIndex:busIndex});
-             });
+                
+                selectedRoute=getBusInfo(result["routes"][busIndex]);
+
+                $(".selectRoute").css("background-color","white");
+                $(".selectRoute").css("color", "black");
+
+                $(this).css("background-color","green");
+                $(this).css("color", "white");
+
+            })
+
+            //confirm button confirms the route selected, and use the route array to calculate the co2 and set the notiffication
+            $("#confirm").click(function(){
+                if(selectedRoute.length === 0){
+                    console.log("Please selected a route")
+                }else{
+                    confirmedRoute=selectedRoute;// confirmedRoute will be the last clicked route
+                }
+            });
+
+            //when back is clicked, clear the map and render the new results on it.
+            $("#busInfoBtn").click(function(){
+                for (let stroke = 0; stroke < directionRenderers.length; stroke++){
+                    directionRenderers[stroke].setOptions({map:null});
+                }// clear the previous map render
+                $(".busInfo").empty();//clear all the child element, so user can search again
+                // $(".busInfo").css("display", "none");// hide the info bar
+                $(".searchbar").css("display", "block");//show the searchbar
+                $(".busInfo").hide();
+                $(".searchbar").show();
+            });
+
         }
         else{
             console.log(status);

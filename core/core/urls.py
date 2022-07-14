@@ -23,7 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='homepage'),
     path('', include('weather.urls')),
+    path('data/', views.data, name='stopsData'),
     path('', include('carbonCalculator.urls')),
     path('', include("users.urls")),
-
 ]
