@@ -1,6 +1,25 @@
-run_tests:
+
+
+stages:
+    - test
+    - deploy
+
+test:
+    stage: test
+    only:
+        - developement
+        - master
     image: python:3.9-alpine
     before_script:
         - docker-compose up -d
     script:
         - docker exec researchpracticum_app_1 sh -c "python manage.py test"
+
+deploy:
+    image: python:3.9-alpine
+    stage: deploy
+    only:
+        - master
+        - developement
+    script:
+        - docker-compose -f docker-compose-deploy.yml up --build -d
