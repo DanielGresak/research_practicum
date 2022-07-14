@@ -1,4 +1,6 @@
 run_tests:
     image: python:3.9-slim-buster
+    before_script:
+        - apt-get update && pip install -r requirements.tx
     script:
         - python core/manage.py test
