@@ -1,5 +1,7 @@
 run_tests:
     image: python:3.9-slim-buster
+    tags:
+        - python
     variables:
         SECRET_KEY: "samplesecretkey123"
         ALLOWED_HOSTS: "127.0.0.1,localhost,31.187.28.185"
