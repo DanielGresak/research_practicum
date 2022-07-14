@@ -1,5 +1,5 @@
 run_tests:
-    image: python:3.9-slim-buster
+    image: python:3.9-alpine
     tags:
         - python
     variables:
@@ -11,7 +11,8 @@ run_tests:
         DATABASE_PASSWORD: "DaMaYaJo2022"
         OPEN_WEATHER_API: "9cbe779463d67dbaec999233ec9ac33c"
     before_script:
-        - apt-get update && pip install -r requirements.tx
+        - apt-get update
+        - pip3 install -r requirements.txt
     script:
         - cd core
         - python3 manage.py makemigrations
