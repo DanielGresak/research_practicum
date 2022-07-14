@@ -3,4 +3,4 @@ run_tests:
     before_script:
         - docker-compose up -d
     script:
-        - docker exec -ti researchpracticum_app_1 sh -c "python manage.py test"
+        - docker exec researchpracticum_app_1 sh -c "python manage.py test"
