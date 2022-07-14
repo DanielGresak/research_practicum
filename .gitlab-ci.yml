@@ -1,6 +1,17 @@
 run_tests:
     image: python:3.9-slim-buster
+    variables:
+        SECRET_KEY: "samplesecretkey123"
+        ALLOWED_HOSTS: "127.0.0.1,localhost,31.187.28.185"
+        GOOGLE_MAPS_KEY: "AIzaSyAT34bLhGEEweJ1Gf7hFh0RyXROTn1vuEs"
+        DATABASE_NAME: "comp47360db"
+        DATABASE_USER: "admin"
+        DATABASE_PASSWORD: "DaMaYaJo2022"
+        OPEN_WEATHER_API: "9cbe779463d67dbaec999233ec9ac33c"
     before_script:
         - apt-get update && pip install -r requirements.tx
     script:
-        - python core/manage.py test
+        - cd core
+        - python3 manage.py makemigrations
+        - python3 manage.py migrate
+        - python3 manage.py test
