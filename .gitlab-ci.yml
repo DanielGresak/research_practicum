@@ -13,13 +13,13 @@ test:
     script:
         - docker exec researchpracticum_app_1 sh -c "python manage.py test"
 
-Type-test:
-    stage: test
-    image: python:3.9-alpine
-    script:
-        - bash -c "pip3 install mypy"
-        - bash -c "mypy core"
-    allow_failure: true
+# Type-test:
+#     stage: test
+#     image: python:3.9-alpine
+#     script:
+#         - bash -c "pip3 install mypy"
+#         - bash -c "mypy core"
+#     allow_failure: true
     
 Lint-test:
     stage: test
