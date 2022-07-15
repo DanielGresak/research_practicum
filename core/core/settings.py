@@ -50,8 +50,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
-    # We explictely define our customised app configuration because it includes our interval background updater
-    'weather.apps.WeatherConfig', 
+    # We explictely define our customised app configuration because 
+    # it includes our interval background updater
+    'weather.apps.WeatherConfig',
     'carbonCalculator',
     "users",
 ]
@@ -121,7 +122,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',# noqa
-    }, 
+    },
 ]
 
 # Internationalization

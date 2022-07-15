@@ -12,4 +12,3 @@ urlpatterns = [
     path('', include('carbonCalculator.urls')),
     path('', include("users.urls")),
 ]
-

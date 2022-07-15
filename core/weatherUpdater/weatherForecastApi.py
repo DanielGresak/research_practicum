@@ -5,7 +5,7 @@ import requests
 from django.core.serializers.json import DjangoJSONEncoder
 from weather.models import Forecast, CurrentWeather
 from requests.exceptions import HTTPError
-
+# flake8: noqa
 
 # Define global constants
 LATITUDE = 53.350140  # Latitude of Dublin

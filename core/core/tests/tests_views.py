@@ -29,11 +29,11 @@ class ViewTests(TestCase):
             "userEmail": "testemsfsfsdgsadasdasdail@email.com",
             "userPassword": "passworasdasdasdasdasdasdasdd123"
         }
-    
 
     def test_homepage(self):
         response = self.client.get(self.home_url)
         self.assertEqual(response.status_code, 200)
+
 
 class UserTests(ViewTests):
     def test_register_and_login(self):
@@ -41,14 +41,14 @@ class UserTests(ViewTests):
         user = User.objects.filter(email=self.user["userEmail"]).first()
         user.is_active = True
         user.save()
-        response = self.client.post(self.login_url, 
-                                    self.user, 
+        response = self.client.post(self.login_url,
+                                    self.user,
                                     format="text/html")
         self.assertEqual(response.status_code, 204)
 
     def test_no_account(self):
-        response = self.client.post(self.login_url, 
-                                    self.unregistered_user, 
+        response = self.client.post(self.login_url,
+                                    self.unregistered_user,
                                     format="text/html")
         self.assertEqual(response.status_code, 401)
 
@@ -57,18 +57,20 @@ class UserTests(ViewTests):
         user = User.objects.filter(email=self.user["userEmail"]).first()
         user.is_active = True
         user.save()
-        response = self.client.post(self.login_url, 
-                                    self.user_incorrect_password, 
+        response = self.client.post(self.login_url,
+                                    self.user_incorrect_password,
                                     format="text/html")
         self.assertEqual(response.status_code, 401)
-    
+
     def test_delete_account(self):
         self.client.post(self.register_url, self.user, format="text/html")
         user = User.objects.filter(email=self.user["userEmail"]).first()
         user.is_active = True
         user.save()
         self.client.post(self.login_url, self.user, format="text/html")
-        response = self.client.get(self.delete_url, self.user, format="text/html")
+        response = self.client.get(self.delete_url,
+                                   self.user,
+                                   format="text/html")
         self.assertEqual(response.status_code, 204)
 
 
