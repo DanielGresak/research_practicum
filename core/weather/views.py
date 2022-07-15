@@ -16,9 +16,9 @@ def weather_data_json(request):
     try:
         # Get a QuerySets of dictionaries according to the provided values
         forecast_query_set = Forecast.objects.all().values("dt", "dt_txt",
-                                                           "temp", "temp_min",
-                                                           "temp_max", "weather_main",
-                                                           "weather_icon", "pop")
+                                                           "temp", "temp_min",  # noqa
+                                                           "temp_max", "weather_main",  # noqa
+                                                           "weather_icon", "pop")  # noqa
         # Convert the QuerySet to a list of dictionaries
         forecast_list = list(forecast_query_set)
         # Get last weather object of the current weather table,
@@ -26,9 +26,10 @@ def weather_data_json(request):
         last_weather_obj = CurrentWeather.objects.filter(dt__gt=0).last()
         # Query current weather data by filtering for timestamp value
         # We'll be receiving a QuerySet that contains only one object.
-        # However, we require a QuerySet so that we can actually chain the forecast 
+        # However, we require a QuerySet so that we can 
+        # actually chain the forecast
         # and current weather information
-        weather_query_set = CurrentWeather.objects.filter(id=last_weather_obj.id).values()
+        weather_query_set = CurrentWeather.objects.filter(id=last_weather_obj.id).values()  # noqa
         # Chain both QuerySets - forecast and current weather information
         result_list = list(chain(forecast_list, weather_query_set))
         result_data = json.dumps(result_list)

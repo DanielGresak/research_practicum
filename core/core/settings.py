@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
-    # We explictely define our customised app configuration because 
+    # We explictely define our customised app configuration because
     # it includes our interval background updater
     'weather.apps.WeatherConfig',
     'carbonCalculator',

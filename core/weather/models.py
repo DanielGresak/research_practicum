@@ -5,7 +5,7 @@ from django.db import models
 
 class Forecast(models.Model):
     # Timestamp - Time of data forecasted, unix, UTC
-    dt = models.BigIntegerField() 
+    dt = models.BigIntegerField()
     # Timestamp text - Timestamp as string "yyyy-mm-dd hh:mm:ss"
     dt_txt = models.CharField(max_length=50, default="")
     # Temperature
@@ -24,7 +24,7 @@ class Forecast(models.Model):
     weather_icon = models.CharField(max_length=255)
     # Clouds - Cloudiness in %
     clouds = models.IntegerField(default=0)
-    # pop - Probability of precipitation. The values of the parameter 
+    # pop - Probability of precipitation. The values of the parameter
     # vary between 0 and 1, where 0 is equal to 0%, 1 is equal to 100%
     pop = models.FloatField(default=0.0)
 
