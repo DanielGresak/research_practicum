@@ -1,8 +1,8 @@
 from django.db import models
-from django.utils import timezone
-from datetime import datetime
+# from django.utils import timezone
+# from datetime import datetime
 
-# Create your models here.
+
 class Forecast(models.Model):
     # Timestamp - Time of data forecasted, unix, UTC 
     dt = models.BigIntegerField() 
@@ -29,6 +29,7 @@ class Forecast(models.Model):
 
     def __str__(self) -> str:
         return f'Forecast timestamp: {self.dt_txt}'
+
 
 class CurrentWeather(models.Model):
     # Timestamp - Time of data calculation, unix, UTC 

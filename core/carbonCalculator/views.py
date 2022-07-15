@@ -1,9 +1,7 @@
-from django.shortcuts import render
-# from sympy import re
 from django.core.exceptions import BadRequest
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-#csrf is checking if cookies have been accepted. We can add a cookie pop up later
+# csrf is checking if cookies have been accepted. We can add a cookie pop up later
 
 """
 Best way I found so far to calculate co2 saved is to take the information found in this article
@@ -20,15 +18,14 @@ Here is the study on this.
 calculation is based off average car and local bus under transport land work.
 """
 
+
 @csrf_exempt
 def CarbonCalculator(request):
     if request.method == 'POST':
         distance = int(request.POST.get('value', False))
-
         saved_emissions = calculate_emissions(distance)
         if request.user.is_authenticated:
-            current_user_emissions = request.user.profile
-            
+            current_user_emissions = request.user.profile 
             if current_user_emissions.emissions is not None:
                 current_user_emissions.emissions += saved_emissions
                 current_user_emissions.save()
@@ -36,7 +33,7 @@ def CarbonCalculator(request):
             if 'co2' in request.session:
                 request.session['co2'] += saved_emissions 
             else:
-                #Set session expiry to 50 years
+                # Set session expiry to 50 years
                 request.session.set_expiry(1576800000)
                 request.session['co2'] = saved_emissions
     else:
@@ -48,7 +45,6 @@ def ReturningCarbonData(request):
     if request.user.is_authenticated:
         current_user_emissions = request.user.profile
         data = current_user_emissions.emissions
-        
     elif 'co2' in request.session:
         data = request.session['co2'] 
     else:

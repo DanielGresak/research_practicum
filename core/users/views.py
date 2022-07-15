@@ -1,17 +1,15 @@
-from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, logout, login
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse, JsonResponse
 from users.models import Profile
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 # from sympy import re
+
 
 @csrf_exempt
 def registerUser(request):
-    
     if request.method == 'POST':
-        
         user_email = request.POST.get("userEmail")
         user_password = request.POST.get("userPassword")
         if username_exists(user_email):
@@ -53,13 +51,13 @@ def loginUser(request):
 
 
 def logoutUser(request):
-    
     logout(request)
-    
     return HttpResponse(status=204)
+
 
 def username_exists(username):
     return User.objects.filter(username=username).exists()
+
 
 # https://stackoverflow.com/questions/33715879/how-to-delete-user-in-django
 @csrf_exempt
@@ -73,5 +71,5 @@ def delete_user(request):
     except User.DoesNotExist:
         return HttpResponse(status=404)
 
-    except Exception as e: 
+    except Exception: 
         return HttpResponse(status=401)

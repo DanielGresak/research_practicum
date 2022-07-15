@@ -1,10 +1,11 @@
-from datetime import datetime
-from sched import scheduler
-import time
-import os
+# from datetime import datetime
+# from sched import scheduler
+# import time
+# import os
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from weatherUpdater import weatherForecastApi
+
 
 def start():
     job_scheduler = BackgroundScheduler()
