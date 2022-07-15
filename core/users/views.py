@@ -77,5 +77,5 @@ def delete_user(request):
         return HttpResponse(status=204)
     except User.DoesNotExist:
         return HttpResponse(status=404)
-    except Exception: 
+    except Exception:
         return HttpResponse(status=401)
