@@ -1,6 +1,7 @@
 # from django.shortcuts import render
 
-import os, smtplib
+import os
+import smtplib
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime
 from django.http import HttpResponse
@@ -13,7 +14,10 @@ def add_route_for_notification(request):
         bus = request.POST.get("bus")
         time = int(request.POST.get("time")) / 1000
         minutes = request.POST.get("minutes")
-        scheduler.add_job(send_notification, "date", run_date=datetime.fromtimestamp(int(time)), args=[bus, minutes, email])
+        scheduler.add_job(send_notification,
+                          "date",
+                          run_date=datetime.fromtimestamp(int(time)),
+                          args=[bus, minutes, email])
         scheduler.start()
         return HttpResponse(status=204)
     else:
@@ -21,7 +25,6 @@ def add_route_for_notification(request):
 
 
 def email(send_to, bus, minutes):
-    """Parameters are the reciepients email, the subject and the message all as strings."""
     subject = "Your bus is due!"
     message = create_message(bus, minutes)
     my_email = "busapplicationucd@gmail.com"
