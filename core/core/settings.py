@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'weather.apps.WeatherConfig',
     'carbonCalculator',
     "users",
+    "notifications",
 ]
 
 MIDDLEWARE = [
