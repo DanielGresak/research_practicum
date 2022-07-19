@@ -48,7 +48,7 @@ def send_sms(send_to, bus, minutes):
     account_sid = os.environ.get('TWILIO_SID')
     auth_token = os.environ.get('TWILIO_AUTH')
     client = Client(account_sid, auth_token)
-    message = client.messages.create(
+    client.messages.create(
         body=message_body,
         from_="+18305875212",
         to="+353857415917"
