@@ -4,9 +4,6 @@ stages:
 
 test:
     stage: test
-    only:
-        - developement
-        - master
     image: python:3.9-alpine
     before_script:
         - docker-compose up -d
