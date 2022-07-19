@@ -6,7 +6,8 @@ test:
     stage: test
     image: python:3.9-alpine
     before_script:
-        - docker-compose up --build -d
+        - docker-compose build --no-cache
+        - docker-compose up -d
     script:
         - docker exec researchpracticum_app_1 sh -c "python manage.py test"
 
