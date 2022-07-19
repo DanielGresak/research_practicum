@@ -53,6 +53,9 @@ INSTALLED_APPS = [
     'weather.apps.WeatherConfig', # We explictely define our customised app configuration because it includes our interval background updater
     'carbonCalculator',
     "users",
+    "prediction",
+    "rest_framework", # Needed for incorporating Django REST Framework
+    "drf_spectacular", # Allows flexible OpenAPI 3 schema generation for Django REST framework.
 ]
 
 MIDDLEWARE = [
@@ -150,3 +153,12 @@ MEDIA_ROOT = '/vol/web/media'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    # Allows unrestricted access to the API and sets the default test format to JSON for all requests.
+    # Note: Unrestricted access is ok for local development, but should be restricted in a production environment
+    # https://www.django-rest-framework.org/api-guide/permissions/#setting-the-permission-policy
+    # 'DEFAULT_PERMISSION_CLASSES': [],
+    # 'TEST_REQUEST_DEFAULT_FORMAT': 'json'
+}

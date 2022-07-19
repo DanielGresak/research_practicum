@@ -26,9 +26,11 @@ class Forecast(models.Model):
     clouds = models.IntegerField(default=0)
     # pop - Probability of precipitation. The values of the parameter vary between 0 and 1, where 0 is equal to 0%, 1 is equal to 100%
     pop = models.FloatField(default=0.0)
+    # Wind speed [m/sec]
+    wind_speed = models.FloatField(default=0.0)
 
     def __str__(self) -> str:
-        return f'Forecast timestamp: {self.dt_txt}'
+        return f'Forecast timestamp: {self.dt}'
 
 class CurrentWeather(models.Model):
     # Timestamp - Time of data calculation, unix, UTC 
@@ -59,4 +61,4 @@ class CurrentWeather(models.Model):
     rain_3h = models.FloatField(default=0.0)
 
     def __str__(self) -> str:
-        return f'Current weather ID: {self.weather_id}'
+        return f'Weather timestamp: {self.dt}'

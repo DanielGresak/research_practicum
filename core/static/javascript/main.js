@@ -387,7 +387,8 @@ function updateEmissions(){
 //     $(".co2-saved").text(data["co2_saved"] + " grams of co2.")
 // })
 
-updateEmissions()
+// !!!! Temporarily commented out because it threw an Server 500 error - JS
+// updateEmissions()
 
 /* FUNCTION FOR POST REQUEST TO ADD CO2 INFORMATION */
 function postCO2(toAdd){
@@ -551,3 +552,40 @@ $("#delete-button").click(function(){
         alert("Account not deleted.")
     }
 })
+
+
+
+function getTravelTimePrediction(line_id, direction, departureTime) {
+
+    if (!Boolean(departureTime)) {
+        console.log("Error - no departure time is provided!");
+    } else if (!Boolean(line_id)) {
+        console.log("Error - no line_id is provided!");
+    } else if (!Boolean(direction)) {
+        console.log("Error - no direction is provided!");
+    } else {
+        let url = "prediction/";
+
+        url += line_id +"/";
+        url += direction +"/";
+        url += departureTime +"/";
+
+        $.ajax({
+          url: url,
+          type: "GET",
+          dataType: "json",
+          success: (data) => {
+            console.log(data);
+          },
+          error: (error) => {
+            console.log(error);
+          }
+        });
+    
+    };
+  };
+
+$("#btn_getPrediction").click(function(){
+    let traveltime = Date.now()
+    getTravelTimePrediction(46, "outbound", traveltime);
+});

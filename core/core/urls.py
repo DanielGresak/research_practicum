@@ -13,6 +13,12 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularSwaggerView,
+)
+
 from django.contrib import admin
 from django.urls import path
 from django.urls import include
@@ -26,4 +32,17 @@ urlpatterns = [
     path('data/', views.data, name='stopsData'),
     path('', include('carbonCalculator.urls')),
     path('', include("users.urls")),
+    path('', include('prediction.urls')),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    
+    # To enable the automated documentation of APIs we're adding:
+    # 'api/schema' will generate the schema four our API, which is the YAML file that describes the API
+    path('api/schema', SpectacularAPIView.as_view(), name='api-schema'),
+    # 'api/docs/' will serve the swagger documentation tool that is going to use schema to generate
+    # a graphical user interface for our API documentation
+    path(
+        'api/docs/', 
+        SpectacularSwaggerView.as_view(url_name='api-schema'), 
+        name='api-docs',
+    ),
 ]
