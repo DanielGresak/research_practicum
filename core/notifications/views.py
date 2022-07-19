@@ -13,7 +13,7 @@ def add_route_for_notification(request):
         email = "daniel.gresak91@gmail.com"  # Will be user email
         scheduler = BackgroundScheduler()
         bus = request.POST.get("bus")
-        time = int(request.POST.get("time")) / 1000
+        time = int(float(request.POST.get("time"))) / 1000
         minutes = request.POST.get("minutes")
         scheduler.add_job(send_notification,
                           "date",
@@ -38,13 +38,15 @@ def email(send_to, bus, minutes):
             connection.sendmail(from_addr=my_email,
                                 to_addrs=send_to,
                                 msg=f"Subject:{subject}\n\n{message}")
-        print("Sent successfully")
+        print("Email sent successfully!")
     except Exception as e:
         print(e)
 
 
 def send_sms(send_to, bus, minutes):
-    message_body = f"The {bus} bus is {minutes} minutes away!"
+    """Sends to my number as we would need 
+    the paid version to send to other numbers"""
+    message_body = create_message(bus, minutes)
     account_sid = os.environ.get('TWILIO_SID')
     auth_token = os.environ.get('TWILIO_AUTH')
     client = Client(account_sid, auth_token)
