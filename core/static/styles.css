@@ -220,6 +220,17 @@ input:valid + span::before {
   color: green;
 } */
 
+.cost {
+  margin: 15px;
+  text-align: center;
+}
+
+.leap-anchor button {
+  top: 40vh;
+  margin: auto;
+  position: relative;
+}
+
 /* MOBILE WEBSITE */
 
 @media screen and (max-width: 1000px) {

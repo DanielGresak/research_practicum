@@ -57,6 +57,10 @@ function showWeatherData(url) {
             // Convert time into a local time string of the format [hh.mm.ss] and remove seconds from the string
             let localTime = d.toLocaleTimeString();
             localTime = localTime.substring(0,5);
+            
+            // Multiply pop (Probablity of Precipitation) by 100 to get 0..100%
+            let pop = item.pop * 100;
+            pop = pop.toFixed(); // Round the number to 0 decimals and convert into a string
 
             // For each timestamp, create a forecast (flexbox) element
             // Note: 'pop' stands for Probability of Precipitation and is given between 0 ... 1, so we need to multiply by 100 to get 0% ... 100%
@@ -65,7 +69,7 @@ function showWeatherData(url) {
               <div class="time">' + localTime + '</div>\
               <div class="temp">' + item.temp.toFixed(1) + ' &#176;C</div>\
               <img src="http://openweathermap.org/img/wn/' + item.weather_icon + '@2x.png" alt="weather icon" class="w-icon">\
-              <div class="pop"><i class="fa-solid fa-droplet"></i> '+ item.pop.toFixed() * 100 +' &#37;</div>\
+              <div class="pop"><i class="fa-solid fa-droplet"></i> '+ pop +' &#37;</div>\
               </div>'    
           }
         });

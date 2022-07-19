@@ -1,11 +1,11 @@
 from django.db import models
-from django.utils import timezone
-from datetime import datetime
+# from django.utils import timezone
+# from datetime import datetime
 
-# Create your models here.
+
 class Forecast(models.Model):
-    # Timestamp - Time of data forecasted, unix, UTC 
-    dt = models.BigIntegerField() 
+    # Timestamp - Time of data forecasted, unix, UTC
+    dt = models.BigIntegerField()
     # Timestamp text - Timestamp as string "yyyy-mm-dd hh:mm:ss"
     dt_txt = models.CharField(max_length=50, default="")
     # Temperature
@@ -24,14 +24,16 @@ class Forecast(models.Model):
     weather_icon = models.CharField(max_length=255)
     # Clouds - Cloudiness in %
     clouds = models.IntegerField(default=0)
-    # pop - Probability of precipitation. The values of the parameter vary between 0 and 1, where 0 is equal to 0%, 1 is equal to 100%
+    # pop - Probability of precipitation. The values of the parameter
+    # vary between 0 and 1, where 0 is equal to 0%, 1 is equal to 100%
     pop = models.FloatField(default=0.0)
 
     def __str__(self) -> str:
         return f'Forecast timestamp: {self.dt_txt}'
 
+
 class CurrentWeather(models.Model):
-    # Timestamp - Time of data calculation, unix, UTC 
+    # Timestamp - Time of data calculation, unix, UTC
     dt = models.BigIntegerField()
     # Weather condition id
     weather_id = models.IntegerField()
@@ -50,7 +52,7 @@ class CurrentWeather(models.Model):
     # Humidity in %
     humidity = models.IntegerField(default=0)
     # Wind speed [m/sec]
-    wind_speed = models.FloatField(default=0.0)   
+    wind_speed = models.FloatField(default=0.0)
     # Clouds - Cloudiness [%]
     clouds = models.IntegerField(default=0)
     # Rain volume for the last 1 hour [mm]
