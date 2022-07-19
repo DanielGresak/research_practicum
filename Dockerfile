@@ -30,12 +30,12 @@ RUN mkdir -p /vol/web/media
 RUN mkdir -p /vol/web/
 
 # Adding user as best practice is to not use the root user
-RUN adduser -D user
-RUN chown -R user:user /vol
+# RUN adduser -D user
+# RUN chown -R user:user /vol
 
-RUN chmod -R 755 /vol/web
+# RUN chmod -R 755 /vol/web
 
-# Changing to user
-USER user 
+# # Changing to user
+# USER user 
 
 CMD ["entrypoint.sh"]
