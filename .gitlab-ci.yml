@@ -15,7 +15,7 @@ test:
     #     - pip install docker-compose
     #     - docker-compose up -d --build
     script:
-        - python manage.py test
+        - py manage.py test
         # - docker exec researchpracticum_app_1 sh -c "python manage.py test --keepdb"
 
 # Type-test:
