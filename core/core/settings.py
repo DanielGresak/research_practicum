@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'carbonCalculator',
     "users",
     "notifications",
+    'django_nose',
 ]
 
 MIDDLEWARE = [
@@ -153,3 +154,9 @@ MEDIA_ROOT = '/vol/web/media'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+NOSE_ARGS = [
+    '--with-coverage',
+    '--cover-package=core,notifications,carbonCalculator,users,weather',
+]
