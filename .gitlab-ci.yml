@@ -11,8 +11,9 @@ test:
     stage: test
     image: python:3.9-alpine
     before_script:
-        - docker-compose build
-        - docker-compose up -d
+        - sudo apt-get install -y python-pip
+        - pip install docker-compose
+        - socker-compose up -d --build
     script:
         - docker exec researchpracticum_app_1 sh -c "python manage.py test"
 
