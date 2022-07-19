@@ -14,7 +14,7 @@ RUN apk add --update --no-cache --virtual .tmp gcc libc-dev linux-headers
 RUN pip install -r requirements.txt
 
 # Deleting module once not needed
-RUN apk del .tmp
+RUN sudo apk del .tmp
 
 RUN mkdir /core
 COPY ./core /core
