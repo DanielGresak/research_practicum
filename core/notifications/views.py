@@ -5,6 +5,7 @@ import smtplib
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime
 from django.http import HttpResponse
+from twilio.rest import Client
 
 
 def add_route_for_notification(request):
@@ -42,6 +43,18 @@ def email(send_to, bus, minutes):
         print(e)
 
 
+def send_sms(send_to, bus, minutes):
+    message_body = f"The {bus} bus is {minutes} minutes away!"
+    account_sid = os.environ.get('TWILIO_SID')
+    auth_token = os.environ.get('TWILIO_AUTH')
+    client = Client(account_sid, auth_token)
+    message = client.messages.create(
+        body=message_body,
+        from_="+18305875212",
+        to="+353857415917"
+    )
+
+
 def create_message(bus, minutes):
     message = f"The {bus} bus is {minutes} minutes away from your stop!"
     return message
@@ -49,3 +62,5 @@ def create_message(bus, minutes):
 
 def send_notification(bus, minutes, user_email):
     email(user_email, bus, minutes)
+    # Commented out as there is limited credit. but works!
+    # send_sms(user_email, bus, minutes)
