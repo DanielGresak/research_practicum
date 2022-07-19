@@ -44,7 +44,7 @@ def email(send_to, bus, minutes):
 
 
 def send_sms(send_to, bus, minutes):
-    """Sends to my number as we would need 
+    """Sends to my number as we would need
     the paid version to send to other numbers"""
     message_body = create_message(bus, minutes)
     account_sid = os.environ.get('TWILIO_SID')
