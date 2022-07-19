@@ -1,11 +1,11 @@
-import pickle
 from time import time
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from datetime import datetime, time
-from django.views.decorators.csrf import csrf_exempt
+from .algorithms import linear_regression
+from weather.models import Forecast, CurrentWeather
 
 # Create your views here.
 
@@ -15,46 +15,73 @@ def predict_travel_time(request, line_id, direction, traveltime):
     if request.method == "GET":
         req_line_id = int(line_id)
         req_direction = str(direction)
-        req_datetime = datetime.fromtimestamp(traveltime / 1000) 
+        # Get UTC timestamp from REST API and divide it by 1000 to match timestamps in the database 
+        req_timestamp = round(traveltime / 1000)
+        # Create datetime (YYYY-MM-DD HH:MM:SS) from timestamp 
+        req_datetime = datetime.fromtimestamp(req_timestamp) 
 
+        weather_details = retrieve_weather_details(req_timestamp)
+
+        # TODO prepare parameters
+        model_path = ""
+        hour = 0
+        weekday = 0
+        month = 0
+
+        time_prediction = linear_regression(model_path, req_line_id, req_direction, weather_details['wind_speed'], weather_details['rain_1h'], weather_details['clouds'], hour, weekday, month)
 
         predictions = {
             "error": "0",
             "line_id": req_line_id,
             "direction": req_direction,
-            "datetime": req_datetime,
+            "req_datetime": req_datetime,
+            "req_timestamp": req_timestamp,
+            "resp_timestamp": weather_details['dt'],
+            "clouds": weather_details['clouds'],
+            "wind_speed": weather_details['wind_speed'],
+            "rain_1h": weather_details['rain_1h'],
+            "time_prediction": time_prediction
         }
 
     return Response(predictions)
 
 
-# @csrf_exempt
-# @api_view(['GET', 'POST'])
-# def predict_travel_time(request):
-#     if request.method == "GET":
-        
-    # def _format_datetime(dt):
-    #     regex = '\d{4}-\d{1,2}-\d{1,2} \d{2}:\d{2}:\d{2}'
-    #     format = '%Y-%m-%d %H:%M:%S'
-    #     return datetime.strptime(dt, format).timestamp()
+def retrieve_weather_details(timestamp):
 
-    # if request.method == "POST":
-    #     req_line_id = int(request.data['line_id'])
-    #     req_direction = str(request.data['direction'])
-    # req_dt = _format_datetime(request.data['traveltime'])
+    # Retrieve all forecast objects stored in the database
+    object_list = []
+    forecasts_objects = Forecast.objects.all()
+    for object in forecasts_objects:
+        object_list.append(object)
 
+    # Retrieve last object in the current weather database and append it to the list
+    object_list.append(CurrentWeather.objects.filter(dt__gt=0).last())
 
+    # Traverse over object list and find the timestamp that is closest to the requested timestamp
+    time_delta_min = abs(object_list[0].dt - timestamp)
+    time_delta_index = 0
+    for i, object in enumerate(object_list):
+        if abs(object.dt - timestamp) < time_delta_min:
+            time_delta_min = abs(object.dt - timestamp)
+            time_delta_index = i
 
-    # predicted_traveltime = 8888
+    # TODO Check if time delta is reasonable and if not throw an error
 
-    # predictions = {
-    #     "line_id": req_line_id,
-    #     "direction": req_direction,
-    #     # "traveltime": req_dt,
-    #     "predicted_traveltime": predict_travel_time  
-    # }
+    # Save weather details from either forecast or current weather object in dictionary
+    details_dict = {}
+    if time_delta_index == len(object_list) - 1:
+        obj = CurrentWeather.objects.filter(dt__gt=0).last()
+        details_dict['rain_1h'] = obj.rain_1h
+    else:
+        obj = Forecast.objects.get(dt = object_list[time_delta_index].dt)
+        details_dict['rain_1h'] = 0 # set to zero because it doesn't exist in forecast object
 
-    # return response(predictions)
+    # These properties are common to both forecast and current weather object
+    details_dict['dt'] = obj.dt
+    details_dict['clouds'] = obj.clouds
+    details_dict['wind_speed'] = obj.wind_speed
+
+    return details_dict
 
 
 
