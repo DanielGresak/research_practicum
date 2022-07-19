@@ -108,7 +108,7 @@ function initMap() {
 function renderDirections(result, gmap){
     var totalRoutes = result["routes"].length;
     const directionRenders = [];
-    const color = ["yellow", "green", "blue", "red"];// the color for the routes
+    const color = ["#9ACD32", "#DB7093", "#A0522D", "#4682B4"];// the color for the routes
     for(let i = 0; i < totalRoutes; i++){
             directionRenders[i] = new google.maps.DirectionsRenderer({
             directions: result,
@@ -116,7 +116,7 @@ function renderDirections(result, gmap){
             map: gmap,
             polylineOptions:{
                 strokeColor: color[i],
-                strokeOpacity: 0.6, 
+                strokeOpacity: 0.9, 
             }
         });}
     
@@ -150,6 +150,20 @@ function getBusInfo(routes){
         }
     }
     return busRoutes;
+}
+
+function getDrivingDistance(origin, dest){
+    var service = new google.maps.DistanceMatrixService();
+    var request={
+        origins: [origin],
+        destinations: [dest],
+        travelMode: 'DRIVING',
+      };
+    service.getDistanceMatrix(request,function(response, status){
+            if(status =="OK"){
+                return response["rows"][0]["elements"][0]["distance"]["value"];
+            }
+        })
 }
 
 function getDirection(line, departure, arrival){
@@ -200,11 +214,10 @@ function calcRoute(directionsService, directionsRenderer, map) {
     var originString = $("#search_start").val();
     var destString = $("#search_destination").val();
     var startTime = $("#time_of_travel").val();
-    console.log(originString+" "+destString+ " "+startTime);
-
+    
     var mydate = new Date(startTime);
     var resultTime = mydate.getTime();
-    console.log(resultTime);
+    //getDrivingDistance(originString, destString);
 
     var request = {
         origin: originString, // start location, now is ucd
@@ -226,7 +239,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
 
             // display all the possible routes on the map in different colors
             const directionRenderers = renderDirections(result, map);
-            console.log(result["routes"]);
+
             // total number of possible routes
             var totalNumberOfRoutes = result["routes"].length// total number of routes
             $(".busInfo").show();
@@ -242,19 +255,19 @@ function calcRoute(directionsService, directionsRenderer, map) {
                 var busNumString = "";
                 var busArrivingString="";
                 var busTravelTime="";
-                var drivingDistance=0;
+                var busDrivingDistance=0;
 
                 for(const r of busRoutes) {
                     const routeNumber = Object.keys(r);
                     busNumString = busNumString+routeNumber+" -> ";
                     busArrivingString=busArrivingString+r[routeNumber]["arriving_time"]+"; ";
-                    drivingDistance=drivingDistance+r[routeNumber]["driving_distance"];
+                    busDrivingDistance=busDrivingDistance+r[routeNumber]["driving_distance"];
                     busTravelTime=busTravelTime+travelTime(routeNumber, r[routeNumber]["direction"], r[routeNumber]["num_stops"])+"; "
                     //console.log(routeNumber+" "+r[routeNumber]["last_stop"]);
                     //console.log(routeNumber+" "+r[routeNumber]["driving_distance"]);
                     //console.log("end_location"+routeNumber+"   "+r[routeNumber]["direction"]);
                 }
-                console.log("total driving distance:"+drivingDistance);
+                console.log("total driving distance:"+busDrivingDistance);
                 busNumString = busNumString.slice(0, -3);
                 busArrivingString = busArrivingString.slice(0, -2);
                 busTravelTime = busTravelTime.slice(0, -2);
@@ -273,36 +286,37 @@ function calcRoute(directionsService, directionsRenderer, map) {
                                         <p class = 'busDetail' id = 'arrivingTime'>Arriving time:<span id ='time'>"+ busArrivingString+"</span></p>\
                                         <p class = 'busDetail' id = 'totalTravelTime'>Total travel time:"+busTravelTime+"</p>\
                                         <p class = 'busDetail' id = 'busFare'>Bus fare:</p>\
-                                        <p class = 'busDetail' id = 'carbonEmissionSaved'>Carbon emission saved:</p>\
-                                        <button class='emissions-btn' onclick='postCO2(" + drivingDistance +")'>Add to emisions</button>\
-                                    </div>")
+                                        <p class = 'busDetail' id = 'carbonEmissionSaved'>Carbon emission saved:</p>")
             }
 
             var selectedRoute=[];//each time select button is clicked, this var will be refreshed.
             var confirmedRoute=[];// ------> this is the final confirmed route the user has selected.
+        
+            //confirm button confirms the route selected
+            $(".busInfo").append("<button id='confirm' class='btn btn-dark'>Confirm</button>");
+            $("#confirm").css("display", "inline-block");
+
             //add a back button, go back to the search bar
             $(".busInfo").append("<button id='busInfoBtn' class='btn btn-dark'>Back</button>");
 
-            //confirm button confirms the route selected
-            $(".busInfo").append("<button id='confirm' class='btn btn-dark'>Confirm</button>");
-
+            $(".busInfo").append("<p class = 'errorMessage' id = 'selectRouteError'><i class='fa-thin fa-circle-exclamation'></i>Please select a route first! </p>");
+            //$("#selectRouteError").css("display", "none");
             //select button selects route and renders the related route on the  map
+            // and get the selected route, when clicking the confirm button, the last selected route will be stored in the confirmRoute;
             $(".selectRoute").mousedown(function(){
                 var stringToArray = $(this).parent().text().match(/\b(\w+)\b/g);
                 var busIndex = stringToArray[2]-1;//extracting the route index
 
-                //for the on clicked route, set the color to red
-                var polylineOnClick = new google.maps.Polyline({
-                    strokeColor: "red",
-                    strokeOpacity: 0.6,
-                })
-
+            
                 // only show the selected route
+                //1. disable all the routes
                 for (let stroke = 0; stroke < directionRenderers.length; stroke++){
                     directionRenderers[stroke].setOptions({map:null, directions: result, routeIndex:stroke});
                 }
-                directionRenderers[busIndex].setOptions({polylineOptions:polylineOnClick, map:map, directions: result, routeIndex:busIndex});
-                
+                //2. show the corresponding route
+                directionRenderers[busIndex].setMap(map);
+
+                // get the selected route
                 selectedRoute=getBusInfo(result["routes"][busIndex]);
 
                 $(".selectRoute").css("background-color","white");
@@ -316,9 +330,24 @@ function calcRoute(directionsService, directionsRenderer, map) {
             //confirm button confirms the route selected, and use the route array to calculate the co2 and set the notiffication
             $("#confirm").click(function(){
                 if(selectedRoute.length === 0){
-                    console.log("Please selected a route")
+                    $("#selectRouteError").css("display", "block");
+                    $("#confirm").css("border", "1px solid red");
                 }else{
+                    $("#selectRouteError").css("display", "none");
                     confirmedRoute=selectedRoute;// confirmedRoute will be the last clicked route
+                    var busDrivingDistance=0;// the bus drving distance
+                    var drivingDistance = getDrivingDistance(originString, destString);// this is the (car) driving distance
+                    
+                    // calculate the total bus driving distance of the chosen trip plan
+                    for (const r of confirmedRoute){
+                        const routeNumber = Object.keys(r);
+                        busDrivingDistance=busDrivingDistance+r[routeNumber]["driving_distance"];
+                    }
+
+                    console.log("busDriving distance: "+busDrivingDistance);
+                    console.log("driving distance: "+drivingDistance);
+                    
+                    postCO2(busDrivingDistance);
                 }
             });
 
