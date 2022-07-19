@@ -10,8 +10,8 @@ stages:
 test:
     stage: test
     image: python:3.9-alpine
-    # before_script:
-    #     - sudo apt-get install -y python3-pip
+    before_script:
+        - sudo apt-get install -y python3-pip
     #     - pip install docker-compose
     #     - docker-compose up -d --build
     script:
