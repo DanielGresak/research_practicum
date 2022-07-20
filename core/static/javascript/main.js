@@ -236,7 +236,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
     };
     directionsService.route(request, function(result, status){
         if(status == "OK"){
-
+            console.log(result["routes"]);
             // display all the possible routes on the map in different colors
             const directionRenderers = renderDirections(result, map);
 
@@ -267,7 +267,6 @@ function calcRoute(directionsService, directionsRenderer, map) {
                     //console.log(routeNumber+" "+r[routeNumber]["driving_distance"]);
                     //console.log("end_location"+routeNumber+"   "+r[routeNumber]["direction"]);
                 }
-                console.log("total driving distance:"+busDrivingDistance);
                 busNumString = busNumString.slice(0, -3);
                 busArrivingString = busArrivingString.slice(0, -2);
                 busTravelTime = busTravelTime.slice(0, -2);
@@ -279,28 +278,28 @@ function calcRoute(directionsService, directionsRenderer, map) {
                 //var busArrivingString = "";
                 //busNumber.forEach(number =>{ busNumString += number});// will be optimized later on for the bus transfering case
                 //arrivingTime.forEach(number =>{ busArrivingString += number});//will be optimized later on for the bus transfering case
-                
+              
                 // add a bus info child window for every bus/route
                 $(".busInfo").append("<div class = 'oneBus'>\
                                         <p class = 'busHeader'>"+"Bus route "+(route+1)+": "+busNumString+"<button class='selectRoute'>Select</button></p>\
                                         <p class = 'busDetail' id = 'arrivingTime'>Arriving time:<span id ='time'>"+ busArrivingString+"</span></p>\
                                         <p class = 'busDetail' id = 'totalTravelTime'>Total travel time:"+busTravelTime+"</p>\
                                         <p class = 'busDetail' id = 'busFare'>Bus fare:</p>\
-                                        <p class = 'busDetail' id = 'carbonEmissionSaved'>Carbon emission saved:</p>")
+                                        <p class = 'busDetail' id = 'carbonEmissionSaved'>Carbon emission saved:</p></div>")
             }
 
             var selectedRoute=[];//each time select button is clicked, this var will be refreshed.
             var confirmedRoute=[];// ------> this is the final confirmed route the user has selected.
         
             //confirm button confirms the route selected
-            $(".busInfo").append("<button id='confirm' class='btn btn-dark'>Confirm</button>");
+            $(".busInfo").append("<button type='button' id='confirm' class='btn btn-dark btn-sm'>Confirm</button>");
             $("#confirm").css("display", "inline-block");
 
             //add a back button, go back to the search bar
-            $(".busInfo").append("<button id='busInfoBtn' class='btn btn-dark'>Back</button>");
-
-            $(".busInfo").append("<p class = 'errorMessage' id = 'selectRouteError'><i class='fa-thin fa-circle-exclamation'></i>Please select a route first! </p>");
-            //$("#selectRouteError").css("display", "none");
+            $(".busInfo").append("<button type='button' id='busInfoBtn' class='btn btn-dark btn-sm'>Back</button>");
+            //error alert
+            $(".busInfo").append("<div class='alert'> Please select a route first.</div>");
+        
             //select button selects route and renders the related route on the  map
             // and get the selected route, when clicking the confirm button, the last selected route will be stored in the confirmRoute;
             $(".selectRoute").mousedown(function(){
@@ -330,10 +329,10 @@ function calcRoute(directionsService, directionsRenderer, map) {
             //confirm button confirms the route selected, and use the route array to calculate the co2 and set the notiffication
             $("#confirm").click(function(){
                 if(selectedRoute.length === 0){
-                    $("#selectRouteError").css("display", "block");
+                    $(".alert").css("display", "block");
                     $("#confirm").css("border", "1px solid red");
                 }else{
-                    $("#selectRouteError").css("display", "none");
+                    $(".alert").css("display", "none");
                     confirmedRoute=selectedRoute;// confirmedRoute will be the last clicked route
                     var busDrivingDistance=0;// the bus drving distance
                     var drivingDistance = getDrivingDistance(originString, destString);// this is the (car) driving distance
@@ -348,6 +347,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
                     console.log("driving distance: "+drivingDistance);
                     
                     postCO2(busDrivingDistance);
+
                 }
             });
 
@@ -363,6 +363,35 @@ function calcRoute(directionsService, directionsRenderer, map) {
                 $(".searchbar").show();
             });
 
+            
+            $("#inlineRadio1").click(function(){
+                if(getBusFare[confirmedRoute] != []){
+                    const busRoute=getBusFare(confirmedRoute)[0];
+                    const recharge=getBusFare(confirmedRoute)[1];
+                    var money = 2+2*recharge;
+                    $(".answerContent").text(" ");
+                    $(".answerContent").text("For adults, "+"traveling from "+originString+" to "+destString+"and taking bus "+busRoute+" , the cost is "+money+" euro.");
+                }
+            })
+        
+            $("#inlineRadio2").click(function(){
+                if(getBusFare[confirmedRoute] != []){
+                    const busRoute=getBusFare(confirmedRoute)[0];
+                    const recharge=getBusFare(confirmedRoute)[1];
+                    var money = 1+1*recharge;
+                    $(".answerContent").text(" ");
+                    $(".answerContent").text("For young adults or students, "+"traveling from "+originString+" to "+destString+"and taking bus "+busRoute+" , the cost is "+money+ " euro.");
+                }
+                })
+            $("#inlineRadio3").click(function(){
+                if(getBusFare[confirmedRoute] != []){
+                    const busRoute=getBusFare(confirmedRoute)[0];
+                    const recharge=getBusFare(confirmedRoute)[1];
+                    var money = 0.65+0.65*recharge;
+                    $(".answerContent").text(" ");
+                    $(".answerContent").text("For child, "+"traveling from "+originString+" to "+destString+"and taking bus "+busRoute+" , the cost is "+money +" euro.");
+                }
+                })
         }
         else{
             console.log(status);
@@ -380,6 +409,35 @@ function calcRoute(directionsService, directionsRenderer, map) {
 //https://www.w3schools.com/html/html5_geolocation.asp
 window.initMap = initMap;
 
+/* GET BUS FARE */
+function getBusFare(confirmed){
+    if(confirmed.length!=0){
+        /* get the bus routes of the confirmed route*/
+        var busNumString = "";
+        for(const r of confirmed) {
+            const routeNumber = Object.keys(r);
+            busNumString = busNumString+routeNumber+"; ";
+        }
+        busNumString = busNumString.slice(0, -2);
+
+        /* get the number of times of recharging the bus fare when tap the card because the travle time is more than 90 min */
+        var travelTime=0; // the travel time of all the buses routes taken in the previous bus trip in a transfer case
+        var recharge=0;
+        for(const route of confirmed){
+            const routeNumber = Object.keys(route);
+            travelTime = travelTime + route[routeNumber]["travel_time"];
+            console.log("travelTime"+travelTime);
+            if(travelTime >= 5400){
+                recharge = recharge+1; // times of respend money because 90 min is passsed
+                travelTime = 0;//record the time from the start
+            }
+        }
+        return [busNumString, recharge];
+    }
+    else{
+        return [];
+    }
+}
 
 /* GET CURRENT LOCATION FUNCTIONALITY */
 

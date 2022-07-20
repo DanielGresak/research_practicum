@@ -120,6 +120,8 @@ html, main {
 
 .selectRoute{
   float: right;
+  font-size: smaller;
+  padding:2px;
 }
 
 
@@ -129,13 +131,22 @@ margin: 4px;
 }
 
 #busInfoBtn{
-  position: relative;
-  top: 3%;
+  position:relative;
+  top: 2%;
   left: 20%;
   height: 4vh;
   width: 10vw;
 }
-
+.alert{
+  display: none;
+  position:relative;
+  top: 3%;
+  left: 7%;
+  font-size: smaller;
+  color: red;
+  background-color: whitesmoke;
+  padding: 0;
+}
 #selectRouteError{
   position: absolute;
   margin-top: 7%;
@@ -145,10 +156,8 @@ margin: 4px;
 }
 
 #confirm{
-  display: block;
-  padding: auto;
   position:relative;
-  top: 3%;
+  top: 2%;
   left: 7%;
   height: 4vh;
   width: 10vw;
@@ -157,7 +166,9 @@ margin: 4px;
 #time{
   color: red;
 }
-
+.answerBlock{
+  padding-top: 10px;
+}
 form {
     padding: 15px;
     display: inline-block;
@@ -219,6 +230,15 @@ input:valid + span::before {
   content: '✓';
   color: green;
 } */
+.table{
+  border:1px, solid, rgb(3, 15, 3);
+  font-size: smaller;
+  margin: auto;
+  margin-bottom: 10px;
+}
+.thead{
+  font-size: smaller;
+}
 
 .cost {
   margin: 15px;
@@ -226,7 +246,7 @@ input:valid + span::before {
 }
 
 .leap-anchor button {
-  top: 40vh;
+  top: 13vh;
   margin: auto;
   position: relative;
 }
