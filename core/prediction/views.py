@@ -16,7 +16,9 @@ def predict_travel_time(request, line_id, direction, traveltime):
         req_line_id = str(line_id)
         req_direction = str(direction)
         # Get UTC timestamp from REST API and divide it by 1000 to match timestamps in the database 
-        req_timestamp = round(traveltime / 1000)
+        # req_timestamp = round(traveltime / 1000)
+        req_timestamp = traveltime
+
         # Create datetime (YYYY-MM-DD HH:MM:SS) from timestamp 
         req_datetime = datetime.fromtimestamp(req_timestamp) 
 
@@ -34,20 +36,40 @@ def predict_travel_time(request, line_id, direction, traveltime):
                 req_datetime.weekday(), req_datetime.month)
 
 
-        predictions = {
-            "error": "0",
-            "line_id": req_line_id,
-            "direction": req_direction,
-            "req_datetime": req_datetime,
-            "req_timestamp": req_timestamp,
-            "weather_timestamp": weather_details['dt'],
-            "clouds": weather_details['clouds'],
-            "wind_speed": weather_details['wind_speed'],
-            "rain_1h": weather_details['rain_1h'],
-            "time_prediction": time_prediction
-        }
+        resp_request_info = {}
+        resp_request_info['line_id'] = req_line_id 
+        resp_request_info['direction'] = req_direction 
+        resp_request_info['datetime'] = req_datetime 
+        resp_request_info['UTC_timestamp'] = req_timestamp 
 
-    return Response(predictions)
+        resp_weather_info = {}
+        resp_weather_info['datetime'] = datetime.fromtimestamp(weather_details['dt'])
+        resp_weather_info['UTC_timestamp'] = weather_details['dt']
+        resp_weather_info['clouds'] = weather_details['clouds']
+        resp_weather_info['wind_speed'] = weather_details['wind_speed']
+        resp_weather_info['rain_1h'] = weather_details['rain_1h']
+
+        resp_data = {}
+        resp_data['error'] = 0
+        resp_data['time_prediction'] = time_prediction
+        resp_data['request_info'] = resp_request_info
+        resp_data['weather_info'] = resp_weather_info
+
+
+        # predictions = {
+        #     "error": "0",
+        #     "line_id": req_line_id,
+        #     "direction": req_direction,
+        #     "req_datetime": req_datetime,
+        #     "req_timestamp": req_timestamp,
+        #     "weather_timestamp": weather_details['dt'],
+        #     "clouds": weather_details['clouds'],
+        #     "wind_speed": weather_details['wind_speed'],
+        #     "rain_1h": weather_details['rain_1h'],
+        #     "time_prediction": time_prediction
+        # }
+
+    return Response(resp_data)
 
 
 def retrieve_weather_details(timestamp):
