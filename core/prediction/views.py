@@ -20,15 +20,19 @@ def predict_travel_time(request, line_id, direction, traveltime):
         # Create datetime (YYYY-MM-DD HH:MM:SS) from timestamp 
         req_datetime = datetime.fromtimestamp(req_timestamp) 
 
+        # TODO validate requested line id
+        # TODO validate direction whether it's 'inbound' or 'outbound'
+        # TODO validate provided timestamp
+
+        # Retrieve weather details that are closest to the requested timestamp
         weather_details = retrieve_weather_details(req_timestamp)
 
-        # TODO prepare parameters
-        model_path = ""
-        hour = 0
-        weekday = 0
-        month = 0
+        # Feed linear regression model with inputs and get travel trime prediction in return
+        time_prediction = linear_regression(req_line_id, req_direction, 
+                weather_details['wind_speed'], weather_details['rain_1h'], 
+                weather_details['clouds'], req_datetime.hour,
+                req_datetime.weekday(), req_datetime.month)
 
-        time_prediction = linear_regression(model_path, req_line_id, req_direction, weather_details['wind_speed'], weather_details['rain_1h'], weather_details['clouds'], hour, weekday, month)
 
         predictions = {
             "error": "0",
