@@ -6,8 +6,10 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime
 from django.http import HttpResponse
 from twilio.rest import Client
+from django.views.decorators.csrf import csrf_exempt
 
 
+@csrf_exempt
 def add_route_for_notification(request):
     if request.method == "POST":
         email = "daniel.gresak91@gmail.com"  # Will be user email
