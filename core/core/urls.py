@@ -11,4 +11,5 @@ urlpatterns = [
     path('data/', views.data, name='stopsData'),
     path('', include('carbonCalculator.urls')),
     path('', include("users.urls")),
+    path('', include("notifications.urls")),
 ]

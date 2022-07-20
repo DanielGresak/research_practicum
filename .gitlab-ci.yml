@@ -1,17 +1,20 @@
+image: docker
+
+services:
+    - docker:dind
+
 stages:
     - test
     - deploy
 
 test:
     stage: test
-    only:
-        - developement
-        - master
     image: python:3.9-alpine
     before_script:
-        - docker-compose up -d
+        - pip install docker-compose
+        - docker-compose up -d --build
     script:
-        - docker exec researchpracticum_app_1 sh -c "python manage.py test"
+        - docker exec researchpracticum_app_1 sh -c "python manage.py test --keepdb"
 
 # Type-test:
 #     stage: test
