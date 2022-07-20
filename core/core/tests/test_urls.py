@@ -5,6 +5,7 @@ from core.views import home
 from carbonCalculator.views import CarbonCalculator, ReturningCarbonData
 from users.views import loginUser, logoutUser, registerUser
 from weather.views import weather_data_json
+from notifications.views import add_route_for_notification
 # from django.contrib.auth import login
 # from django.contrib.auth.models import User
 # Test each page in urlpatterns
@@ -40,6 +41,10 @@ class TestUrls(SimpleTestCase):
     def test_weather_url_is_resolved(self):
         url = reverse('ajax_weather')
         self.assertEquals(resolve(url).func, weather_data_json)
+
+    def test_notification_url_is_resolved(self):
+        url = reverse("notify")
+        self.assertEquals(resolve(url).func, add_route_for_notification)
 
     # def test_delete_user_url_is_resolved(self):
     #     user = {

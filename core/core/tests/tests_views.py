@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
 from weatherUpdater import weatherForecastApi
+import time
 
 
 class ViewTests(TestCase):
@@ -14,6 +15,7 @@ class ViewTests(TestCase):
         self.carbon_get_url = reverse("get_carbon")
         self.weather_url = reverse("ajax_weather")
         self.delete_url = reverse("delete_user")
+        self.notification_url = reverse("notify")
         self.user = {
             "userEmail": "testemail@email.com",
             "userPassword": "password123",
@@ -93,3 +95,16 @@ class EmissionsTests(ViewTests):
     def test_get_emissions(self):
         response = self.client.get(self.carbon_get_url)
         self.assertEqual(response.status_code, 200)
+
+
+class NotificationTests(ViewTests):
+    def test_email(self):
+        url = self.notification_url
+        time_to_use = time.time() * 1000
+        arguments = {
+            "bus": "15",
+            "time": time_to_use,
+            "minutes": "5"
+        }
+        response = self.client.post(url, arguments, format="text/html")
+        self.assertEqual(response.status_code, 204)
