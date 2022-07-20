@@ -35,6 +35,10 @@ Lint-test:
 deploy:
     image: python:3.9-alpine
     stage: deploy
+    variables:
+        - EMAIL_PASSWORD=$EMAIL_PASSWORD
+        - TWILIO_AUTH=$TWILIO_AUTH
+        - TWILIO_SID=$TWILIO_SID
     only:
         - master
         - developement
