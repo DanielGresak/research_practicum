@@ -2,16 +2,7 @@ FROM python:3.9-buster
 ENV PATH="/scripts:${PATH}"
 ENV PYTHONUNBUFFERED=1
 
-
-# RUN apt-get install mysql-shell
-# RUN apt-get install --no-cache mariadb-connector-c-dev
-# RUN apt-get update && apt-get install python3 python3-dev mariadb-dev build-base && pip3 install mysqlclient && apt-get del python3-dev mariadb-dev build-base
-# RUN apt-get install netcat-openbsd
-
-# RUN apt-get install chromium
 COPY requirements.txt requirements.txt
-
-# RUN apt-get install --update --no-cache --virtual .tmp gcc libc-dev linux-headers
 RUN pip install -r requirements.txt
 
 # Deleting module once not needed
