@@ -13,7 +13,7 @@ from weather.models import Forecast, CurrentWeather
 def predict_travel_time(request, line_id, direction, traveltime):
 # def predict_travel_time(request, line_id, direction):
     if request.method == "GET":
-        req_line_id = int(line_id)
+        req_line_id = str(line_id)
         req_direction = str(direction)
         # Get UTC timestamp from REST API and divide it by 1000 to match timestamps in the database 
         req_timestamp = round(traveltime / 1000)
@@ -40,7 +40,7 @@ def predict_travel_time(request, line_id, direction, traveltime):
             "direction": req_direction,
             "req_datetime": req_datetime,
             "req_timestamp": req_timestamp,
-            "resp_timestamp": weather_details['dt'],
+            "weather_timestamp": weather_details['dt'],
             "clouds": weather_details['clouds'],
             "wind_speed": weather_details['wind_speed'],
             "rain_1h": weather_details['rain_1h'],

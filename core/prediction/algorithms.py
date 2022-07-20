@@ -1,9 +1,10 @@
 import os
 import pickle
+import sklearn
 
 def linear_regression(line, direction, wind_speed, rain_1h, clouds_all, hour, weekday, month):
     file_name = f"route_{line}_{direction}.pkl"
-    model_path = os.path.join(os.path.join(os.getcwd(), "models"), file_name)
+    model_path = os.path.join(os.path.join(os.getcwd(), "prediction", "models", "linearRegression"), file_name)
     linear_reg = pickle.load(open(model_path, 'rb'))
     inputs = []
     inputs.append(wind_speed)

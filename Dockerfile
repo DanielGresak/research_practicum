@@ -7,7 +7,6 @@ RUN apk update && apk add python3 python3-dev mariadb-dev build-base && pip3 ins
 RUN apk add netcat-openbsd
 
 RUN apk add chromium
-ENV PYTHONUNBUFFERED=1
 COPY requirements.txt requirements.txt
 
 RUN apk add --update --no-cache --virtual .tmp gcc libc-dev linux-headers

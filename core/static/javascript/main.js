@@ -587,5 +587,5 @@ function getTravelTimePrediction(line_id, direction, departureTime) {
 
 $("#btn_getPrediction").click(function(){
     let traveltime = Date.now()
-    getTravelTimePrediction(46, "outbound", traveltime);
+    getTravelTimePrediction("46A", "outbound", traveltime);
 });
