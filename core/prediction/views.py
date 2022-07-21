@@ -10,6 +10,11 @@ from weather.models import Forecast, CurrentWeather
 
 # Create your views here.
 
+# Function to predict the travel time based on the line-ID, direction and traveltime
+# were the inputs are expected as follow:
+#  - line_id ; STRING, e.g. 46A
+#  - direction ; STRING, either 'inbound' or 'outbound'
+#  - departureTime ; UTC timestamp in milliseconds (JavaScript), INT, e.g. Date.now() 
 @api_view(['GET'])
 def predict_travel_time(request, line_id, direction, traveltime):
 
@@ -91,7 +96,10 @@ def predict_travel_time(request, line_id, direction, traveltime):
 
     return Response(resp_data, status=status.HTTP_200_OK)
 
-
+# Function to retrieve the the weather details based on the provided
+# timestamps from one of the following database tables:
+# - weather_forecast
+# - weather_currentweather
 def retrieve_weather_details(timestamp):
 
     # Retrieve all forecast objects stored in the database
@@ -128,9 +136,3 @@ def retrieve_weather_details(timestamp):
 
     return details_dict
 
-    # Examples 
-    # https://medium.datadriveninvestor.com/deploying-ml-models-using-django-rest-api-part-2-84cea50b3c83
-    # https://www.django-rest-framework.org/tutorial/2-requests-and-responses/
-    # https://engineertodeveloper.com/how-to-return-a-json-response-in-django/
-    # https://www.datacamp.com/tutorial/pickle-python-tutorial
-    # https://www.aionlinecourse.com/blog/deploy-machine-learning-model-using-django-and-rest-api

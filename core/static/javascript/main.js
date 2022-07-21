@@ -596,7 +596,7 @@ function getTravelTimePrediction(line_id, direction, departureTime) {
 
 // !!! This button is only for testing purposes and should be removed afterwards
 $("#btn_getPrediction").click(function(){
-    // let traveltime = Date.now()
-    let traveltime = 1658459237000;
+    let traveltime = Date.now()
+    // let traveltime = 1658459237000; // some date in the future
     getTravelTimePrediction("46A", "outbound", traveltime);
 });
