@@ -555,6 +555,11 @@ $("#delete-button").click(function(){
 
 
 
+// @Yating -  feel free to tweak and change the function you need it :) Happy coding...
+// Function to get the predicted travel time (full route) for following parameters:
+// - line_id ; STRING, e.g. 46A
+// - direction ; STRING, either 'inbound' or 'outbound'
+// - departureTime ; UTC timestamp in milliseconds, INT, e.g. Date.now()
 function getTravelTimePrediction(line_id, direction, departureTime) {
 
     if (!Boolean(departureTime)) {
@@ -575,7 +580,11 @@ function getTravelTimePrediction(line_id, direction, departureTime) {
           type: "GET",
           dataType: "json",
           success: (data) => {
+            // check the console to see the data response as JSON
             console.log(data);
+            // For example, retrieve the time prediction... 
+            timePrediction = data.time_prediction
+            console.log("Predicted time:", timePrediction);
           },
           error: (error) => {
             console.log(error);
@@ -585,7 +594,9 @@ function getTravelTimePrediction(line_id, direction, departureTime) {
     };
   };
 
+// !!! This button is only for testing purposes and should be removed afterwards
 $("#btn_getPrediction").click(function(){
-    let traveltime = Date.now()
+    // let traveltime = Date.now()
+    let traveltime = 1658459237000;
     getTravelTimePrediction("46A", "outbound", traveltime);
 });

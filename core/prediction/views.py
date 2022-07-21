@@ -1,8 +1,7 @@
 import json
 import os
 from pathlib import Path
-from datetime import datetime, timedelta, timezone, time
-from django.shortcuts import render
+from datetime import datetime, timezone, time
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -17,7 +16,8 @@ def predict_travel_time(request, line_id, direction, traveltime):
     # The weather forecast is for 5 days in the future.
     # We will provide 4 days as the maximum traveltime from the now on.
     # This is equal to 345,000 seconds
-    TIME_DELTA_SEC = 345600
+    TIME_DELTA_FUTURE_SEC = 345600 # [sec]
+    TIME_DELTA_PAST_SEC = 120 # [sec] 
 
     if request.method == "GET":
         # ***************** Prepare Input Arguments ***************
@@ -38,7 +38,8 @@ def predict_travel_time(request, line_id, direction, traveltime):
             with open(bus_lines_file) as json_file:
                 bus_lines_dic = json.load(json_file)
                 if not req_line_id in bus_lines_dic:
-                    print("Error - requested bus line does not exist in the 'df_final_dic.json' file.")                    
+                    print("Error - requested bus line does not exist in the 'df_final_dic.json' file.")
+                    return Response(status=status.HTTP_400_BAD_REQUEST)
         except IOError:
             print("Error - could not open or load the 'df_final_dic.json' file.")
             return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -49,13 +50,13 @@ def predict_travel_time(request, line_id, direction, traveltime):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         # 3) Validate requested timestamp; time needs to be in a reasonable time range
-        # dt = datetime.now(timezone.utc)  
-        # utc_time = dt.replace(tzinfo=timezone.utc)
-        # utc_timestamp = utc_time.timestamp()
-        # if (req_timestamp < utc_timestamp) or \
-        #     (req_timestamp > utc_timestamp + timedelta(seconds=TIME_DELTA_SEC)):
-        #         print("Error - provided timestamp is invalid.")
-        #         return Response(status=status.HTTP_400_BAD_REQUEST)
+        dt = datetime.now(timezone.utc)  
+        utc_time = dt.replace(tzinfo=timezone.utc)
+        utc_timestamp = utc_time.timestamp()
+        if (req_timestamp + TIME_DELTA_PAST_SEC < utc_timestamp) or \
+            (req_timestamp > utc_timestamp + TIME_DELTA_FUTURE_SEC):
+                print("Error - provided timestamp is invalid.")
+                return Response(status=status.HTTP_400_BAD_REQUEST)
 
         # ***************** Retrieve Weather Info ***************
         # Retrieve weather details that are closest to the requested timestamp
