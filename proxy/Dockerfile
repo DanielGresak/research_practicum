@@ -6,6 +6,7 @@ COPY ./uwsgi_params /etc/nginx/uwsgi_params
 
 COPY ./certs ./etc/nginx/certs
 
+RUN cat ./etc/nginx/certs/certificate.crt ./etc/nginx/certs/ca_bundle.crt >> certificate.crt
 USER root
 
 RUN mkdir -p /vol/static
