@@ -132,7 +132,7 @@ function renderDirections(result, gmap){
 // and the number of stops this trip will cover.
 
 // routes is from result["routes"][index]
-function getBusInfo(routes){
+function getBusInfo(routes, startTime){
     var busRoutes = [];
     var steps = routes["legs"][0]["steps"];
     var numberSteps = steps.length;
@@ -140,30 +140,18 @@ function getBusInfo(routes){
         if (steps[i]["transit"] !== undefined){// find the steps for the bus instead of walking
             routeInfo={};
             thisRoute={};
+            var direction = getDirection(steps[i]["transit"]["line"]["short_name"],steps[i]["transit"]["departure_stop"]["name"], steps[i]["transit"]["arrival_stop"]["name"]);
             routeInfo["arriving_time"]=steps[i]["transit"]["departure_time"]["text"];
             routeInfo["driving_distance"]=steps[i]["distance"]["value"];
             routeInfo["num_stops"]=steps[i]["transit"]["num_stops"];
             routeInfo["travel_time"]=steps[i]["duration"]["value"];// travel time in second.
-            routeInfo["direction"]=getDirection(steps[i]["transit"]["line"]["short_name"],steps[i]["transit"]["departure_stop"]["name"], steps[i]["transit"]["arrival_stop"]["name"]);
+            routeInfo["direction"]= direction;
+            routeInfo["forecastTripTime"]=travelTime(steps[i], direction, startTime, steps[i]["transit"]["num_stops"], getTotalNumberOfStops());
             thisRoute[steps[i]["transit"]["line"]["short_name"]]=routeInfo;
             busRoutes.push(thisRoute);
         }
     }
     return busRoutes;
-}
-
-function getDrivingDistance(origin, dest){
-    var service = new google.maps.DistanceMatrixService();
-    var request={
-        origins: [origin],
-        destinations: [dest],
-        travelMode: 'DRIVING',
-      };
-    service.getDistanceMatrix(request,function(response, status){
-            if(status =="OK"){
-                return response["rows"][0]["elements"][0]["distance"]["value"];
-            }
-        })
 }
 
 function getDirection(line, departure, arrival){
@@ -173,7 +161,7 @@ function getDirection(line, departure, arrival){
     //console.log("departure gagagaga stop: "+departureStop);
     //console.log("arrival gagagagaga stop : "+arrivalStop);
     //console.log("line: "+line);
-    var bound;
+    var bound="";
     $.ajax({
         url: "./data",
         async: false,
@@ -181,31 +169,40 @@ function getDirection(line, departure, arrival){
         success: function(json){
             if(line in json){
                 if((jQuery.inArray(departureStop,json[line]["outbound"]) !== -1) || (jQuery.inArray(arrivalStop,json[line]["outbound"]) !== -1)){
-                    bound= 2;
+                    bound= "outbound";
                 }
                 else if((jQuery.inArray(departureStop,json[line]["inbound"]) !== -1) || (jQuery.inArray(arrivalStop,json[line]["inbound"]) !== -1)){
-                    bound= 1;
+                    bound= "inbound";
                 }
-                else{bound = 0}
-            }
-            else{bound = 0} 
+            } 
         }
     })
     return bound;
 }
 
-// return the travel time of a route
-function travelTime(route, direction, num_stops){
-    var d;
-    var travelTime;
-    if(direction === 1){
-        d="inbound";
-    }else{
-        d="outbound";
-    }
-    const model_name="route_"+route+"_"+d+".pkl";
+// pass in the route number and the direction, get the total number of the stops of this route
+// from 2022 gtfs data set
+function getTotalNumberOfStops(route, directions){
+    return 50;
+}
 
-    return model_name;
+// return the travel time of a bus route
+function travelTime(route, direction, startTime, numOfStops, totalNumOfStops){
+    var forecastingTravelTime=0;
+    // if can't find the direction of this trip from the data set, just return the result of google map
+    if(direction === ""){
+        return route["duration"]["value"];
+    }
+    /* this is where we get the result from the model
+
+     parameters data form: e.g.
+     route: 46a
+     direction: "inbound"
+     startTime: 1658409120000
+    
+    */
+
+    return forecastingTravelTime*(numOfStops/totalNumOfStops)
 }
 
 
@@ -214,11 +211,11 @@ function calcRoute(directionsService, directionsRenderer, map) {
     var originString = $("#search_start").val();
     var destString = $("#search_destination").val();
     var startTime = $("#time_of_travel").val();
-    
-    var mydate = new Date(startTime);
-    var resultTime = mydate.getTime();
-    //getDrivingDistance(originString, destString);
 
+    var mydate = new Date(startTime);
+    var resultTime = mydate.getTime();// in form of timestamp
+    console.log(resultTime);
+    console.log(startTime);
     var request = {
         origin: originString, // start location, now is ucd
         destination: destString, // end location, now is temple bar
@@ -330,13 +327,11 @@ function calcRoute(directionsService, directionsRenderer, map) {
             $("#confirm").click(function(){
                 if(selectedRoute.length === 0){
                     $(".alert").css("display", "block");
-                    $("#confirm").css("border", "1px solid red");
                 }else{
                     $(".alert").css("display", "none");
                     confirmedRoute=selectedRoute;// confirmedRoute will be the last clicked route
                     var busDrivingDistance=0;// the bus drving distance
                     var drivingDistance = getDrivingDistance(originString, destString);// this is the (car) driving distance
-                    
                     // calculate the total bus driving distance of the chosen trip plan
                     for (const r of confirmedRoute){
                         const routeNumber = Object.keys(r);
@@ -344,8 +339,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
                     }
 
                     console.log("busDriving distance: "+busDrivingDistance);
-                    console.log("driving distance: "+drivingDistance);
-                    
+                    console.log("driving distanceeee: "+ drivingDistance);
                     postCO2(busDrivingDistance);
 
                 }
@@ -363,33 +357,31 @@ function calcRoute(directionsService, directionsRenderer, map) {
                 $(".searchbar").show();
             });
 
+            /* the bus fare calculation */
             
             $("#inlineRadio1").click(function(){
                 if(getBusFare[confirmedRoute] != []){
-                    const busRoute=getBusFare(confirmedRoute)[0];
                     const recharge=getBusFare(confirmedRoute)[1];
                     var money = 2+2*recharge;
                     $(".answerContent").text(" ");
-                    $(".answerContent").text("For adults, "+"traveling from "+originString+" to "+destString+"and taking bus "+busRoute+" , the cost is "+money+" euro.");
+                    $(".answerContent").text("Your bus fare for this trip is "+money+" euro.");
                 }
             })
         
             $("#inlineRadio2").click(function(){
                 if(getBusFare[confirmedRoute] != []){
-                    const busRoute=getBusFare(confirmedRoute)[0];
                     const recharge=getBusFare(confirmedRoute)[1];
                     var money = 1+1*recharge;
                     $(".answerContent").text(" ");
-                    $(".answerContent").text("For young adults or students, "+"traveling from "+originString+" to "+destString+"and taking bus "+busRoute+" , the cost is "+money+ " euro.");
+                    $(".answerContent").text("Your bus fare for this trip is "+money+ " euro.");
                 }
                 })
             $("#inlineRadio3").click(function(){
                 if(getBusFare[confirmedRoute] != []){
-                    const busRoute=getBusFare(confirmedRoute)[0];
                     const recharge=getBusFare(confirmedRoute)[1];
                     var money = 0.65+0.65*recharge;
                     $(".answerContent").text(" ");
-                    $(".answerContent").text("For child, "+"traveling from "+originString+" to "+destString+"and taking bus "+busRoute+" , the cost is "+money +" euro.");
+                    $(".answerContent").text("Your bus fare for this trip is "+money +" euro.");
                 }
                 })
         }
@@ -439,6 +431,27 @@ function getBusFare(confirmed){
     }
 }
 
+/* Get Car Driving Distance */
+function getDrivingDistance(origin, dest){
+    var service = new google.maps.DistanceMatrixService();
+    var request={
+        origins: [origin],
+        destinations: [dest],
+        travelMode: 'DRIVING',
+      };
+    service.getDistanceMatrix(request,function(response, status){
+            if(status =="OK"){
+                var carDrivingDistance = response["rows"][0]["elements"][0]["distance"]["value"];
+                console.log(carDrivingDistance);
+                console.log(response["rows"]);
+                return carDrivingDistance;
+            }
+            else{
+                console.log("status is not ok")
+            }
+        })
+}
+
 /* GET CURRENT LOCATION FUNCTIONALITY */
 
 function getLocation() {
@@ -482,8 +495,6 @@ function postCO2(toAdd){
         alert("Your trip has been added to your emmisions saved")
     }).then(function(){
         updateEmissions()
-    
-      
     })
 }
 
@@ -637,50 +648,4 @@ $("#delete-button").click(function(){
     else {
         alert("Account not deleted.")
     }
-})
-
-Notification.requestPermission().then(function(result) {
-    if (result == "granted"){
-        const text = 'HEY! Your task  is now overdue.';
-        const notification = new Notification('To do list', { body: text });
-    }
-  });
-
-function newNotification(bus, interval){
-    const text = "The " + bus + " bus is " + interval +" Minutes away from your stop!";
-    const notification = new Notification('To do list', { body: text });
-}
-
-newNotification(15, 5)
-
-$("#add-notification").click(function(){
-    var minutesToAdd=2;
-    var currentDate = new Date();
-    var futureDate = new Date(currentDate.getTime() + minutesToAdd*60000);
-    var chosenRoute = {
-        bus: 15 ,
-        time: futureDate.getTime(),
-        minutes: 5,
-    }
-   
-        $.ajax({
-            type: "POST",
-            url: "add_notification",
-            data: chosenRoute,
-            dataType: "json",
-            encode: true,
-            headers: {
-                'X-CSRFToken': csrfToken
-            },
-            success: function(msg) {
-                alert("SUCCESS")
-            },
-            "statusCode": {
-                404: function (xhr, error, thrown) {
-                alert("Account not found.")
-                }
-            }
-        }).then(function(){
-           console.log("success?")
-        })
 })

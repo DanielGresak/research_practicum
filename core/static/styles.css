@@ -166,9 +166,7 @@ margin: 4px;
 #time{
   color: red;
 }
-.answerBlock{
-  padding-top: 10px;
-}
+
 form {
     padding: 15px;
     display: inline-block;
@@ -243,6 +241,11 @@ input:valid + span::before {
 .cost {
   margin: 15px;
   text-align: center;
+}
+
+.answerBlock{
+  padding-top: 10px;
+  font-size: large;
 }
 
 .leap-anchor button {
