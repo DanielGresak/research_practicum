@@ -147,6 +147,7 @@ function getBusInfo(routes, startTime){
             routeInfo["travel_time"]=steps[i]["duration"]["value"];// travel time in second.
             routeInfo["direction"]= direction;
             routeInfo["forecastTripTime"]=travelTime(steps[i], direction, startTime, steps[i]["transit"]["num_stops"], getTotalNumberOfStops());
+            console.log("get the travel time is"+routeInfo["forecastTripTime"]);
             thisRoute[steps[i]["transit"]["line"]["short_name"]]=routeInfo;
             busRoutes.push(thisRoute);
         }
@@ -158,9 +159,7 @@ function getDirection(line, departure, arrival){
     //console.log("departure stop: "+departure);
     var departureStop = ""+departure.replace(/[^0-9.]/g, "");
     var arrivalStop = ""+arrival.replace(/[^0-9.]/g, "");
-    //console.log("departure gagagaga stop: "+departureStop);
-    //console.log("arrival gagagagaga stop : "+arrivalStop);
-    //console.log("line: "+line);
+   
     var bound="";
     $.ajax({
         url: "./data",
@@ -181,18 +180,24 @@ function getDirection(line, departure, arrival){
 }
 
 // pass in the route number and the direction, get the total number of the stops of this route
-// from 2022 gtfs data set
+
 function getTotalNumberOfStops(route, directions){
     return 50;
 }
 
 // return the travel time of a bus route
-function travelTime(route, direction, startTime, numOfStops, totalNumOfStops){
-    var forecastingTravelTime=0;
+function travelTime(route, direction, departureTime, numOfStops, totalNumOfStops){
+    console.log("departuretime"+departureTime);
+    var timePrediction=0;
     // if can't find the direction of this trip from the data set, just return the result of google map
     if(direction === ""){
+        console.log("no direction is found, will return the result from the google map")
         return route["duration"]["value"];
     }
+    if(departureTime==="NaN"){
+        departureTime=Date.now();
+    }
+    var line_id = route["transit"]["line"]["short_name"];
     /* this is where we get the result from the model
 
      parameters data form: e.g.
@@ -201,8 +206,30 @@ function travelTime(route, direction, startTime, numOfStops, totalNumOfStops){
      startTime: 1658409120000
     
     */
+    
+    let url = "prediction/";
+    url += line_id +"/";
+    url += direction +"/";
+    url += departureTime +"/";
 
-    return forecastingTravelTime*(numOfStops/totalNumOfStops)
+    $.ajax({
+        url: url,
+        type: "GET",
+        async: false,
+        dataType: "json",
+        success: (data) => {
+        // check the console to see the data response as JSON
+        console.log(data);
+        // For example, retrieve the time prediction... 
+        timePrediction = data.time_prediction
+        console.log("timePredition: "+timePrediction);
+        },
+        error: (error) => { 
+        console.log(error);
+        }
+    });
+    console.log("the prediction time from the travelTime function is"+timePrediction*(numOfStops/totalNumOfStops));
+    return timePrediction*(numOfStops/totalNumOfStops);
 }
 
 
@@ -247,11 +274,11 @@ function calcRoute(directionsService, directionsRenderer, map) {
                 if (result["routes"][route]["legs"][0]["steps"].length < 2){
                     continue;
                 }
-                var busRoutes = getBusInfo(result["routes"][route]); // an array of routes(transfer) or a route(one go)
+                var busRoutes = getBusInfo(result["routes"][route], resultTime); // an array of routes(transfer) or a route(one go)
                 // if no need to transfer a bus, only one key will be in this dict
                 var busNumString = "";
                 var busArrivingString="";
-                var busTravelTime="";
+                var busTravelTime=0;
                 var busDrivingDistance=0;
 
                 for(const r of busRoutes) {
@@ -259,30 +286,20 @@ function calcRoute(directionsService, directionsRenderer, map) {
                     busNumString = busNumString+routeNumber+" -> ";
                     busArrivingString=busArrivingString+r[routeNumber]["arriving_time"]+"; ";
                     busDrivingDistance=busDrivingDistance+r[routeNumber]["driving_distance"];
-                    busTravelTime=busTravelTime+travelTime(routeNumber, r[routeNumber]["direction"], r[routeNumber]["num_stops"])+"; "
-                    //console.log(routeNumber+" "+r[routeNumber]["last_stop"]);
-                    //console.log(routeNumber+" "+r[routeNumber]["driving_distance"]);
-                    //console.log("end_location"+routeNumber+"   "+r[routeNumber]["direction"]);
+                    busTravelTime=busTravelTime+r[routeNumber]["forecastTripTime"];
+                    
                 }
-                busNumString = busNumString.slice(0, -3);
-                busArrivingString = busArrivingString.slice(0, -2);
-                busTravelTime = busTravelTime.slice(0, -2);
-                
 
-                //var busNumber = Object.keys(busRoutes); // bus number
-                //var arrivingTime = busRoutes[busNumber];// arriving time of this bus
-                
-                //var busArrivingString = "";
-                //busNumber.forEach(number =>{ busNumString += number});// will be optimized later on for the bus transfering case
-                //arrivingTime.forEach(number =>{ busArrivingString += number});//will be optimized later on for the bus transfering case
-              
+                busNumString = busNumString.slice(0, -3);
+                busArrivingString = busArrivingString.slice(0, -2);    
+
                 // add a bus info child window for every bus/route
                 $(".busInfo").append("<div class = 'oneBus'>\
                                         <p class = 'busHeader'>"+"Bus route "+(route+1)+": "+busNumString+"<button class='selectRoute'>Select</button></p>\
-                                        <p class = 'busDetail' id = 'arrivingTime'>Arriving time:<span id ='time'>"+ busArrivingString+"</span></p>\
-                                        <p class = 'busDetail' id = 'totalTravelTime'>Total travel time:"+busTravelTime+"</p>\
-                                        <p class = 'busDetail' id = 'busFare'>Bus fare:</p>\
-                                        <p class = 'busDetail' id = 'carbonEmissionSaved'>Carbon emission saved:</p></div>")
+                                        <p class = 'busDetail' id = 'arrivingTime'>Arriving time:<span class ='keyValue'>"+ busArrivingString+"</span></p>\
+                                        <p class = 'busDetail' id = 'totalTravelTime'>Total travel time:<span class ='keyValue'>"+busTravelTime+"</span></p>\
+                                        <p class = 'busDetail' id = 'busFare'>Bus fare: <span class ='keyValue'></span></p>\
+                                        <p class = 'busDetail' id = 'carbonEmissionSaved'>Carbon emission saved: <span class ='keyValue'>:</span></p></div>")
             }
 
             var selectedRoute=[];//each time select button is clicked, this var will be refreshed.
@@ -703,39 +720,7 @@ $("#add-notification").click(function(){
 // - line_id ; STRING, e.g. 46A
 // - direction ; STRING, either 'inbound' or 'outbound'
 // - departureTime ; UTC timestamp in milliseconds, INT, e.g. Date.now()
-function getTravelTimePrediction(line_id, direction, departureTime) {
 
-    if (!Boolean(departureTime)) {
-        console.log("Error - no departure time is provided!");
-    } else if (!Boolean(line_id)) {
-        console.log("Error - no line_id is provided!");
-    } else if (!Boolean(direction)) {
-        console.log("Error - no direction is provided!");
-    } else {
-        let url = "prediction/";
-
-        url += line_id +"/";
-        url += direction +"/";
-        url += departureTime +"/";
-
-        $.ajax({
-          url: url,
-          type: "GET",
-          dataType: "json",
-          success: (data) => {
-            // check the console to see the data response as JSON
-            console.log(data);
-            // For example, retrieve the time prediction... 
-            timePrediction = data.time_prediction
-            console.log("Predicted time:", timePrediction);
-          },
-          error: (error) => {
-            console.log(error);
-          }
-        });
-    
-    };
-  };
 
 // !!! This button is only for testing purposes and should be removed afterwards
 $("#btn_getPrediction").click(function(){
