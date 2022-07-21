@@ -487,7 +487,8 @@ function updateEmissions(){
 //     $(".co2-saved").text(data["co2_saved"] + " grams of co2.")
 // })
 
-updateEmissions()
+// !!!! Temporarily commented out because it threw an Server 500 error - JS
+// updateEmissions()
 
 /* FUNCTION FOR POST REQUEST TO ADD CO2 INFORMATION */
 function postCO2(toAdd){
@@ -649,3 +650,96 @@ $("#delete-button").click(function(){
         alert("Account not deleted.")
     }
 })
+
+Notification.requestPermission().then(function(result) {
+    if (result == "granted"){
+        const text = 'HEY! Your task  is now overdue.';
+        const notification = new Notification('To do list', { body: text });
+    }
+  });
+
+function newNotification(bus, interval){
+    const text = "The " + bus + " bus is " + interval +" Minutes away from your stop!";
+    const notification = new Notification('To do list', { body: text });
+}
+
+newNotification(15, 5)
+
+$("#add-notification").click(function(){
+    var minutesToAdd=2;
+    var currentDate = new Date();
+    var futureDate = new Date(currentDate.getTime() + minutesToAdd*60000);
+    var chosenRoute = {
+        bus: 15 ,
+        time: futureDate.getTime(),
+        minutes: 5,
+    }
+   
+        $.ajax({
+            type: "POST",
+            url: "add_notification",
+            data: chosenRoute,
+            dataType: "json",
+            encode: true,
+            headers: {
+                'X-CSRFToken': csrfToken
+            },
+            success: function(msg) {
+                alert("SUCCESS")
+            },
+            "statusCode": {
+                404: function (xhr, error, thrown) {
+                alert("Account not found.")
+                }
+            }
+        }).then(function(){
+           console.log("success?")
+        })
+})
+
+
+// @Yating -  feel free to tweak and change the function you need it :) Happy coding...
+// Function to get the predicted travel time (full route) for following parameters:
+// - line_id ; STRING, e.g. 46A
+// - direction ; STRING, either 'inbound' or 'outbound'
+// - departureTime ; UTC timestamp in milliseconds, INT, e.g. Date.now()
+function getTravelTimePrediction(line_id, direction, departureTime) {
+
+    if (!Boolean(departureTime)) {
+        console.log("Error - no departure time is provided!");
+    } else if (!Boolean(line_id)) {
+        console.log("Error - no line_id is provided!");
+    } else if (!Boolean(direction)) {
+        console.log("Error - no direction is provided!");
+    } else {
+        let url = "prediction/";
+
+        url += line_id +"/";
+        url += direction +"/";
+        url += departureTime +"/";
+
+        $.ajax({
+          url: url,
+          type: "GET",
+          dataType: "json",
+          success: (data) => {
+            // check the console to see the data response as JSON
+            console.log(data);
+            // For example, retrieve the time prediction... 
+            timePrediction = data.time_prediction
+            console.log("Predicted time:", timePrediction);
+          },
+          error: (error) => {
+            console.log(error);
+          }
+        });
+    
+    };
+  };
+
+// !!! This button is only for testing purposes and should be removed afterwards
+$("#btn_getPrediction").click(function(){
+    let traveltime = Date.now()
+    // let traveltime = 1658459237000; // some date in the future
+    getTravelTimePrediction("46A", "outbound", traveltime);
+});

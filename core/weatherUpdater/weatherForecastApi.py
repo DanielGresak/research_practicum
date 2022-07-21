@@ -96,6 +96,10 @@ def update_weather_forecast():
             entity_dict["weather_icon"] = entity["weather"][0]["icon"]
             entity_dict["clouds"] = entity["clouds"]["all"]
             entity_dict["pop"] = entity["pop"]
+            if "wind" in entity:
+                entity_dict["wind_speed"] = entity["wind"]["speed"]
+            else:
+                entity_dict["wind_speed"] = 0
 
             # Store the timestamp of the first entity received so that we can later delete older 
             # forecast entities

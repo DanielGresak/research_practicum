@@ -369,3 +369,7 @@ input:valid + span::before {
     float: left;
   }
 }
+
+#btn_getPrediction{
+  margin-top: 10px;
+}
