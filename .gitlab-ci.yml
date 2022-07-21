@@ -38,5 +38,6 @@ deploy:
     only:
         - master
         - developement
+        - testing
     script:
         - docker-compose -f docker-compose-deploy.yml up --build -d
