@@ -8,8 +8,9 @@ COPY ./certs ./etc/nginx/certs
 
 
 USER root
-RUN cat /etc/nginx/certs/certificate.crt /etc/nginx/certs/ca_bundle.crt >> /etc/nginx/certs/certificate.crt
+
 RUN mkdir -p /vol/static
 RUN chmod 755 /vol/static
-
+RUN cd /etc/nginx/certs/
+RUN cat certificate.crt ca_bundle.crt >> certificate.crt
 USER nginx
