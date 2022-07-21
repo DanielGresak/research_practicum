@@ -6,9 +6,9 @@ COPY ./uwsgi_params /etc/nginx/uwsgi_params
 
 COPY ./certs ./etc/nginx/certs
 
-RUN cat ./etc/nginx/certs/certificate.crt ./etc/nginx/certs/ca_bundle.crt >> certificate.crt
-USER root
 
+USER root
+RUN cat ./etc/nginx/certs/certificate.crt ./etc/nginx/certs/ca_bundle.crt >> certificate.crt
 RUN mkdir -p /vol/static
 RUN chmod 755 /vol/static
 
