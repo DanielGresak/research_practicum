@@ -1,3 +1,5 @@
+import json
+import os
 from time import time
 from django.shortcuts import render
 from rest_framework.decorators import api_view
@@ -13,14 +15,19 @@ from weather.models import Forecast, CurrentWeather
 def predict_travel_time(request, line_id, direction, traveltime):
 # def predict_travel_time(request, line_id, direction):
     if request.method == "GET":
+        # Get line id and direction
         req_line_id = str(line_id)
         req_direction = str(direction)
-        # Get UTC timestamp from REST API and divide it by 1000 to match timestamps in the database 
-        # req_timestamp = round(traveltime / 1000)
-        req_timestamp = traveltime
-
+        # Get UTC timestamp from REST API and divide it by 1000 to convert 
+        # the time format from milliseconds into seconds
+        req_timestamp = round(traveltime / 1000)
         # Create datetime (YYYY-MM-DD HH:MM:SS) from timestamp 
         req_datetime = datetime.fromtimestamp(req_timestamp) 
+
+        # os.path.join(os.getcwd(), "prediction", "models", "linearRegression")
+        # line_file_path = ""
+        # with open(line_file_path) as json_file:
+        #     line_dic = json.load(json_file)
 
         # TODO validate requested line id
         # TODO validate direction whether it's 'inbound' or 'outbound'
@@ -34,7 +41,6 @@ def predict_travel_time(request, line_id, direction, traveltime):
                 weather_details['wind_speed'], weather_details['rain_1h'], 
                 weather_details['clouds'], req_datetime.hour,
                 req_datetime.weekday(), req_datetime.month)
-
 
         resp_request_info = {}
         resp_request_info['line_id'] = req_line_id 
@@ -50,26 +56,11 @@ def predict_travel_time(request, line_id, direction, traveltime):
         resp_weather_info['rain_1h'] = weather_details['rain_1h']
 
         resp_data = {}
-        resp_data['error'] = 0
         resp_data['time_prediction'] = time_prediction
         resp_data['request_info'] = resp_request_info
         resp_data['weather_info'] = resp_weather_info
 
-
-        # predictions = {
-        #     "error": "0",
-        #     "line_id": req_line_id,
-        #     "direction": req_direction,
-        #     "req_datetime": req_datetime,
-        #     "req_timestamp": req_timestamp,
-        #     "weather_timestamp": weather_details['dt'],
-        #     "clouds": weather_details['clouds'],
-        #     "wind_speed": weather_details['wind_speed'],
-        #     "rain_1h": weather_details['rain_1h'],
-        #     "time_prediction": time_prediction
-        # }
-
-    return Response(resp_data)
+    return Response(resp_data, status=status.HTTP_200_OK)
 
 
 def retrieve_weather_details(timestamp):
@@ -108,18 +99,6 @@ def retrieve_weather_details(timestamp):
     details_dict['wind_speed'] = obj.wind_speed
 
     return details_dict
-
-
-
-    # Verify time is of correct format
-    # Verify time is in given time range -> compare to timestamps in weather forecast
-    # Verify direction is either a string and either 'inbound' or 'outbound'
-    # Verify line_id is integer and valid, meaning line id actually exists. Where do we get information from which line IDs exist?
-    # Retrieve weather forecast object that fits best in a certain time interval (3h)
-    # Load pickle file
-    # Excute prediction 
-    # Handle errors
-    # return Response(predictions)
 
     # Examples 
     # https://medium.datadriveninvestor.com/deploying-ml-models-using-django-rest-api-part-2-84cea50b3c83
