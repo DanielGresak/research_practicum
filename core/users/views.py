@@ -7,7 +7,7 @@ from django.http import HttpResponse
 # from sympy import re
 
 
-@csrf_exempt
+# @csrf_exempt
 def registerUser(request):
     if request.method == 'POST':
         user_email = request.POST.get("userEmail")
@@ -42,7 +42,7 @@ def registerUser(request):
             return HttpResponse(status=204)
 
 
-@csrf_exempt
+# @csrf_exempt
 def loginUser(request):
     if request.method == 'POST':
         user_email = request.POST.get("userEmail")
@@ -68,7 +68,7 @@ def username_exists(username):
 
 
 # https://stackoverflow.com/questions/33715879/how-to-delete-user-in-django
-@csrf_exempt
+# @csrf_exempt
 @login_required
 def delete_user(request):
     try:
