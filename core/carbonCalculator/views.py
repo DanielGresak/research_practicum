@@ -24,8 +24,9 @@ transport land work.
 @csrf_exempt
 def CarbonCalculator(request):
     if request.method == 'POST':
-        distance = int(request.POST.get('value', False))
-        saved_emissions = calculate_emissions(distance)
+        bus_distance = int(request.POST.get('bus_distance', False))
+        driving_distance = int(request.POST.get('driving_distance', False))
+        saved_emissions = calculate_emissions(bus_distance, driving_distance)
         if request.user.is_authenticated:
             current_user_emissions = request.user.profile
             if current_user_emissions.emissions is not None:
@@ -58,6 +59,12 @@ def ReturningCarbonData(request):
     return JsonResponse(responseData)
 
 
-def calculate_emissions(distance):
-    saved = int(98 * (distance / 1000))
-    return saved
+def calculate_emissions(bus, car):
+    car_emissions = car * .17152
+    bus_emissions = bus * .10391
+    saved = car_emissions - bus_emissions
+    rounded = round(saved, 2)
+    print(car_emissions, bus_emissions)
+    print(rounded)
+    return rounded
+ 

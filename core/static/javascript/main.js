@@ -500,9 +500,8 @@ function updateEmissions(){
 // updateEmissions()
 
 /* FUNCTION FOR POST REQUEST TO ADD CO2 INFORMATION */
-function postCO2(toAdd, carDistance){
-    console.log("The car driving distance is: "+carDistance);
-    $.post("carbon/", {'value': toAdd}).done(function(response){
+function postCO2(drivingDistance, busDistance){
+    $.post("carbon/", {'driving_distance': drivingDistance, "bus_distance": busDistance}).done(function(response){
         alert("Your trip has been added to your emmisions saved")
     }).then(function(){
         updateEmissions()
@@ -543,6 +542,8 @@ $("#login-button").click(function(){
                 }
             }
         }).then(function(){
+            $("#not-auth").hide();
+            $("#auth").show();
 
             $(".logout").show()
             $(".login").hide()
@@ -587,6 +588,8 @@ $("#register-button").click(function(){
                 }
             }
         }).then(function(){
+            $("#not-auth").hide();
+            $("#auth").show();
             $(".logout").show()
             $(".register").hide()
             updateEmissions()
@@ -611,6 +614,8 @@ $("#logout-button").click(function(){
         },
         
     }).then(function(){
+        $("#not-auth").show();
+        $("#auth").hide();
         $(".logout").hide()
         $(".login").show()
         updateEmissions()
@@ -651,6 +656,8 @@ $("#delete-button").click(function(){
                 }
             }
         }).then(function(){
+            $("#not-auth").show();
+            $("#auth").hide();
             $(".logout").hide()
             $(".login").show()
             updateEmissions() 
@@ -661,30 +668,25 @@ $("#delete-button").click(function(){
     }
 })
 
-Notification.requestPermission().then(function(result) {
-    if (result == "granted"){
-        const text = 'HEY! Your task  is now overdue.';
-        const notification = new Notification('To do list', { body: text });
-    }
-  });
+// Notification.requestPermission().then(function(result) {
+//     if (result == "granted"){
+//         const text = 'HEY! Your task  is now overdue.';
+//         const notification = new Notification('To do list', { body: text });
+//     }
+//   });
 
-function newNotification(bus, interval){
-    const text = "The " + bus + " bus is " + interval +" Minutes away from your stop!";
-    const notification = new Notification('To do list', { body: text });
-}
+// function newNotification(bus, interval){
+//     const text = "The " + bus + " bus is " + interval +" Minutes away from your stop!";
+//     const notification = new Notification('To do list', { body: text });
+// }
 
-newNotification(15, 5)
+// newNotification(15, 5)
 
-$("#add-notification").click(function(){
-    var minutesToAdd=2;
-    var currentDate = new Date();
-    var futureDate = new Date(currentDate.getTime() + minutesToAdd*60000);
+function sendNotificaiton(time, bus){
     var chosenRoute = {
-        bus: 15 ,
-        time: futureDate.getTime(),
-        minutes: 5,
+        bus: bus ,
+        time: time,
     }
-   
         $.ajax({
             type: "POST",
             url: "add_notification",
@@ -705,7 +707,7 @@ $("#add-notification").click(function(){
         }).then(function(){
            console.log("success?")
         })
-})
+}
 
 
 // @Yating -  feel free to tweak and change the function you need it :) Happy coding...
@@ -720,4 +722,52 @@ $("#btn_getPrediction").click(function(){
     let traveltime = Date.now()
     // let traveltime = 1658459237000; // some date in the future
     getTravelTimePrediction("46A", "outbound", traveltime);
+});
+
+
+// NOTIFICATION CHECKBOX FUNCTIONALITY
+$("#notify-box").change(function() {
+    $.ajax({
+        type: "GET",
+        url: "change_notification_settings",
+        success: function(msg) {
+            alert("Settings changed")
+        },
+        "statusCode": {
+            401: function (xhr, error, thrown) {
+            alert("error." + error)
+            }
+        }
+    }).then(function(){
+       console.log("setting changed")
+    })
+});
+
+// NOTIFICATION DELAY CHANGE
+
+$("#change-notification-delay").change(function() {
+    var newDelay = {
+        delay: $('#change-notification-delay').find(":selected").text(),
+    }
+
+    $.ajax({
+        type: "POST",
+        url: "change_delay",
+        data: newDelay,
+        dataType: "json",
+        encode: true,
+        headers: {
+            'X-CSRFToken': csrfToken
+        },
+        success: function(msg) {
+            alert("SUCCESS")
+        },
+        "statusCode": {
+            401: function (xhr, error, thrown) {
+            alert("Not Authorized")
+            }
+        }
+    }).then(function(){
+       console.log("delay changed")
+    })
 });

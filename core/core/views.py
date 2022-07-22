@@ -15,11 +15,18 @@ def home(request):
     # All in if/else block is for testing
     if request.user.is_authenticated:
         logged_in = True
+        current_user = request.user.profile
+        notifications = current_user.notifications
+        notification_delay = current_user.notification_delay
     else:
         logged_in = False
+        notifications = False
+        notification_delay = 0
     return render(request, "core/index.html",
                   context={"GOOGLE_MAPS_KEY": os.environ.get("GOOGLE_MAPS_KEY"),  # noqa
-                  "loggedIn": logged_in})
+                  "loggedIn": logged_in,
+                  "notifications": notifications,
+                  "delay": notification_delay})
 
 
 def data(request):
