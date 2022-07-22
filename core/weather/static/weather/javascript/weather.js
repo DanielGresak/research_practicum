@@ -8,7 +8,7 @@ function showWeatherData(url) {
         // Array elements [0] up to [39] contain the forecast details, where each element represents a three hour interval
         // Array element [40] contains the current weather information
         if (data.length != 41) {
-          console.log("Error - Unexpected data field length received from API");
+          console.log("Error - Unexpected data field length received from weather REST API");
           console.log(data);
           return;
         } else {

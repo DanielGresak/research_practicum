@@ -101,6 +101,7 @@ function initMap() {
 
 /* DIRECTIONS FUNCTIONALITY */
 
+let carDrivingDistance = 0;
 // the function that renders all the routes on the map.
 // parameter: result, the parameter from the directionsService.route()
 // parameter: map, the map
@@ -147,7 +148,7 @@ function getBusInfo(routes, startTime){
             routeInfo["travel_time"]=steps[i]["duration"]["value"];// travel time in second.
             routeInfo["direction"]= direction;
             routeInfo["forecastTripTime"]=travelTime(steps[i], direction, startTime, steps[i]["transit"]["num_stops"], getTotalNumberOfStops());
-            console.log("get the travel time is"+routeInfo["forecastTripTime"]);
+            //console.log("get the travel time is"+routeInfo["forecastTripTime"]);
             thisRoute[steps[i]["transit"]["line"]["short_name"]]=routeInfo;
             busRoutes.push(thisRoute);
         }
@@ -187,7 +188,7 @@ function getTotalNumberOfStops(route, directions){
 
 // return the travel time of a bus route
 function travelTime(route, direction, departureTime, numOfStops, totalNumOfStops){
-    console.log("departuretime"+departureTime);
+    //console.log("departuretime"+departureTime);
     var timePrediction=0;
     // if can't find the direction of this trip from the data set, just return the result of google map
     if(direction === ""){
@@ -219,16 +220,15 @@ function travelTime(route, direction, departureTime, numOfStops, totalNumOfStops
         dataType: "json",
         success: (data) => {
         // check the console to see the data response as JSON
-        console.log(data);
+        //console.log("data"+data);
         // For example, retrieve the time prediction... 
         timePrediction = data.time_prediction
-        console.log("timePredition: "+timePrediction);
+        //console.log("timePredition: "+timePrediction);
         },
         error: (error) => { 
         console.log(error);
         }
     });
-    console.log("the prediction time from the travelTime function is"+timePrediction*(numOfStops/totalNumOfStops));
     return timePrediction*(numOfStops/totalNumOfStops);
 }
 
@@ -260,6 +260,21 @@ function calcRoute(directionsService, directionsRenderer, map) {
     };
     directionsService.route(request, function(result, status){
         if(status == "OK"){
+
+            var service = new google.maps.DistanceMatrixService();
+            service.getDistanceMatrix(
+                {
+                    origins: [originString],
+                    destinations: [destString],
+                    travelMode: 'DRIVING',
+                  },(response, status) =>{
+                    if(status =="OK"){
+                        carDrivingDistance = response["rows"][0]["elements"][0]["distance"]["value"];
+                        //console.log("driving distance in the function "+carDrivingDistance);
+                        //console.log(response["rows"]);
+            }});
+
+            console.log(carDrivingDistance);
             console.log(result["routes"]);
             // display all the possible routes on the map in different colors
             const directionRenderers = renderDirections(result, map);
@@ -348,22 +363,14 @@ function calcRoute(directionsService, directionsRenderer, map) {
                     $(".alert").css("display", "none");
                     confirmedRoute=selectedRoute;// confirmedRoute will be the last clicked route
                     var busDrivingDistance=0;// the bus drving distance
-                    var drivingDistance = getDrivingDistance(originString, destString);// this is the (car) driving distance
+                    //var drivingDistance = getCarDrivingDistance(originString, destString);// this is the (car) driving distance
                     // calculate the total bus driving distance of the chosen trip plan
                     for (const r of confirmedRoute){
                         const routeNumber = Object.keys(r);
                         busDrivingDistance=busDrivingDistance+r[routeNumber]["driving_distance"];
                     }
-                    console.log(confirmedRoute)
-
-                    console.log("busDriving distance: "+busDrivingDistance);
-                    console.log("driving distanceeee: "+ drivingDistance);
-                    postCO2(busDrivingDistance, busDrivingDistance);
-                    
-                    var time = new Date();
-                    time = time.getTime();
-                    var bus = "15"
-                    sendNotificaiton(time, bus)
+                    console.log("driving distance in clonfirm "+carDrivingDistance);
+                    postCO2(busDrivingDistance, carDrivingDistance);
 
                 }
             });
@@ -453,28 +460,7 @@ function getBusFare(confirmed){
         return [];
     }
 }
-
-/* Get Car Driving Distance */
-function getDrivingDistance(origin, dest){
-    var service = new google.maps.DistanceMatrixService();
-    var request={
-        origins: [origin],
-        destinations: [dest],
-        travelMode: 'DRIVING',
-      };
-    service.getDistanceMatrix(request,function(response, status){
-            if(status =="OK"){
-                var carDrivingDistance = response["rows"][0]["elements"][0]["distance"]["value"];
-                console.log(carDrivingDistance);
-                console.log(response["rows"]);
-                return carDrivingDistance;
-            }
-            else{
-                console.log("status is not ok")
-            }
-        })
-}
-
+  
 /* GET CURRENT LOCATION FUNCTIONALITY */
 
 function getLocation() {
