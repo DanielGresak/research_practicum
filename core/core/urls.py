@@ -34,8 +34,9 @@ urlpatterns = [
     path('', include("users.urls")),
     path('', include("notifications.urls")),
     path('', include('prediction.urls')),
-    path('api-auth/', include('rest_framework.urls',
-            namespace='rest_framework')),
+    path(
+        'api-auth/',
+        include('rest_framework.urls', namespace='rest_framework')),
 
     # To enable the automated documentation of APIs we're adding:
     # 'api/schema' will generate the schema four our API,

@@ -2,7 +2,8 @@ import os
 import pickle
 
 
-def linear_regression(line, direction, wind_speed, rain_1h,
+def linear_regression(
+        line, direction, wind_speed, rain_1h,
         clouds_all, hour, weekday, month):
 
     # Create pickle file name according to provided line and direction
