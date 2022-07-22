@@ -693,7 +693,7 @@ function sendNotificaiton(time, bus){
     }
         $.ajax({
             type: "POST",
-            url: "add_notification",
+            url: "add-notification",
             data: chosenRoute,
             dataType: "json",
             encode: true,
