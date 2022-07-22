@@ -24,10 +24,10 @@ def add_route_for_notification(request):
             sending_time = time - delay
             # For testing purposes
             sending_time += 360
-
+            sending_time = int(sending_time)
             scheduler.add_job(send_notification,
                               "date",
-                              run_date=datetime.fromtimestamp(int(sending_time)),
+                              run_date=datetime.fromtimestamp(sending_time),
                               args=[bus, delay, email])
             scheduler.start()
         return HttpResponse(status=204)
