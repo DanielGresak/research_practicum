@@ -160,7 +160,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 NOSE_ARGS = [
-    '--cover-package=core,notifications,carbonCalculator,users,weather',
+    '--cover-package=core,notifications,carbonCalculator,users,weather,prediction',
 ]
 
 REST_FRAMEWORK = {
