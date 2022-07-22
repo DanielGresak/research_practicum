@@ -358,7 +358,12 @@ function calcRoute(directionsService, directionsRenderer, map) {
 
                     console.log("busDriving distance: "+busDrivingDistance);
                     console.log("driving distanceeee: "+ drivingDistance);
-                    postCO2(busDrivingDistance);
+                    postCO2(busDrivingDistance, busDrivingDistance);
+                    
+                    var time = new Date();
+                    time = time.getTime();
+                    var bus = "15"
+                    sendNotificaiton(time, bus)
 
                 }
             });
@@ -509,8 +514,8 @@ function updateEmissions(){
 // updateEmissions()
 
 /* FUNCTION FOR POST REQUEST TO ADD CO2 INFORMATION */
-function postCO2(toAdd){
-    $.post("carbon/", {'value': toAdd}).done(function(response){
+function postCO2(drivingDistance, busDistance){
+    $.post("carbon/", {'driving_distance': drivingDistance, "bus_distance": busDistance}).done(function(response){
         alert("Your trip has been added to your emmisions saved")
     }).then(function(){
         updateEmissions()
@@ -551,8 +556,8 @@ $("#login-button").click(function(){
                 }
             }
         }).then(function(){
-            $("#not-not-auth").hide();
-            $("#notif-auth").show();
+            $("#not-auth").hide();
+            $("#auth").show();
 
             $(".logout").show()
             $(".login").hide()
@@ -597,8 +602,8 @@ $("#register-button").click(function(){
                 }
             }
         }).then(function(){
-            $("#not-not-auth").hide();
-            $("#notif-auth").show();
+            $("#not-auth").hide();
+            $("#auth").show();
             $(".logout").show()
             $(".register").hide()
             updateEmissions()
@@ -623,8 +628,8 @@ $("#logout-button").click(function(){
         },
         
     }).then(function(){
-        $("#not-not-auth").show();
-        $("#notif-auth").hide();
+        $("#not-auth").show();
+        $("#auth").hide();
         $(".logout").hide()
         $(".login").show()
         updateEmissions()
@@ -665,8 +670,8 @@ $("#delete-button").click(function(){
                 }
             }
         }).then(function(){
-            $("#not-not-auth").show();
-            $("#notif-auth").hide();
+            $("#not-auth").show();
+            $("#auth").hide();
             $(".logout").hide()
             $(".login").show()
             updateEmissions() 
@@ -677,28 +682,25 @@ $("#delete-button").click(function(){
     }
 })
 
-Notification.requestPermission().then(function(result) {
-    if (result == "granted"){
-        const text = 'HEY! Your task  is now overdue.';
-        const notification = new Notification('To do list', { body: text });
-    }
-  });
+// Notification.requestPermission().then(function(result) {
+//     if (result == "granted"){
+//         const text = 'HEY! Your task  is now overdue.';
+//         const notification = new Notification('To do list', { body: text });
+//     }
+//   });
 
-function newNotification(bus, interval){
-    const text = "The " + bus + " bus is " + interval +" Minutes away from your stop!";
-    const notification = new Notification('To do list', { body: text });
-}
+// function newNotification(bus, interval){
+//     const text = "The " + bus + " bus is " + interval +" Minutes away from your stop!";
+//     const notification = new Notification('To do list', { body: text });
+// }
 
-newNotification(15, 5)
+// newNotification(15, 5)
 
 function sendNotificaiton(time, bus){
-    var minutesToAdd=2;
-    
     var chosenRoute = {
-        bus: 15 ,
-        time: futureDate.getTime(),
+        bus: bus ,
+        time: time,
     }
-   
         $.ajax({
             type: "POST",
             url: "add_notification",
