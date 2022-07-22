@@ -14,15 +14,15 @@ from weather.models import Forecast, CurrentWeather
 #  - line_id ; STRING, e.g. 46A
 #  - direction ; STRING, either 'inbound' or 'outbound'
 #  - departureTime ; UTC timestamp in milliseconds (JavaScript),
-# INT, e.g. Date.now() 
+# INT, e.g. Date.now()
 @api_view(['GET'])
 def predict_travel_time(request, line_id, direction, traveltime):
 
     # The weather forecast is for 5 days in the future.
     # We will provide 4 days as the maximum traveltime from the now on.
     # This is equal to 345,000 seconds
-    TIME_DELTA_FUTURE_SEC = 345600 # [sec]
-    TIME_DELTA_PAST_SEC = 120 # [sec]
+    TIME_DELTA_FUTURE_SEC = 345600  # [sec]
+    TIME_DELTA_PAST_SEC = 120  # [sec]
 
     if request.method == "GET":
         # ***************** Prepare Input Arguments ***************
@@ -36,14 +36,14 @@ def predict_travel_time(request, line_id, direction, traveltime):
         req_datetime = datetime.fromtimestamp(req_timestamp)
 
         # ***************** Input Validiation ************************
-        # 1) Validate requested line id by checking it against 
+        # 1) Validate requested line id by checking it against
         # the static bus line dictionary
-        bus_lines_file = os.path.join(os.path.join(os.getcwd(),\
-            "prediction", "static_data"), "df_final_dic.json")
+        bus_lines_file = os.path.join(os.path.join(os.getcwd(),
+                "prediction", "static_data"), "df_final_dic.json")
         try:
             with open(bus_lines_file) as json_file:
                 bus_lines_dic = json.load(json_file)
-                if not req_line_id in bus_lines_dic:
+                if req_line_id not in bus_lines_dic:
                     print("Error - requested bus line does not exist in the\
                         'df_final_dic.json' file.")
                     return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -58,13 +58,13 @@ def predict_travel_time(request, line_id, direction, traveltime):
                 'inbound' or 'outbound'.")
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        # 3) Validate requested timestamp 
+        # 3) Validate requested timestamp
         # Time needs to be in a reasonable time range
-        dt = datetime.now(timezone.utc)  
+        dt = datetime.now(timezone.utc)
         utc_time = dt.replace(tzinfo=timezone.utc)
         utc_timestamp = utc_time.timestamp()
-        if (req_timestamp + TIME_DELTA_PAST_SEC < utc_timestamp) or \
-            (req_timestamp > utc_timestamp + TIME_DELTA_FUTURE_SEC):
+        if (req_timestamp + TIME_DELTA_PAST_SEC < utc_timestamp) or\
+                (req_timestamp > utc_timestamp + TIME_DELTA_FUTURE_SEC):
                 print("Error - provided timestamp is invalid.")
                 return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -73,24 +73,27 @@ def predict_travel_time(request, line_id, direction, traveltime):
         weather_details = retrieve_weather_details(req_timestamp)
 
         # ***************** Feed ML model with Inputs ***************
-        # Feed linear regression model with inputs and get 
+        # Feed linear regression model with inputs and get
         # travel trime prediction in return
         time_prediction = linear_regression(req_line_id, req_direction,
-                weather_details['wind_speed'], weather_details['rain_1h'],
-                weather_details['clouds'], req_datetime.hour,
-                req_datetime.weekday(), req_datetime.month)
+                                weather_details['wind_speed'],
+                                weather_details['rain_1h'],
+                                weather_details['clouds'],
+                                req_datetime.hour,
+                                req_datetime.weekday(),
+                                req_datetime.month)
 
         # ***************** Prepare the Response ***************
         resp_request_info = {}
-        resp_request_info['line_id'] = req_line_id 
-        resp_request_info['direction'] = req_direction 
-        resp_request_info['datetime'] = req_datetime 
+        resp_request_info['line_id'] = req_line_id
+        resp_request_info['direction'] = req_direction
+        resp_request_info['datetime'] = req_datetime
         resp_request_info['UTC_timestamp'] = req_timestamp
 
         resp_weather_info = {}
-        resp_weather_info['db_name'] = weather_details['db_name']  
-        resp_weather_info['datetime'] = datetime.fromtimestamp(\
-            weather_details['dt'])
+        resp_weather_info['db_name'] = weather_details['db_name']
+        resp_weather_info['datetime'] = datetime.fromtimestamp(
+                weather_details['dt'])
         resp_weather_info['UTC_timestamp'] = weather_details['dt']
         resp_weather_info['clouds'] = weather_details['clouds']
         resp_weather_info['wind_speed'] = weather_details['wind_speed']
@@ -107,8 +110,9 @@ def predict_travel_time(request, line_id, direction, traveltime):
 # timestamps from one of the following database tables:
 # - weather_forecast
 # - weather_currentweather
-def retrieve_weather_details(timestamp):
 
+
+def retrieve_weather_details(timestamp):
 
     # Retrieve all forecast objects stored in the database
     object_list = []
@@ -137,8 +141,8 @@ def retrieve_weather_details(timestamp):
         details_dict['rain_1h'] = obj.rain_1h
     else:
         obj = Forecast.objects.get(dt=object_list[time_delta_index].dt)
-         # set to zero because it doesn't exist in forecast object
-        details_dict['rain_1h'] = 0 
+        # set to zero because it doesn't exist in forecast object
+        details_dict['rain_1h'] = 0
 
     # These properties are common to both forecast and current weather object
     details_dict['db_name'] = obj._meta.db_table

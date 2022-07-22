@@ -166,9 +166,9 @@ NOSE_ARGS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-    # Allows unrestricted access to the API and sets the default 
+    # Allows unrestricted access to the API and sets the default
     # test format to JSON for all requests.
-    # Note: Unrestricted access is ok for local development, 
+    # Note: Unrestricted access is ok for local development,
     # but should be restricted in a production environment
     # https://www.django-rest-framework.org/api-guide/permissions/#setting-the-permission-policy # noqa
     # 'DEFAULT_PERMISSION_CLASSES': [],
