@@ -10,8 +10,13 @@ def linear_regression(line, direction, wind_speed, rain_1h,
     # Create model path relatively to the current working directory
     # The current working directory is where 'manage.py' is being invoked
     # In our case it's '/core/'
-    model_path = os.path.join(os.path.join(os.getcwd(),
-            "prediction", "models", "linearRegression"), file_name)
+    model_path = os.path.join(
+        os.path.join(
+            os.getcwd(),
+            "prediction",
+            "models",
+            "linearRegression"),
+        file_name)
     try:
         linear_reg = pickle.load(open(model_path, 'rb'))
     except IOError:

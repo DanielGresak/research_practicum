@@ -38,8 +38,9 @@ def predict_travel_time(request, line_id, direction, traveltime):
         # ***************** Input Validiation ************************
         # 1) Validate requested line id by checking it against
         # the static bus line dictionary
-        bus_lines_file = os.path.join(os.path.join(os.getcwd(),
-                "prediction", "static_data"), "df_final_dic.json")
+        bus_lines_file = os.path.join(
+            os.path.join(os.getcwd(), "prediction", "static_data"),
+            "df_final_dic.json")
         try:
             with open(bus_lines_file) as json_file:
                 bus_lines_dic = json.load(json_file)
@@ -65,8 +66,8 @@ def predict_travel_time(request, line_id, direction, traveltime):
         utc_timestamp = utc_time.timestamp()
         if (req_timestamp + TIME_DELTA_PAST_SEC < utc_timestamp) or\
                 (req_timestamp > utc_timestamp + TIME_DELTA_FUTURE_SEC):
-                print("Error - provided timestamp is invalid.")
-                return Response(status=status.HTTP_400_BAD_REQUEST)
+            print("Error - provided timestamp is invalid.")
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
         # ***************** Retrieve Weather Info ***************
         # Retrieve weather details that are closest to the requested timestamp
@@ -75,13 +76,15 @@ def predict_travel_time(request, line_id, direction, traveltime):
         # ***************** Feed ML model with Inputs ***************
         # Feed linear regression model with inputs and get
         # travel trime prediction in return
-        time_prediction = linear_regression(req_line_id, req_direction,
-                                weather_details['wind_speed'],
-                                weather_details['rain_1h'],
-                                weather_details['clouds'],
-                                req_datetime.hour,
-                                req_datetime.weekday(),
-                                req_datetime.month)
+        time_prediction = linear_regression(
+            req_line_id,
+            req_direction,
+            weather_details['wind_speed'],
+            weather_details['rain_1h'],
+            weather_details['clouds'],
+            req_datetime.hour,
+            req_datetime.weekday(),
+            req_datetime.month)
 
         # ***************** Prepare the Response ***************
         resp_request_info = {}
