@@ -75,7 +75,11 @@ Then run:
 ```
 docker exec -ti researchpracticum_app_1 sh -c "python manage.py test"
 ```
+For testing coverage run:
 
+1. python -m coverage run manage.py test
+2. python -m coverage report
+3. python -m coverage html
 
 ## Django Extension in VS-Code
 The following Django Extension aims to speed up coding by highlighting code snippets in Django-html. 
