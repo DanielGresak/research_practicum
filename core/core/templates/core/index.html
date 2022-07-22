@@ -31,12 +31,16 @@
 </div>
   {% if loggedIn == True %}
 <script>
+    $("#not-not-auth").hide();
+    $("#notif-auth").show();    
     $(".register").hide();
     $(".logout").show();
     $(".login").hide();
 </script>
         {% else %}
 <script>
+    $("#notif-auth").hide();
+    $("#not-not-auth").show();
     $(".register").show();
     $(".logout").hide();
     $(".login").hide();

@@ -354,6 +354,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
                         const routeNumber = Object.keys(r);
                         busDrivingDistance=busDrivingDistance+r[routeNumber]["driving_distance"];
                     }
+                    console.log(confirmedRoute)
 
                     console.log("busDriving distance: "+busDrivingDistance);
                     console.log("driving distanceeee: "+ drivingDistance);
@@ -550,6 +551,8 @@ $("#login-button").click(function(){
                 }
             }
         }).then(function(){
+            $("#not-not-auth").hide();
+            $("#notif-auth").show();
 
             $(".logout").show()
             $(".login").hide()
@@ -594,6 +597,8 @@ $("#register-button").click(function(){
                 }
             }
         }).then(function(){
+            $("#not-not-auth").hide();
+            $("#notif-auth").show();
             $(".logout").show()
             $(".register").hide()
             updateEmissions()
@@ -618,6 +623,8 @@ $("#logout-button").click(function(){
         },
         
     }).then(function(){
+        $("#not-not-auth").show();
+        $("#notif-auth").hide();
         $(".logout").hide()
         $(".login").show()
         updateEmissions()
@@ -658,6 +665,8 @@ $("#delete-button").click(function(){
                 }
             }
         }).then(function(){
+            $("#not-not-auth").show();
+            $("#notif-auth").hide();
             $(".logout").hide()
             $(".login").show()
             updateEmissions() 
@@ -682,14 +691,12 @@ function newNotification(bus, interval){
 
 newNotification(15, 5)
 
-$("#add-notification").click(function(){
+function sendNotificaiton(time, bus){
     var minutesToAdd=2;
-    var currentDate = new Date();
-    var futureDate = new Date(currentDate.getTime() + minutesToAdd*60000);
+    
     var chosenRoute = {
         bus: 15 ,
         time: futureDate.getTime(),
-        minutes: 5,
     }
    
         $.ajax({
@@ -712,7 +719,7 @@ $("#add-notification").click(function(){
         }).then(function(){
            console.log("success?")
         })
-})
+}
 
 
 // @Yating -  feel free to tweak and change the function you need it :) Happy coding...
@@ -727,4 +734,52 @@ $("#btn_getPrediction").click(function(){
     let traveltime = Date.now()
     // let traveltime = 1658459237000; // some date in the future
     getTravelTimePrediction("46A", "outbound", traveltime);
+});
+
+
+// NOTIFICATION CHECKBOX FUNCTIONALITY
+$("#notify-box").change(function() {
+    $.ajax({
+        type: "GET",
+        url: "change_notification_settings",
+        success: function(msg) {
+            alert("Settings changed")
+        },
+        "statusCode": {
+            401: function (xhr, error, thrown) {
+            alert("error." + error)
+            }
+        }
+    }).then(function(){
+       console.log("setting changed")
+    })
+});
+
+// NOTIFICATION DELAY CHANGE
+
+$("#change-notification-delay").change(function() {
+    var newDelay = {
+        delay: $('#change-notification-delay').find(":selected").text(),
+    }
+
+    $.ajax({
+        type: "POST",
+        url: "change_delay",
+        data: newDelay,
+        dataType: "json",
+        encode: true,
+        headers: {
+            'X-CSRFToken': csrfToken
+        },
+        success: function(msg) {
+            alert("SUCCESS")
+        },
+        "statusCode": {
+            401: function (xhr, error, thrown) {
+            alert("Not Authorized")
+            }
+        }
+    }).then(function(){
+       console.log("delay changed")
+    })
 });
