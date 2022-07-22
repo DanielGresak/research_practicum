@@ -3,9 +3,9 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from weatherUpdater import weatherForecastApi
 import time
-from users.models import Profile
-from django.contrib.auth import authenticate, login
-from django.contrib.sessions.middleware import SessionMiddleware
+
+
+
 
 class ViewTests(TestCase):
     def setUp(self):
@@ -116,17 +116,21 @@ class NotificationTests(ViewTests):
 
     def test_change_notification_setting(self):
         url = self.notification_setting_url
-        request = self.client.post(self.register_url, self.user, format="text/html")
+        request = self.client.post(self.register_url,
+                                   self.user,
+                                   format="text/html")
         user = User.objects.get(username=self.user["userEmail"])
         self.assertFalse(user.profile.notifications)
         response = self.client.post(url, request, format="text/html")
         user = User.objects.get(username=self.user["userEmail"])
         self.assertEqual(response.status_code, 204)
         self.assertTrue(user.profile.notifications)
-    
+
     def test_change_notification_delay(self):
         url = self.notification_delay_url
-        request = self.client.post(self.register_url, self.user, format="text/html")
+        request = self.client.post(self.register_url,
+                                   self.user,
+                                   format="text/html")
         user = User.objects.get(username=self.user["userEmail"])
         self.assertEqual(user.profile.notification_delay, 5)
         request["delay"] = 10
@@ -134,7 +138,3 @@ class NotificationTests(ViewTests):
         user = User.objects.get(username=self.user["userEmail"])
         self.assertEqual(response.status_code, 204)
         self.assertTrue(user.profile.notification_delay, 10)
-
-        
-
-
