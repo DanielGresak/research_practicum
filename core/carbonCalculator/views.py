@@ -67,4 +67,3 @@ def calculate_emissions(bus, car):
     print(car_emissions, bus_emissions)
     print(rounded)
     return rounded
- 
