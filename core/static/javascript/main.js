@@ -487,7 +487,7 @@ function updateEmissions(){
             $(".co2-saved").text("No savings yet, take a trip and save some emissions!")
         }
         else {
-            $(".co2-saved").text(data["co2_saved"] + " gs of co2 saved!")
+            $(".co2-saved").text(data["co2_saved"] + " kgs of co2 saved!")
         }
     })
 }
@@ -500,7 +500,7 @@ function updateEmissions(){
 // updateEmissions()
 
 /* FUNCTION FOR POST REQUEST TO ADD CO2 INFORMATION */
-function postCO2(drivingDistance, busDistance){
+function postCO2(busDistance, drivingDistance){
     $.post("carbon/", {'driving_distance': drivingDistance, "bus_distance": busDistance}).done(function(response){
         alert("Your trip has been added to your emmisions saved")
     }).then(function(){
