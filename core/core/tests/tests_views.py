@@ -5,8 +5,6 @@ from weatherUpdater import weatherForecastApi
 import time
 
 
-
-
 class ViewTests(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
