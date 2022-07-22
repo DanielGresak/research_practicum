@@ -371,8 +371,8 @@ function calcRoute(directionsService, directionsRenderer, map) {
                     }
                     console.log("driving distance in clonfirm "+carDrivingDistance);
                     postCO2(busDrivingDistance, carDrivingDistance);
-                    var time = Date.now()
-                    time = time.getTime()
+                    var time = new Date();
+                    time = time.getTime();
                     bus = "15"
                     sendNotificaiton(time, bus)
 
