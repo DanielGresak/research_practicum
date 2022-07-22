@@ -81,7 +81,6 @@ def send_notification(bus, minutes, user_email):
 def notification_toggle(request):
     if request.user.is_authenticated:
         current_user = request.user.profile
-        print(current_user.__dict__)
         if (current_user.notifications):
             current_user.notifications = False
             current_user.save()
