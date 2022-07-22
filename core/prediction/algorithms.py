@@ -13,10 +13,9 @@ def linear_regression(
     # In our case it's '/core/'
     model_path = os.path.join(
         os.path.join(
-            os.getcwd(),
-            "prediction",
-            "models",
-            "linearRegression"),
+            os.getcwd(), "prediction",
+            "static", "prediction",
+            "models", "linearRegression"),
         file_name)
     try:
         linear_reg = pickle.load(open(model_path, 'rb'))

@@ -39,7 +39,9 @@ def predict_travel_time(request, line_id, direction, traveltime):
         # 1) Validate requested line id by checking it against
         # the static bus line dictionary
         bus_lines_file = os.path.join(
-            os.path.join(os.getcwd(), "prediction", "static_data"),
+            os.path.join(
+                    os.getcwd(), "prediction", "static",
+                    "prediction", "models"),
             "df_final_dic.json")
         try:
             with open(bus_lines_file) as json_file:

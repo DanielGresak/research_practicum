@@ -713,18 +713,3 @@ $("#add-notification").click(function(){
            console.log("success?")
         })
 })
-
-
-// @Yating -  feel free to tweak and change the function you need it :) Happy coding...
-// Function to get the predicted travel time (full route) for following parameters:
-// - line_id ; STRING, e.g. 46A
-// - direction ; STRING, either 'inbound' or 'outbound'
-// - departureTime ; UTC timestamp in milliseconds, INT, e.g. Date.now()
-
-
-// !!! This button is only for testing purposes and should be removed afterwards
-$("#btn_getPrediction").click(function(){
-    let traveltime = Date.now()
-    // let traveltime = 1658459237000; // some date in the future
-    getTravelTimePrediction("46A", "outbound", traveltime);
-});
