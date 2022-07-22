@@ -6,4 +6,3 @@ class ForecastSerializer(serializers.ModelSerializer):
     class Meta:
         model = CurrentWeather
         fields = ('dt', 'wind_speed', 'clouds', 'rain_1h')
-        
