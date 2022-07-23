@@ -412,15 +412,25 @@ function calcRoute(directionsService, directionsRenderer, map) {
                     var busDrivingDistance=0;// the bus drving distance
                     //var drivingDistance = getCarDrivingDistance(originString, destString);// this is the (car) driving distance
                     // calculate the total bus driving distance of the chosen trip plan
-                    for (const r of confirmedRoute){
-                        const routeNumber = Object.keys(r);
-                        busDrivingDistance=busDrivingDistance+r[routeNumber]["driving_distance"];
+                    // const routeNumber = Object.keys(confirmedRoute)
+                    // console.log()
+                    
+                    var counter = 0
+                    for (var r of confirmedRoute){
+                        if (counter != confirmedRoute.length - 1){
+                            console.log(confirmedRoute.length)
+                            counter++;
+                            var routeNumber = Object.keys(r);
+                            busDrivingDistance=busDrivingDistance+r[routeNumber[0]]["driving_distance"];
+                        }
                     }
-                    //console.log("driving distance in confirm "+carDrivingDistance);
+
                     postCO2(busDrivingDistance, carDrivingDistance);
 
-                    var theFirstBusString = Object.keys(confirmedRoute[0]);
-                    sendNotificaiton(resultTime, theFirstBusString);
+                    var theFirstBusString = Object.keys(confirmedRoute[0])[0];
+                    console.log(carDrivingDistance)
+                    var firstBusTime = confirmedRoute[0][theFirstBusString]["arriving_time"]
+                    sendNotificaiton(firstBusTime, theFirstBusString);
 
                 }
             });
