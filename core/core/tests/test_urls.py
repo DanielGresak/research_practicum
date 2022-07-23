@@ -6,6 +6,7 @@ from carbonCalculator.views import CarbonCalculator, ReturningCarbonData
 from users.views import loginUser, logoutUser, registerUser
 from weather.views import weather_data_json
 from notifications.views import add_route_for_notification
+from notifications.views import change_delay, notification_toggle
 # from django.contrib.auth import login
 # from django.contrib.auth.models import User
 # Test each page in urlpatterns
@@ -45,6 +46,14 @@ class TestUrls(SimpleTestCase):
     def test_notification_url_is_resolved(self):
         url = reverse("notify")
         self.assertEquals(resolve(url).func, add_route_for_notification)
+
+    def test_notification_delay_url_is_resolved(self):
+        url = reverse("change_delay")
+        self.assertEquals(resolve(url).func, change_delay)
+
+    def test_notification_settings_url_is_resolved(self):
+        url = reverse("toggle_notify")
+        self.assertEquals(resolve(url).func, notification_toggle)
 
     # def test_delete_user_url_is_resolved(self):
     #     user = {
