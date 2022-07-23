@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .algorithms import linear_regression
 from weather.models import Forecast, CurrentWeather
+from algorithms import Prediction
 
 # Create your views here.
 
@@ -76,17 +77,31 @@ def predict_travel_time(request, line_id, direction, traveltime):
         weather_details = retrieve_weather_details(req_timestamp)
 
         # ***************** Feed ML model with Inputs ***************
-        # Feed linear regression model with inputs and get
-        # travel trime prediction in return
-        time_prediction = linear_regression(
+        # Use either Linear Regression or Random Forest Model,
+        # depending on what's configured in the .env file
+        if os.environ.get("USE_LINEAR_REGRESSION"):
+            model = Prediction("Linear Regression Model", "linearRegression")
+        else:
+            model = Prediction("Random Forest Model", "randomForest")
+        # Feed model with input features and get response as follows:
+        # [travelTimeSec, execution_time]
+        prediction = model.get_prediction(
             req_line_id,
             req_direction,
             weather_details['wind_speed'],
             weather_details['rain_1h'],
             weather_details['clouds'],
-            req_datetime.hour,
-            req_datetime.weekday(),
-            req_datetime.month)
+            req_datetime)
+
+        # time_prediction = linear_regression(
+        #     req_line_id,
+        #     req_direction,
+        #     weather_details['wind_speed'],
+        #     weather_details['rain_1h'],
+        #     weather_details['clouds'],
+        #     req_datetime.hour,
+        #     req_datetime.weekday(),
+        #     req_datetime.month)
 
         # ***************** Prepare the Response ***************
         resp_request_info = {}
@@ -105,7 +120,8 @@ def predict_travel_time(request, line_id, direction, traveltime):
         resp_weather_info['rain_1h'] = weather_details['rain_1h']
 
         resp_data = {}
-        resp_data['time_prediction'] = time_prediction
+        resp_data['time_prediction'] = prediction[0]
+        resp_data['time_execution'] = prediction[1]
         resp_data['request_info'] = resp_request_info
         resp_data['weather_info'] = resp_weather_info
 
