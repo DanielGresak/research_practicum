@@ -128,7 +128,7 @@ function renderDirections(result, gmap){
 // this function will return an array contains the dicts of the bus routes and related details pairs
 // in case of transfering bus, more than one dict will be in this array
 
-// so the structure of this array is like [{46a:{}}, {36:{}}, {"walkingTime":200}..], the length of the array is the number of bus need to transfer
+// so the structure of this array is like [{"46a":{}}, {"36":{}}, {"walkingTime":200}..], the length of the array is the number of bus need to transfer
 // the bus route details dict contains the: arriving time of this bus, the draving distance, the headsign (last stop on this route) of this bus
 // and the number of stops this trip will cover.
 
@@ -144,7 +144,7 @@ function getBusInfo(routes, startTime){
             var thisRoute={};
             var direction = getDirection(steps[i]["transit"]["line"]["short_name"],steps[i]["transit"]["departure_stop"]["name"], steps[i]["transit"]["arrival_stop"]["name"]);
             var forecastTravelTime=travelTime(steps[i], direction, startTime, steps[i]["transit"]["num_stops"], getTotalNumberOfStops());
-            console.log("forecastTripTime from the dict is "+forecastTravelTime);
+            //console.log("forecastTripTime from the dict is "+forecastTravelTime);
             routeInfo["arriving_time"]=steps[i]["transit"]["departure_time"]["text"];
             routeInfo["driving_distance"]=steps[i]["distance"]["value"];
             routeInfo["num_stops"]=steps[i]["transit"]["num_stops"];
@@ -249,7 +249,7 @@ function travelTime(route, direction, departureTime, numOfStops, totalNumOfStops
         console.log(error);
         }
     });
-    console.log("in prediction function, the predicted travel time is: "+timePrediction);
+    //console.log("in prediction function, the predicted travel time is: "+timePrediction);
     return timePrediction*(numOfStops/totalNumOfStops);
 }
 
@@ -262,8 +262,8 @@ function calcRoute(directionsService, directionsRenderer, map) {
 
     var mydate = new Date(startTime);
     var resultTime = mydate.getTime();// in form of timestamp
-    console.log(resultTime);
-    console.log(startTime);
+    //console.log(resultTime);
+    //console.log(startTime);
     var request = {
         origin: originString, // start location, now is ucd
         destination: destString, // end location, now is temple bar
@@ -319,15 +319,16 @@ function calcRoute(directionsService, directionsRenderer, map) {
 
                 for(const r of busRoutes) {
                     const routeNumber = Object.keys(r);
-                    if(isNaN(routeNumber)){
+                    if(routeNumber[0] === "walkingTime"){
                         walkingTime = r["walkingTime"];
                         //console.log("in isNaN, walking time of this option is "+walkingTime);
-                    }else{
+                    }
+                    else{
                         busNumString = busNumString+routeNumber+" -> ";
                         busArrivingString=busArrivingString+r[routeNumber]["arriving_time"]+"; ";
                         busDrivingDistance=busDrivingDistance+r[routeNumber]["driving_distance"];
                         busTravelTime=busTravelTime+r[routeNumber]["forecastTripTime"];
-                        console.log("in for loop the busTravelTime is "+busTravelTime);
+                        //console.log("in for loop the busTravelTime is "+busTravelTime);
                     }
                 }
                 //console.log("bus travel time:"+busTravelTime);
@@ -396,12 +397,11 @@ function calcRoute(directionsService, directionsRenderer, map) {
                         const routeNumber = Object.keys(r);
                         busDrivingDistance=busDrivingDistance+r[routeNumber]["driving_distance"];
                     }
-                    console.log("driving distance in clonfirm "+carDrivingDistance);
+                    //console.log("driving distance in confirm "+carDrivingDistance);
                     postCO2(busDrivingDistance, carDrivingDistance);
-                    var time = new Date();
-                    time = time.getTime();
-                    bus = "15"
-                    sendNotificaiton(time, bus)
+
+                    var theFirstBusString = Object.keys(confirmedRoute[0]);
+                    sendNotificaiton(resultTime, theFirstBusString);
 
                 }
             });
@@ -503,8 +503,8 @@ function getLocation() {
 }
 
 function showPosition(position) {
-    console.log("Latitude: " + position.coords.latitude + 
-  "Longitude: " + position.coords.longitude);
+    //console.log("Latitude: " + position.coords.latitude + 
+  //"Longitude: " + position.coords.longitude);
     var position = position.coords.latitude + ", " + position.coords.longitude;
   $("#search_start").val(position);
 }
