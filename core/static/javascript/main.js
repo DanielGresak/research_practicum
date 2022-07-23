@@ -143,7 +143,7 @@ function getBusInfo(routes, startTime){
             var routeInfo={};
             var thisRoute={};
             var direction = getDirection(steps[i]["transit"]["line"]["short_name"],steps[i]["transit"]["departure_stop"]["name"], steps[i]["transit"]["arrival_stop"]["name"]);
-            var forecastTravelTime=travelTime(steps[i], direction, startTime, steps[i]["transit"]["num_stops"], getTotalNumberOfStops());
+            var forecastTravelTime=travelTime(steps[i], direction, startTime, steps[i]["transit"]["num_stops"], getTotalNumberOfStops(steps[i]["transit"]["line"]["short_name"],direction));
             //console.log("forecastTripTime from the dict is "+forecastTravelTime);
             routeInfo["arriving_time"]=steps[i]["transit"]["departure_time"]["text"];
             routeInfo["driving_distance"]=steps[i]["distance"]["value"];
@@ -171,7 +171,6 @@ function getDirection(line, departure, arrival){
     //console.log("departure stop: "+departure);
     var departureStop = ""+departure.replace(/[^0-9.]/g, "");
     var arrivalStop = ""+arrival.replace(/[^0-9.]/g, "");
-   
     var bound="";
     $.ajax({
         url: "./data",
@@ -195,8 +194,25 @@ function getDirection(line, departure, arrival){
 
 // pass in the route number and the direction, get the total number of the stops of this route
 
-function getTotalNumberOfStops(route, directions){
-    return 40;
+function getTotalNumberOfStops(line, direction){
+    var totalNumberOfRoutes = 0
+    $.ajax({
+        url: "./data",
+        async: false,
+        dataType: "json",
+        success: function(json){
+            if((line in json) && ((direction === "inbound") || (direction === "outbound"))){
+                console.log("length: "+json[line][direction].length);
+                totalNumberOfRoutes = json[line][direction].length;
+            } 
+            else{
+                console.log("didn't find the line id "+line+" in the dataset of 2018");
+                totalNumberOfRoutes = "notFoundTotalStopNumbers";
+            }
+        }
+    })
+    return totalNumberOfRoutes;
+
 }
 
 // return the forecast travel time for each trip
@@ -212,7 +228,9 @@ function travelTime(route, direction, departureTime, numOfStops, totalNumOfStops
         console.log("the departure time is not selected");
         departureTime=Date.now();
     }
-    
+    if(totalNumOfStops === "notFoundTotalStopNumbers"){
+        return route["duration"]["value"];
+    }
     // if the selected travel time is out of the range, then return the trip time from the Google map.
     if(departureTime > Date.now()+345600000){
         console.log("The selected time is out of the time range.");
@@ -250,6 +268,7 @@ function travelTime(route, direction, departureTime, numOfStops, totalNumOfStops
         }
     });
     //console.log("in prediction function, the predicted travel time is: "+timePrediction);
+    console.log("total number of stops "+totalNumOfStops);
     return timePrediction*(numOfStops/totalNumOfStops);
 }
 
@@ -373,7 +392,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
                 directionRenderers[busIndex].setMap(map);
 
                 // get the selected route
-                selectedRoute=getBusInfo(result["routes"][busIndex]);
+                selectedRoute=getBusInfo(result["routes"][busIndex], resultTime);
 
                 $(".selectRoute").css("background-color","white");
                 $(".selectRoute").css("color", "black");
