@@ -4,9 +4,8 @@ from datetime import datetime, timezone
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .algorithms import linear_regression
 from weather.models import Forecast, CurrentWeather
-from algorithms import Prediction
+from .algorithms import Prediction
 
 # Create your views here.
 
@@ -16,6 +15,8 @@ from algorithms import Prediction
 #  - direction ; STRING, either 'inbound' or 'outbound'
 #  - departureTime ; UTC timestamp in milliseconds (JavaScript),
 # INT, e.g. Date.now()
+
+
 @api_view(['GET'])
 def predict_travel_time(request, line_id, direction, traveltime):
 
@@ -79,12 +80,12 @@ def predict_travel_time(request, line_id, direction, traveltime):
         # ***************** Feed ML model with Inputs ***************
         # Use either Linear Regression or Random Forest Model,
         # depending on what's configured in the .env file
-        if os.environ.get("USE_LINEAR_REGRESSION"):
+        if os.getenv("USE_LINEAR_REGRESSION", 'False').lower() in ('true', '1'):
             model = Prediction("Linear Regression Model", "linearRegression")
         else:
             model = Prediction("Random Forest Model", "randomForest")
         # Feed model with input features and get response as follows:
-        # [travelTimeSec, execution_time]
+        # [travel_time_sec, execution_time]
         prediction = model.get_prediction(
             req_line_id,
             req_direction,
@@ -93,23 +94,16 @@ def predict_travel_time(request, line_id, direction, traveltime):
             weather_details['clouds'],
             req_datetime)
 
-        # time_prediction = linear_regression(
-        #     req_line_id,
-        #     req_direction,
-        #     weather_details['wind_speed'],
-        #     weather_details['rain_1h'],
-        #     weather_details['clouds'],
-        #     req_datetime.hour,
-        #     req_datetime.weekday(),
-        #     req_datetime.month)
-
         # ***************** Prepare the Response ***************
+
+        # Request related information
         resp_request_info = {}
         resp_request_info['line_id'] = req_line_id
         resp_request_info['direction'] = req_direction
         resp_request_info['datetime'] = req_datetime
         resp_request_info['UTC_timestamp'] = req_timestamp
 
+        # Weather related information
         resp_weather_info = {}
         resp_weather_info['db_name'] = weather_details['db_name']
         resp_weather_info['datetime'] = datetime.fromtimestamp(
@@ -119,10 +113,16 @@ def predict_travel_time(request, line_id, direction, traveltime):
         resp_weather_info['wind_speed'] = weather_details['wind_speed']
         resp_weather_info['rain_1h'] = weather_details['rain_1h']
 
+        # Response details
+        resp_info = {}
+        resp_info['model'] = model.name
+        resp_info['time_execution'] = prediction[1]
+
+        # Wrap details and time prediction up in response data 
         resp_data = {}
         resp_data['time_prediction'] = prediction[0]
-        resp_data['time_execution'] = prediction[1]
         resp_data['request_info'] = resp_request_info
+        resp_data['response_info'] = resp_info
         resp_data['weather_info'] = resp_weather_info
 
     return Response(resp_data, status=status.HTTP_200_OK)
