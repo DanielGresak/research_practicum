@@ -361,7 +361,8 @@ function calcRoute(directionsService, directionsRenderer, map) {
                                         <p class = 'busHeader'>"+"Bus route "+(route+1)+": "+busNumString+"<button class='selectRoute'>Select</button></p>\
                                         <p class = 'busDetail' id = 'arrivingTime'>Arriving time: <span class ='keyValue'>"+ busArrivingString+"</span></p>\
                                         <p class = 'busDetail' id = 'totalTravelTime'>Total travel time: <span class ='keyValue'>"+Math.ceil(busTravelTime/60)+" minutes.</span></p>\
-                                        <p class = 'busDetail' id = 'carbonEmissionSaved'>Carbon emission saved: <span class ='keyValue'>:</span></p></div>")
+                                        <p class = 'busDetail' id = 'carbonEmissionSaved'>Carbon emission saved: <span class ='keyValue'>:</span></p>\
+                                        <p class = 'busDetail' id = 'busFare'> The bus fare is: <span class ='keyValue'>"+getBusFare(busRoutes, "adult")+" \u20AC"+"</span></p></div>")// Hi Daniel, the second parameter of the getBusFare() function is the age, age is a string and can be one of "adult", "student" or "child".
             }
 
             var selectedRoute=[];//each time select button is clicked, this var will be refreshed.
@@ -428,7 +429,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
                     postCO2(busDrivingDistance, carDrivingDistance);
 
                     var theFirstBusString = Object.keys(confirmedRoute[0])[0];
-                    console.log(carDrivingDistance)
+                    //console.log(carDrivingDistance)
                     var firstBusTime = confirmedRoute[0][theFirstBusString]["arriving_time"]
                     sendNotificaiton(firstBusTime, theFirstBusString);
 
@@ -450,8 +451,8 @@ function calcRoute(directionsService, directionsRenderer, map) {
             /* the bus fare calculation */
             
             $("#inlineRadio1").click(function(){
-                if(getBusFare[confirmedRoute] != []){
-                    const recharge=getBusFare(confirmedRoute)[1];
+                if(getBusFare(confirmedRoute, "adult") != []){
+                    const recharge=getBusFare(confirmedRoute, "adult")[1];
                     var money = 2+2*recharge;
                     $(".answerContent").text(" ");
                     $(".answerContent").text("Your bus fare for this trip is "+money+" euro.");
@@ -459,16 +460,16 @@ function calcRoute(directionsService, directionsRenderer, map) {
             })
         
             $("#inlineRadio2").click(function(){
-                if(getBusFare[confirmedRoute] != []){
-                    const recharge=getBusFare(confirmedRoute)[1];
+                if(getBusFare(confirmedRoute, "student") != []){
+                    const recharge=getBusFare(confirmedRoute, "student")[1];
                     var money = 1+1*recharge;
                     $(".answerContent").text(" ");
                     $(".answerContent").text("Your bus fare for this trip is "+money+ " euro.");
                 }
                 })
             $("#inlineRadio3").click(function(){
-                if(getBusFare[confirmedRoute] != []){
-                    const recharge=getBusFare(confirmedRoute)[1];
+                if(getBusFare(confirmedRoute, "child") != []){
+                    const recharge=getBusFare(confirmedRoute, "child")[1];
                     var money = 0.65+0.65*recharge;
                     $(".answerContent").text(" ");
                     $(".answerContent").text("Your bus fare for this trip is "+money +" euro.");
@@ -492,15 +493,16 @@ function calcRoute(directionsService, directionsRenderer, map) {
 window.initMap = initMap;
 
 /* GET BUS FARE */
-function getBusFare(confirmed){
+// age can be
+function getBusFare(confirmed, age){
     if(confirmed.length!=0){
-        /* get the bus routes of the confirmed route*/
+        /* get the bus routes of the confirmed route
         var busNumString = "";
         for(const r of confirmed) {
             const routeNumber = Object.keys(r);
             busNumString = busNumString+routeNumber+"; ";
         }
-        busNumString = busNumString.slice(0, -2);
+        busNumString = busNumString.slice(0, -2);*/
 
         /* get the number of times of recharging the bus fare when tap the card because the travle time is more than 90 min */
         var accumulatetravelTime=0; // the travel time of all the buses routes taken in the previous bus trip in a transfer case
@@ -514,7 +516,14 @@ function getBusFare(confirmed){
                 accumulatetravelTime = 0;//record the time from the start
             }
         }
-        return [busNumString, recharge];
+        if(age === "adult"){
+            return 2+2*recharge;
+        }if(age === "student"){
+            return 1+1*recharge;
+        }if(age === "child"){
+            return 0.65+0.65*recharge;
+        }
+        //return [busNumString, recharge];
     }
     else{
         return [];
