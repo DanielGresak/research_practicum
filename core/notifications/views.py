@@ -21,7 +21,7 @@ def add_route_for_notification(request):
             scheduler = BackgroundScheduler()
             bus = request.POST.get("bus")
             time = int(float(request.POST.get("time"))) / 1000
-            sending_time = time - delay
+            sending_time = time - (delay * 60)
             # For testing purposes
             sending_time += 360
             sending_time = int(sending_time)
