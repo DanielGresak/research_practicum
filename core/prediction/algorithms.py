@@ -3,8 +3,8 @@ import pickle
 import time
 from datetime import datetime
 
-class Prediction(object):
 
+class Prediction(object):
 
     def __init__(self, name, model_subdir):
 
@@ -12,13 +12,11 @@ class Prediction(object):
         self.model_subdir = model_subdir
         self.feature_list = []
 
-    def _startTiming(self):       
+    def _startTiming(self):    
         self._startTime = time.perf_counter()
-       
 
-    def _stopTiming(self):        
+    def _stopTiming(self):
         return time.perf_counter() - self._startTime
-
 
     def _load_model(self, line, direction):
 
@@ -42,14 +40,12 @@ class Prediction(object):
 
         return model
 
-
     def _prepare_weather_features(self, wind_speed, rain_1h, clouds_all):
 
         # Append all weather details to the list
         self.feature_list.append(wind_speed)
         self.feature_list.append(rain_1h)
         self.feature_list.append(clouds_all)
-
 
     def _prepare_time_features(self, dt: datetime):
 
@@ -66,7 +62,9 @@ class Prediction(object):
             print("Error:", e)
 
 
-    def get_prediction(self, line, direction, wind_speed, rain_1h, clouds_all, dt: datetime):
+    def get_prediction(
+            self, line, direction, wind_speed,
+            rain_1h, clouds_all, dt: datetime):
 
         # Start timing to measure the time it takes to get the prediction
         self._startTiming()

@@ -80,7 +80,8 @@ def predict_travel_time(request, line_id, direction, traveltime):
         # ***************** Feed ML model with Inputs ***************
         # Use either Linear Regression or Random Forest Model,
         # depending on what's configured in the .env file
-        if os.getenv("USE_LINEAR_REGRESSION", 'False').lower() in ('true', '1'):
+        if os.getenv("USE_LINEAR_REGRESSION", 'False').lower()\
+            in ('true', '1'):
             model = Prediction("Linear Regression Model", "linearRegression")
         else:
             model = Prediction("Random Forest Model", "randomForest")
@@ -118,7 +119,7 @@ def predict_travel_time(request, line_id, direction, traveltime):
         resp_info['model'] = model.name
         resp_info['time_execution'] = prediction[1]
 
-        # Wrap details and time prediction up in response data 
+        # Wrap details and time prediction up in response data
         resp_data = {}
         resp_data['time_prediction'] = prediction[0]
         resp_data['request_info'] = resp_request_info
