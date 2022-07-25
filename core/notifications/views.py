@@ -16,7 +16,7 @@ def add_route_for_notification(request):
            request.user.profile.notifications):
             user_profile = request.user.profile
             email = request.user.email
-            delay = user_profile.notification_delay * 60
+            delay = user_profile.notification_delay
 
             scheduler = BackgroundScheduler()
             bus = request.POST.get("bus")

@@ -146,6 +146,7 @@ function getBusInfo(routes, startTime){
             var forecastTravelTime=travelTime(steps[i], direction, startTime, steps[i]["transit"]["num_stops"], getTotalNumberOfStops(steps[i]["transit"]["line"]["short_name"],direction));
             //console.log("forecastTripTime from the dict is "+forecastTravelTime);
             routeInfo["arriving_time"]=steps[i]["transit"]["departure_time"]["text"];
+            routeInfo["arrivalTimestamp"] = steps[i]["transit"]["departure_time"]["value"];
             routeInfo["driving_distance"]=steps[i]["distance"]["value"];
             routeInfo["num_stops"]=steps[i]["transit"]["num_stops"];
             routeInfo["travel_time"]=steps[i]["duration"]["value"];// travel time in second.
@@ -346,7 +347,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
                 var busTravelTime=0;
                 var busDrivingDistance=0;
                 var walkingTime=0;
-
+                console.log(busRoutes)
                 for(const r of busRoutes) {
                     const routeNumber = Object.keys(r);
                     if(routeNumber[0] === "walkingTime"){
@@ -371,7 +372,6 @@ function calcRoute(directionsService, directionsRenderer, map) {
                 // console.log("car " + carDrivingDistance)
                 // var co2SavedFromRoute = calculateCo2(busDrivingDistance, carDrivingDistance)
                 // add a bus info child window for every bus/route
-                console.log("vroom: " + busDrivingDistance)
                 $(".busInfo").append("<div class = 'oneBus'>\
                                         <p class = 'busHeader'>"+"Bus route "+(route+1)+": "+busNumString+"<button class='selectRoute'>Select</button></p>\
                                         <p class = 'busDetail' id = 'arrivingTime'>Arriving time: <span class ='keyValue'>"+ busArrivingString+"</span></p>\
@@ -452,9 +452,10 @@ function calcRoute(directionsService, directionsRenderer, map) {
                     postCO2(busDrivingDistance, carDrivingDistance);
 
                     var theFirstBusString = Object.keys(confirmedRoute[0])[0];
+                    var arrivalTimestamp = confirmedRoute[0][theFirstBusString]["arrivalTimestamp"].getTime()
 
                     var firstBusTime = confirmedRoute[0][theFirstBusString]["arriving_time"]
-                    sendNotificaiton(firstBusTime, theFirstBusString);
+                    sendNotificaiton(arrivalTimestamp, theFirstBusString);
 
                 }
             });
