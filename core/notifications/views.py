@@ -16,7 +16,7 @@ def add_route_for_notification(request):
            request.user.profile.notifications):
             user_profile = request.user.profile
             email = request.user.email
-            delay = user_profile.notification_delay * 60
+            delay = user_profile.notification_delay
 
             scheduler = BackgroundScheduler()
             bus = request.POST.get("bus")
@@ -98,8 +98,11 @@ def notification_toggle(request):
 def change_delay(request):
     if request.method == "POST":
         if request.user.is_authenticated:
+            request_delay = request.POST.get("delay")
+            delay = [int(s) for s in request_delay.split() if s.isdigit()]
+            delay = delay[0]
             current_user = request.user.profile
-            current_user.notification_delay = int(request.POST.get("delay"))
+            current_user.notification_delay = delay
             current_user.save()
             return HttpResponse(status=204)
 

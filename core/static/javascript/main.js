@@ -146,6 +146,7 @@ function getBusInfo(routes, startTime){
             var forecastTravelTime=travelTime(steps[i], direction, startTime, steps[i]["transit"]["num_stops"], getTotalNumberOfStops(steps[i]["transit"]["line"]["short_name"],direction));
             //console.log("forecastTripTime from the dict is "+forecastTravelTime);
             routeInfo["arriving_time"]=steps[i]["transit"]["departure_time"]["text"];
+            routeInfo["arrivalTimestamp"] = steps[i]["transit"]["departure_time"]["value"];
             routeInfo["driving_distance"]=steps[i]["distance"]["value"];
             routeInfo["num_stops"]=steps[i]["transit"]["num_stops"];
             routeInfo["travel_time"]=steps[i]["duration"]["value"];// travel time in second.
@@ -302,7 +303,8 @@ function calcRoute(directionsService, directionsRenderer, map) {
         if(status == "OK"){
 
             var service = new google.maps.DistanceMatrixService();
-            service.getDistanceMatrix(
+            let myPromise = new Promise(function(myResolve, myReject) {
+                service.getDistanceMatrix(
                 {
                     origins: [originString],
                     destinations: [destString],
@@ -310,9 +312,19 @@ function calcRoute(directionsService, directionsRenderer, map) {
                   },(response, status) =>{
                     if(status =="OK"){
                         carDrivingDistance = response["rows"][0]["elements"][0]["distance"]["value"];
+                        console.log(response)
+                        console.log("car in function " + carDrivingDistance)
                         //console.log("driving distance in the function "+carDrivingDistance);
                         //console.log(response["rows"]);
-            }});
+            }
+            if(carDrivingDistance > 0){
+                myResolve(carDrivingDistance)
+            }
+            else {
+                myReject("error")
+            }
+        });
+    });
 
             console.log(result["routes"]);
             // display all the possible routes on the map in different colors
@@ -322,7 +334,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
             var totalNumberOfRoutes = result["routes"].length// total number of routes
             $(".busInfo").show();
             $(".searchbar").hide();
-        
+            let busRouteDistances = []
             // for all the suggested ways(routes) the google map provides:
             for(let route = 0; route < totalNumberOfRoutes; route++){
                 if (result["routes"][route]["legs"][0]["steps"].length < 2){
@@ -335,7 +347,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
                 var busTravelTime=0;
                 var busDrivingDistance=0;
                 var walkingTime=0;
-
+                console.log(busRoutes)
                 for(const r of busRoutes) {
                     const routeNumber = Object.keys(r);
                     if(routeNumber[0] === "walkingTime"){
@@ -350,20 +362,32 @@ function calcRoute(directionsService, directionsRenderer, map) {
                         //console.log("in for loop the busTravelTime is "+busTravelTime);
                     }
                 }
+                busRouteDistances.push(busDrivingDistance)
                 //console.log("bus travel time:"+busTravelTime);
                 busTravelTime = busTravelTime + walkingTime;
                 //console.log("the final bus travel time in seconds is "+busTravelTime);
                 busNumString = busNumString.slice(0, -3);
-                busArrivingString = busArrivingString.slice(0, -2);    
-
+                busArrivingString = busArrivingString.slice(0, -2);
+                // console.log("bus" + busDrivingDistance)
+                // console.log("car " + carDrivingDistance)
+                // var co2SavedFromRoute = calculateCo2(busDrivingDistance, carDrivingDistance)
                 // add a bus info child window for every bus/route
                 $(".busInfo").append("<div class = 'oneBus'>\
                                         <p class = 'busHeader'>"+"Bus route "+(route+1)+": "+busNumString+"<button class='selectRoute'>Select</button></p>\
                                         <p class = 'busDetail' id = 'arrivingTime'>Arriving time: <span class ='keyValue'>"+ busArrivingString+"</span></p>\
                                         <p class = 'busDetail' id = 'totalTravelTime'>Total travel time: <span class ='keyValue'>"+Math.ceil(busTravelTime/60)+" minutes.</span></p>\
-                                        <p class = 'busDetail' id = 'carbonEmissionSaved'>Carbon emission saved: <span class ='keyValue'>:</span></p></div>")
+                                        <p class = 'busDetail' id = 'carbonEmissionSaved'>Carbon emission saved: <span class ='keyValue carbon-" + route +"'>Loading</span></p></div>")
+                console.log(result)
+                myPromise.then(
+                    
+                    function(value) {
+                        changeEmissionInfo(route, busRouteDistances[route], value);
+                    },
+                    function(error){console.log(error)}
+                )
             }
 
+           
             var selectedRoute=[];//each time select button is clicked, this var will be refreshed.
             var confirmedRoute=[];// ------> this is the final confirmed route the user has selected.
         
@@ -428,9 +452,10 @@ function calcRoute(directionsService, directionsRenderer, map) {
                     postCO2(busDrivingDistance, carDrivingDistance);
 
                     var theFirstBusString = Object.keys(confirmedRoute[0])[0];
-                    console.log(carDrivingDistance)
+                    var arrivalTimestamp = confirmedRoute[0][theFirstBusString]["arrivalTimestamp"].getTime()
+
                     var firstBusTime = confirmedRoute[0][theFirstBusString]["arriving_time"]
-                    sendNotificaiton(firstBusTime, theFirstBusString);
+                    sendNotificaiton(arrivalTimestamp, theFirstBusString);
 
                 }
             });
@@ -482,6 +507,13 @@ function calcRoute(directionsService, directionsRenderer, map) {
  
         
 }
+
+function changeEmissionInfo(infoClass, bus, car){
+    console.log("bus" + bus)
+    console.log("car " + car)
+    console.log(infoClass)
+    $(".carbon-" + infoClass).text(calculateCo2(bus, car) + "kgs")
+}
 //
 //https://stackoverflow.com/questions/35050401/display-multiple-routes-between-two-points-on-google-maps
 //display more than one routes on the map
@@ -489,6 +521,17 @@ function calcRoute(directionsService, directionsRenderer, map) {
 
 // Get users location
 //https://www.w3schools.com/html/html5_geolocation.asp
+
+/* Calculate co2 savings */
+
+function calculateCo2(busDistance, carDisstance){
+    var carEmission = (carDisstance / 1000) * .17152;
+    var busEmission =  (busDistance / 1000) * .10391;
+    var saved = (carEmission - busEmission).toFixed(2)
+    return saved
+
+
+}
 window.initMap = initMap;
 
 /* GET BUS FARE */
@@ -544,14 +587,14 @@ function showPosition(position) {
 function updateEmissions(){
     $.get("carbon/get/", function(data, status){
         if (data["co2_saved"] == 0){
-            $(".co2-saved").text("No savings yet, take a trip and save some emissions!")
+            $(".co2-saved").html("No savings yet, take a trip and save some emissions!")
         }
         else {
-            $(".co2-saved").text(data["co2_saved"] + " kgs of co2 saved!")
+            $(".co2-saved").html(data["co2_saved"] + " kgs of co<sub>2</sub> saved!")
         }
     })
 }
-
+updateEmissions()
 // $.get("carbon/get/", function(data, status){
 //     $(".co2-saved").text(data["co2_saved"] + " grams of co2.")
 // })
