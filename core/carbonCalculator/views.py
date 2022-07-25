@@ -24,8 +24,8 @@ transport land work.
 @csrf_exempt
 def CarbonCalculator(request):
     if request.method == 'POST':
-        bus_distance = int(request.POST.get('bus_distance', False)) / 1000  # Made into kms
-        driving_distance = int(request.POST.get('driving_distance', False)) / 1000  # Made into kms
+        bus_distance = int(request.POST.get('bus_distance', False)) / 1000
+        driving_distance = int(request.POST.get('driving_distance', False)) / 1000
         saved_emissions = calculate_emissions(bus_distance, driving_distance)
         if request.user.is_authenticated:
             current_user_emissions = request.user.profile
