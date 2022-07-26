@@ -9,6 +9,7 @@ from rest_framework.test import APITestCase
 from django.urls import reverse
 from weatherUpdater import weatherForecastApi
 
+
 def prediction_url(*args):
     """Create and return a prediction URL"""
 
@@ -49,11 +50,13 @@ class PredictionAPITests(APITestCase):
 
         # Note: Timestamp is multiplied by 1000 to get milliseconds,
         # because that's the way it's received from JavaScript via the API
-        td_delta = self.dt_now + timedelta(days=3) 
+        td_delta = self.dt_now + timedelta(days=3)
         ts = round(datetime.timestamp(td_delta)*1000)
         url = prediction_url("46A", "inbound", ts)
         response = self.client.get(url, format='json')
-        self.assertTrue(response.data, {'request_info':{'UTC_timestamp': ts}})
+        self.assertTrue(
+                response.data,
+                {'request_info': {'UTC_timestamp': ts}})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_invalid_datetime_format(self):
@@ -67,22 +70,22 @@ class PredictionAPITests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_invalid_future_datetime(self):
-        """Test invalid GET request, using a datetime that's to far in the future"""
+        """Test invalid GET request, using a invalid datetime in the future"""
 
         # Let's test the response if we request a prediction where
         # the datetime lies too far in the future
         # Note: The database holds the forecast only up to 5 days
-        td_delta = self.dt_now + timedelta(days=6) 
+        td_delta = self.dt_now + timedelta(days=6)
         ts = round(datetime.timestamp(td_delta)*1000)
         url = prediction_url("46A", "inbound", ts)
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_invalid_past_datetime(self):
-        """Test invalid GET request, using a datetime that lies to far in the past"""
+        """Test invalid GET request, using a invalid datetime in the past"""
 
-        # Note: In this case pass a timestamp that lies in the past
-        # to provoke a failure
+        # Note: In this case pass a timestamp that lies too far in the past,
+        # provoking a bad request status
         ts = round(datetime.timestamp(self.dt_now))
         url = prediction_url("46A", "inbound", ts - 300000)
         response = self.client.get(url)
