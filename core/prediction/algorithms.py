@@ -12,7 +12,7 @@ class Prediction(object):
         self.model_subdir = model_subdir
         self.feature_list = []
 
-    def _startTiming(self):    
+    def _startTiming(self):
         self._startTime = time.perf_counter()
 
     def _stopTiming(self):
@@ -60,7 +60,6 @@ class Prediction(object):
             self.feature_list.extend(month_list)
         except TypeError as e:
             print("Error:", e)
-
 
     def get_prediction(
             self, line, direction, wind_speed,
