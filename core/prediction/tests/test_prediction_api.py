@@ -3,7 +3,6 @@ Tests for travel time predictions.
 """
 
 from datetime import datetime, timedelta
-from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APITestCase
 from django.urls import reverse
@@ -42,7 +41,7 @@ class PredictionAPITests(APITestCase):
         response = self.client.get(url, format='json')
         self.assertTrue(
                 response.data,
-                {'request_info':{'UTC_timestamp': self.ts_now}})
+                {'request_info': {'UTC_timestamp': self.ts_now}})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_valid_future_datetime(self):

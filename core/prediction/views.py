@@ -81,7 +81,7 @@ def predict_travel_time(request, line_id, direction, traveltime):
         # Use either Linear Regression or Random Forest Model,
         # depending on what's configured in the .env file
         if os.getenv("USE_LINEAR_REGRESSION", 'False').lower()\
-            in ('true', '1'):
+                in ('true', '1'):
             model = Prediction("Linear Regression Model", "linearRegression")
         else:
             model = Prediction("Random Forest Model", "randomForest")
