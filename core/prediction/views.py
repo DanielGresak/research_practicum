@@ -4,8 +4,8 @@ from datetime import datetime, timezone
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .algorithms import linear_regression
 from weather.models import Forecast, CurrentWeather
+from .algorithms import Prediction
 
 # Create your views here.
 
@@ -15,6 +15,8 @@ from weather.models import Forecast, CurrentWeather
 #  - direction ; STRING, either 'inbound' or 'outbound'
 #  - departureTime ; UTC timestamp in milliseconds (JavaScript),
 # INT, e.g. Date.now()
+
+
 @api_view(['GET'])
 def predict_travel_time(request, line_id, direction, traveltime):
 
@@ -76,25 +78,33 @@ def predict_travel_time(request, line_id, direction, traveltime):
         weather_details = retrieve_weather_details(req_timestamp)
 
         # ***************** Feed ML model with Inputs ***************
-        # Feed linear regression model with inputs and get
-        # travel trime prediction in return
-        time_prediction = linear_regression(
+        # Use either Linear Regression or Random Forest Model,
+        # depending on what's configured in the .env file
+        if os.getenv("USE_LINEAR_REGRESSION", 'False').lower()\
+            in ('true', '1'):
+            model = Prediction("Linear Regression Model", "linearRegression")
+        else:
+            model = Prediction("Random Forest Model", "randomForest")
+        # Feed model with input features and get response as follows:
+        # [travel_time_sec, execution_time]
+        prediction = model.get_prediction(
             req_line_id,
             req_direction,
             weather_details['wind_speed'],
             weather_details['rain_1h'],
             weather_details['clouds'],
-            req_datetime.hour,
-            req_datetime.weekday(),
-            req_datetime.month)
+            req_datetime)
 
         # ***************** Prepare the Response ***************
+
+        # Request related information
         resp_request_info = {}
         resp_request_info['line_id'] = req_line_id
         resp_request_info['direction'] = req_direction
         resp_request_info['datetime'] = req_datetime
         resp_request_info['UTC_timestamp'] = req_timestamp
 
+        # Weather related information
         resp_weather_info = {}
         resp_weather_info['db_name'] = weather_details['db_name']
         resp_weather_info['datetime'] = datetime.fromtimestamp(
@@ -104,9 +114,16 @@ def predict_travel_time(request, line_id, direction, traveltime):
         resp_weather_info['wind_speed'] = weather_details['wind_speed']
         resp_weather_info['rain_1h'] = weather_details['rain_1h']
 
+        # Response details
+        resp_info = {}
+        resp_info['model'] = model.name
+        resp_info['time_execution'] = prediction[1]
+
+        # Wrap details and time prediction up in response data
         resp_data = {}
-        resp_data['time_prediction'] = time_prediction
+        resp_data['time_prediction'] = prediction[0]
         resp_data['request_info'] = resp_request_info
+        resp_data['response_info'] = resp_info
         resp_data['weather_info'] = resp_weather_info
 
     return Response(resp_data, status=status.HTTP_200_OK)
@@ -119,33 +136,37 @@ def predict_travel_time(request, line_id, direction, traveltime):
 
 def retrieve_weather_details(timestamp):
 
-    # Retrieve all forecast objects stored in the database
-    object_list = []
-    forecasts_objects = Forecast.objects.all()
-    for object in forecasts_objects:
-        object_list.append(object)
+    details_dict = {}
 
     # Retrieve last object in the current weather database
-    # and append it to the list
-    object_list.append(CurrentWeather.objects.filter(dt__gt=0).last())
+    try:
+        current_weather_obj = CurrentWeather.objects.last()
+    except Exception as e:
+        print("Database error:", e)
+        return details_dict
+    if current_weather_obj is not None:
+        obj = current_weather_obj
+        time_delta = abs(obj.dt - timestamp)
 
     # Traverse over object list and find the timestamp
     # that is closest to the requested timestamp
-    time_delta_min = abs(object_list[0].dt - timestamp)
-    time_delta_index = 0
-    for i, object in enumerate(object_list):
-        if abs(object.dt - timestamp) < time_delta_min:
-            time_delta_min = abs(object.dt - timestamp)
-            time_delta_index = i
+    # Retrieve all forecast objects stored in the database
+    try:
+        forecasts_objects = Forecast.objects.all()
+    except Exception as e:
+        print("Database error:", e)
+        return details_dict
+    if forecasts_objects is not None:
+        for object in forecasts_objects:
+            if abs(object.dt - timestamp) < time_delta:
+                time_delta = abs(object.dt - timestamp)
+                obj = object
 
     # Save weather details from either forecast or current weather object
     # in dictionary
-    details_dict = {}
-    if time_delta_index == len(object_list) - 1:
-        obj = CurrentWeather.objects.filter(dt__gt=0).last()
+    if obj == current_weather_obj:
         details_dict['rain_1h'] = obj.rain_1h
     else:
-        obj = Forecast.objects.get(dt=object_list[time_delta_index].dt)
         # set to zero because it doesn't exist in forecast object
         details_dict['rain_1h'] = 0
 
