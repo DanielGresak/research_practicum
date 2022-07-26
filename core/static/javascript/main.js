@@ -587,14 +587,40 @@ function showPosition(position) {
 function updateEmissions(){
     $.get("carbon/get/", function(data, status){
         if (data["co2_saved"] == 0){
-            $(".co2-saved").html("No savings yet, take a trip and save some emissions!")
+            $(".co2-saved").html("No savings yet, take a trip and save some emissions!");
         }
         else {
-            $(".co2-saved").html(data["co2_saved"] + " kgs of co<sub>2</sub> saved!")
+            $(".co2-saved").html(data["co2_saved"] + " kgs of co<sub>2</sub> saved!");
         }
     })
 }
-updateEmissions()
+
+function updateNotifications(){
+    $.get("update_notifications", function(data, status){
+        if (data["notificationOnOff"] == true){
+            $("#notify-box").prop("checked", true);
+            console.log(data["notificationOnOff"])
+            
+        } else {
+            $("#notify-box").prop("checked", false);
+            console.log(data["notificationOnOff"])
+        }
+        $("option:selected").prop("selected", false);
+        if (data["delay"] == 5){
+            $("#five").prop("selected", true);
+        } else if (data["delay"] == 10){
+            $("#ten").prop("selected", true);
+        } else if (data["delay"] == 15){
+            $("#fifteen").prop("selected", true);
+        }else if (data["delay"] == 30){
+            $("#thirty").prop("selected", true);
+        }
+
+        $("#user-email").text(data["email"])
+    })
+}
+updateNotifications();
+updateEmissions();
 // $.get("carbon/get/", function(data, status){
 //     $(".co2-saved").text(data["co2_saved"] + " grams of co2.")
 // })
@@ -650,7 +676,13 @@ $("#login-button").click(function(){
 
             $(".logout").show()
             $(".login").hide()
-            updateEmissions()
+
+            updateEmissions();
+            updateNotifications();
+            $("#login-email").val("")
+            $("#login-password").val("")
+            
+
         })
 
     }
@@ -695,7 +727,11 @@ $("#register-button").click(function(){
             $("#auth").show();
             $(".logout").show()
             $(".register").hide()
-            updateEmissions()
+            updateEmissions();
+            updateNotifications();
+            $("#register-email").val("")
+            $("#register-password").val("")
+            $("#confirm-register-password").val("")
         })
 } else {
     $("#password-validation-text").text("Passwords do not match.")
@@ -827,6 +863,7 @@ $("#notify-box").change(function() {
             }
         }
     }).then(function(){
+        $("#notify-box").toggle();
        console.log("setting changed")
     })
 });
