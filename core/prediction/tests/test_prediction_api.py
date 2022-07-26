@@ -3,7 +3,6 @@ Tests for travel time predictions.
 """
 
 from datetime import datetime, timedelta
-from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APITestCase
 from django.urls import reverse
