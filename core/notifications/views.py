@@ -22,8 +22,8 @@ def add_route_for_notification(request):
             bus = request.POST.get("bus")
             time = int(float(request.POST.get("time"))) / 1000
             sending_time = time - (delay * 60)
-            # For testing purposes
-            sending_time += 360
+            print(f"Time: {time} Delay: {delay} sneding time: {sending_time}")
+            print(f"from date_time: {datetime.fromtimestamp(sending_time)}")
             sending_time = int(sending_time)
             scheduler.add_job(send_notification,
                               "date",
