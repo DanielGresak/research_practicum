@@ -6,7 +6,7 @@ from datetime import datetime
 # The following Prediciton class is currently used for both Linear Regression
 # and Random Forest as the feature set is identical. However, should these
 # features differ from each other we can than outsource these methods into
-# separate subclasses. 
+# separate subclasses.
 
 
 class Prediction(object):
