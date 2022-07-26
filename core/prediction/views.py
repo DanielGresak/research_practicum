@@ -136,33 +136,37 @@ def predict_travel_time(request, line_id, direction, traveltime):
 
 def retrieve_weather_details(timestamp):
 
-    # Retrieve all forecast objects stored in the database
-    object_list = []
-    forecasts_objects = Forecast.objects.all()
-    for object in forecasts_objects:
-        object_list.append(object)
+    details_dict = {}
 
     # Retrieve last object in the current weather database
-    # and append it to the list
-    object_list.append(CurrentWeather.objects.filter(dt__gt=0).last())
+    try:
+        current_weather_obj = CurrentWeather.objects.last()
+    except Exception as e:
+        print("Database error:", e)
+        return details_dict
+    if current_weather_obj is not None:
+        obj = current_weather_obj
+        time_delta = abs(obj.dt - timestamp)
 
     # Traverse over object list and find the timestamp
     # that is closest to the requested timestamp
-    time_delta_min = abs(object_list[0].dt - timestamp)
-    time_delta_index = 0
-    for i, object in enumerate(object_list):
-        if abs(object.dt - timestamp) < time_delta_min:
-            time_delta_min = abs(object.dt - timestamp)
-            time_delta_index = i
+    # Retrieve all forecast objects stored in the database
+    try:
+        forecasts_objects = Forecast.objects.all()
+    except Exception as e:
+        print("Database error:", e)
+        return details_dict
+    if forecasts_objects is not None:
+        for object in forecasts_objects:
+            if abs(object.dt - timestamp) < time_delta:
+                time_delta = abs(object.dt - timestamp)
+                obj = object
 
     # Save weather details from either forecast or current weather object
     # in dictionary
-    details_dict = {}
-    if time_delta_index == len(object_list) - 1:
-        obj = CurrentWeather.objects.filter(dt__gt=0).last()
+    if obj == current_weather_obj:
         details_dict['rain_1h'] = obj.rain_1h
     else:
-        obj = Forecast.objects.get(dt=object_list[time_delta_index].dt)
         # set to zero because it doesn't exist in forecast object
         details_dict['rain_1h'] = 0
 

@@ -7,7 +7,7 @@ from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APITestCase
 from django.urls import reverse
-
+from weatherUpdater import weatherForecastApi
 
 def prediction_url(*args):
     """Create and return a prediction URL"""
@@ -15,13 +15,20 @@ def prediction_url(*args):
     args_list = []
     for a in args:
         args_list.append(a)
-    return reverse('prediction/', args=args_list)
+    return reverse('api_prediction', args=args_list)
 
 
 class PredictionAPITests(APITestCase):
     """Test travel time predictions"""
 
     def setUp(self):
+        # By default, running Django tests creates a blank test database.
+        # However, to run our tests we actually need to query existing data
+        # from an real mySQL database. So that's why we need to create and
+        # update our databes first before running the tests.
+        weatherForecastApi.update_weather_forecast()
+        weatherForecastApi.update_current_weather()
+
         self.dt_now = datetime.now()
         # Note: to simulate the timestamp provided by the JavaScript
         # GET request, we multiply it by 1000 to get milliseconds
