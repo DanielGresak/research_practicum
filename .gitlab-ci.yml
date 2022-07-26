@@ -11,6 +11,7 @@ test:
     stage: test
     image: python:3.9-alpine
     before_script:
+        - docker system prune --force
         - pip install docker-compose
         - docker-compose up -d --build
     script:

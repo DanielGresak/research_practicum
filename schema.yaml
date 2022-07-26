@@ -5,7 +5,7 @@ info:
 paths:
   /api/schema:
     get:
-      operationId: schema_retrieve
+      operationId: api_schema_retrieve
       description: |-
         OpenApi3 schema for this API. Format can be selected via content negotiation.
 
@@ -122,7 +122,7 @@ paths:
           - zh-hans
           - zh-hant
       tags:
-      - schema
+      - api
       security:
       - cookieAuth: []
       - basicAuth: []
@@ -147,6 +147,34 @@ paths:
                 type: object
                 additionalProperties: {}
           description: ''
+  /prediction/{line_id}/{direction}/{traveltime}/:
+    get:
+      operationId: prediction_retrieve
+      parameters:
+      - in: path
+        name: direction
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: line_id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: traveltime
+        schema:
+          type: integer
+        required: true
+      tags:
+      - prediction
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
 components:
   securitySchemes:
     basicAuth:
