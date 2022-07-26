@@ -162,6 +162,9 @@ margin: 4px;
   height: 4vh;
   width: 10vw;
 }
+.loadingAnimation{
+  display: none;
+}
 
 .keyValue{
   color: red;

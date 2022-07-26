@@ -92,6 +92,11 @@ function initMap() {
     });
     directionsRenderer.setMap(map);
     document.getElementById("btn").addEventListener('click', event =>{
+        $(".loadingAnimation").css("display", "block");
+        $("#totalTravelTime").ready(function(){
+            $(".loadingAnimation").css("display", "none");
+            console.log("the page is loaded");
+        })
         $(".busInfo").css("display", "inline");
         calcRoute(directionsService, directionsRenderer, map);
         $(".searchbar").css("display", "none");
@@ -142,15 +147,15 @@ function getBusInfo(routes, startTime){
         if (steps[i]["transit"] !== undefined){// find the steps for the bus instead of walking
             var routeInfo={};
             var thisRoute={};
-            var direction = getDirection(steps[i]["transit"]["line"]["short_name"],steps[i]["transit"]["departure_stop"]["name"], steps[i]["transit"]["arrival_stop"]["name"]);
-            var forecastTravelTime=travelTime(steps[i], direction, startTime, steps[i]["transit"]["num_stops"], getTotalNumberOfStops(steps[i]["transit"]["line"]["short_name"],direction));
+            //var direction = getDirection(steps[i]["transit"]["line"]["short_name"],steps[i]["transit"]["departure_stop"]["name"], steps[i]["transit"]["arrival_stop"]["name"]);
+            //var forecastTravelTime=travelTime(steps[i], direction, startTime, steps[i]["transit"]["num_stops"], getTotalNumberOfStops(steps[i]["transit"]["line"]["short_name"],direction));
             //console.log("forecastTripTime from the dict is "+forecastTravelTime);
             routeInfo["arriving_time"]=steps[i]["transit"]["departure_time"]["text"];
             routeInfo["driving_distance"]=steps[i]["distance"]["value"];
             routeInfo["num_stops"]=steps[i]["transit"]["num_stops"];
             routeInfo["travel_time"]=steps[i]["duration"]["value"];// travel time in second.
-            routeInfo["direction"]= direction;
-            routeInfo["forecastTripTime"]=forecastTravelTime;
+            //routeInfo["direction"]= direction;
+            //routeInfo["forecastTripTime"]=forecastTravelTime;
             //console.log("get the travel time is"+routeInfo["forecastTripTime"]);
             thisRoute[steps[i]["transit"]["line"]["short_name"]]=routeInfo;
             busRoutes.push(thisRoute);
@@ -166,6 +171,21 @@ function getBusInfo(routes, startTime){
     //console.log("The walking time in getBusInfo is "+otherTime);
     return busRoutes;
 }
+
+function getForecastTravelTime(option, walkingTime, startTime){
+    console.log(option);
+    var forecastTravelTime = 0;
+    var trip = option["legs"][0]["steps"];
+    for(const route of trip){
+        if(route["transit"] !== undefined){
+            var direction = getDirection(route["transit"]["line"]["short_name"],route["transit"]["departure_stop"]["name"], route["transit"]["arrival_stop"]["name"]);        
+            //console.log("direction in the get forecaset function is: "+direction);
+            forecastTravelTime = forecastTravelTime + travelTime(route, direction, startTime, route["transit"]["num_stops"], getTotalNumberOfStops(route["transit"]["line"]["short_name"], direction));
+        }
+    }
+    return Math.ceil((forecastTravelTime+walkingTime)/60);
+}
+
 
 function getDirection(line, departure, arrival){
     //console.log("departure stop: "+departure);
@@ -184,7 +204,13 @@ function getDirection(line, departure, arrival){
                 else if((jQuery.inArray(departureStop,json[line]["inbound"]) !== -1) || (jQuery.inArray(arrivalStop,json[line]["inbound"]) !== -1)){
                     bound= "inbound";
                 }
+                else{
+                    bound ="noMatch";
+                }
             } 
+            else{
+                bound="noMatch";
+            }
         }
     })
     return bound;
@@ -201,12 +227,20 @@ function getTotalNumberOfStops(line, direction){
         async: false,
         dataType: "json",
         success: function(json){
-            if((line in json) && ((direction === "inbound") || (direction === "outbound"))){
-                console.log("length: "+json[line][direction].length);
-                totalNumberOfRoutes = json[line][direction].length;
+            if(line in json){
+                //console.log("found "+line+" in the ds");
+                if (direction === "inbound" || direction === "outbound"){
+                    //console.log("length: "+json[line][direction].length);
+                    //console.log("found the direction in the ds");
+                    totalNumberOfRoutes = json[line][direction].length;
+            }
+                else{
+                    console.log("no direction is found, direction: "+direction);
+                    totalNumberOfRoutes = "notFoundTotalStopNumbers"
             } 
+        }
             else{
-                console.log("didn't find the line id "+line+" in the dataset of 2018");
+                console.log("didn't find the line id "+line+" in the dataset of 2018, direction: "+direction);
                 totalNumberOfRoutes = "notFoundTotalStopNumbers";
             }
         }
@@ -217,6 +251,7 @@ function getTotalNumberOfStops(line, direction){
 
 // return the forecast travel time for each trip
 function travelTime(route, direction, departureTime, numOfStops, totalNumOfStops){
+    //console.log("the direction in the travelTime is: "+direction);
     var timePrediction=0;
     // if can't find the direction of this trip from the data set, just return the result of google map.
     if(direction === ""){
@@ -268,7 +303,7 @@ function travelTime(route, direction, departureTime, numOfStops, totalNumOfStops
         }
     });
     //console.log("in prediction function, the predicted travel time is: "+timePrediction);
-    console.log("total number of stops "+totalNumOfStops);
+    //console.log("total number of stops "+totalNumOfStops);
     return timePrediction*(numOfStops/totalNumOfStops);
 }
 
@@ -325,6 +360,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
         
             // for all the suggested ways(routes) the google map provides:
             for(let route = 0; route < totalNumberOfRoutes; route++){
+                //console.log(result["routes"][route]);
                 if (result["routes"][route]["legs"][0]["steps"].length < 2){
                     continue;
                 }
@@ -332,7 +368,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
                 // if no need to transfer a bus, only one key will be in this dict
                 var busNumString = "";
                 var busArrivingString="";
-                var busTravelTime=0;
+                //var busTravelTime=0;
                 var busDrivingDistance=0;
                 var walkingTime=0;
 
@@ -346,12 +382,12 @@ function calcRoute(directionsService, directionsRenderer, map) {
                         busNumString = busNumString+routeNumber+" -> ";
                         busArrivingString=busArrivingString+r[routeNumber]["arriving_time"]+"; ";
                         busDrivingDistance=busDrivingDistance+r[routeNumber]["driving_distance"];
-                        busTravelTime=busTravelTime+r[routeNumber]["forecastTripTime"];
+                        //busTravelTime=busTravelTime+r[routeNumber]["forecastTripTime"];
                         //console.log("in for loop the busTravelTime is "+busTravelTime);
                     }
                 }
                 //console.log("bus travel time:"+busTravelTime);
-                busTravelTime = busTravelTime + walkingTime;
+                //busTravelTime = busTravelTime + walkingTime;
                 //console.log("the final bus travel time in seconds is "+busTravelTime);
                 busNumString = busNumString.slice(0, -3);
                 busArrivingString = busArrivingString.slice(0, -2);    
@@ -359,12 +395,21 @@ function calcRoute(directionsService, directionsRenderer, map) {
                 // add a bus info child window for every bus/route
                 $(".busInfo").append("<div class = 'oneBus'>\
                                         <p class = 'busHeader'>"+"Bus route "+(route+1)+": "+busNumString+"<button class='selectRoute'>Select</button></p>\
-                                        <p class = 'busDetail' id = 'arrivingTime'>Arriving time: <span class ='keyValue'>"+ busArrivingString+"</span></p>\
-                                        <p class = 'busDetail' id = 'totalTravelTime'>Total travel time: <span class ='keyValue'>"+Math.ceil(busTravelTime/60)+" minutes.</span></p>\
-                                        <p class = 'busDetail' id = 'carbonEmissionSaved'>Carbon emission saved: <span class ='keyValue'>:</span></p>\
-                                        <p class = 'busDetail' id = 'busFare'> The bus fare is: <span class ='keyValue'>"+getBusFare(busRoutes, "adult")+" \u20AC"+"</span></p></div>")// Hi Daniel, the second parameter of the getBusFare() function is the age, age is a string and can be one of "adult", "student" or "child".
-            }
+                                        <p class = 'busDetail'>Arriving time: <span class ='keyValue'>"+ busArrivingString+"</span></p>\
+                                        <p class = 'busDetail' id = 'forecastTime'>Total travel time: </p>\
+                                        <p class = 'busDetail'>Carbon emission saved: <span class ='keyValue'></span></p>\
+                                        <p class = 'busDetail'> The bus fare is: <span class ='keyValue'>"+getBusFare(busRoutes, "adult")+"</span></p></div>")// Hi Daniel, the second parameter of the getBusFare() function is the age, age is a string and can be one of "adult", "student" or "child".
+                $("#forecastTime").attr("id", route);
+                console.log(route);
 
+                setTimeout(disPlayTravelTime, 5000, route);
+                console.log(route);
+                var disPlayTravelTime=function(theRoute){
+                    console.log(theRoute);
+                    $("#"+theRoute).append("<span class ='keyValue'>"+getForecastTravelTime(result["routes"][theRoute], walkingTime, resultTime)+" minutes</span>");
+                }
+            }
+            
             var selectedRoute=[];//each time select button is clicked, this var will be refreshed.
             var confirmedRoute=[];// ------> this is the final confirmed route the user has selected.
         
@@ -506,22 +551,26 @@ function getBusFare(confirmed, age){
 
         /* get the number of times of recharging the bus fare when tap the card because the travle time is more than 90 min */
         var accumulatetravelTime=0; // the travel time of all the buses routes taken in the previous bus trip in a transfer case
+        var distance = 0;
         var recharge=0;
         for(const route of confirmed){
             const routeNumber = Object.keys(route);
+            if(accumulatetravelTime === 0 && route[routeNumber]["driving_distance"] < 2000/3){
+                distance= distance+1;
+            }
             accumulatetravelTime = accumulatetravelTime + route[routeNumber]["travel_time"];
-            console.log("travelTime"+accumulatetravelTime);
+            //console.log("travelTime"+accumulatetravelTime);
             if(accumulatetravelTime >= 5400){
                 recharge = recharge+1; // times of respend money because 90 min is passsed
                 accumulatetravelTime = 0;//record the time from the start
             }
         }
         if(age === "adult"){
-            return 2+2*recharge;
+            return (2*(1+recharge-distance)+distance*1.3)+" \u20AC";
         }if(age === "student"){
-            return 1+1*recharge;
+            return (1*(1+recharge-distance)+distance*0.65)+" \u20AC";
         }if(age === "child"){
-            return 0.65+0.65*recharge;
+            return (0.65*(1+recharge-distance)+distance*0.65)+" \u20AC";
         }
         //return [busNumString, recharge];
     }
