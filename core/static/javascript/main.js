@@ -380,7 +380,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
                 $(".busInfo").append("<div class = 'oneBus'>\
                                         <p class = 'busHeader'>"+"Bus route "+(route+1)+": "+busNumString+"<button class='selectRoute'>Select</button></p>\
                                         <p class = 'busDetail'>Arriving time: <span class ='keyValue'>"+ busArrivingString+"</span></p>\
-                                        <p class = 'busDetail' id = 'forecastTime'>Total travel time: </p>\
+                                        <p class = 'busDetail' id = 'forecastTime'>Total travel time: <i class='fas fa-spinner fa-pulse'></i> </p>\
                                         <p class = 'busDetail'>Carbon emission saved: <span class ='keyValue'></span></p>\
                                         <p class = 'busDetail'> The bus fare is: <span class ='keyValue'>"+getBusFare(busRoutes, "adult")+"</span></p></div>")// Hi Daniel, the second parameter of the getBusFare() function is the age, age is a string and can be one of "adult", "student" or "child".
                 $("#forecastTime").attr("id", route);
@@ -505,7 +505,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
  
         
 }
-function displayTheForecastTime(theRouteId, route, walkingTime, resultTime){
+function displayTheForecastTime (theRouteId, route, walkingTime, resultTime){
     setTimeout(function(){$("#"+theRouteId).append("<span class ='keyValue'>"+getForecastTravelTime(route, walkingTime, resultTime)+" minutes</span>")}, 0);
     //console.log(theRoute);
 }
