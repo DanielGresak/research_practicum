@@ -373,6 +373,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
                         
                     }
                 }
+                var new_age = $("input.age:checked").val()
                 busRouteDistances.push(busDrivingDistance);
                 busNumString = busNumString.slice(0, -3);
                 busArrivingString = busArrivingString.slice(0, -2);
@@ -381,10 +382,17 @@ function calcRoute(directionsService, directionsRenderer, map) {
                                         <p class = 'busHeader'>"+"Bus route "+(route+1)+": "+busNumString+"<button class='selectRoute'>Select</button></p>\
                                         <p class = 'busDetail'>Arriving time: <span class ='keyValue'>"+ busArrivingString+"</span></p>\
                                         <p class = 'busDetail' id = 'forecastTime'>Total travel time: </p>\
-                                        <p class = 'busDetail'>Carbon emission saved: <span class ='keyValue'></span></p>\
-                                        <p class = 'busDetail'> The bus fare is: <span class ='keyValue'>"+getBusFare(busRoutes, "adult")+"</span></p></div>")// Hi Daniel, the second parameter of the getBusFare() function is the age, age is a string and can be one of "adult", "student" or "child".
+                                        <p class = 'busDetail' id = 'carbonEmissionSaved'>Carbon emission saved: <span class ='keyValue carbon-" + route +"'>Loading</span></p>\
+                                        <p class = 'busDetail'> The bus fare is: <span class ='keyValue'>"+getBusFare(busRoutes, new_age)+"</span></p></div>")// Hi Daniel, the second parameter of the getBusFare() function is the age, age is a string and can be one of "adult", "student" or "child".
                 $("#forecastTime").attr("id", route);
                 displayTheForecastTime(route, result["routes"][route], walkingTime, resultTime);
+                myPromise.then(
+                    
+                    function(value) {
+                        changeEmissionInfo(route, busRouteDistances[route], value);
+                    },
+                    function(error){console.log(error)}
+                )
             }
             
             var selectedRoute=[];//each time select button is clicked, this var will be refreshed.
