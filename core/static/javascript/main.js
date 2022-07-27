@@ -384,7 +384,10 @@ function calcRoute(directionsService, directionsRenderer, map) {
                                         <p class = 'busDetail'>Carbon emission saved: <span class ='keyValue'></span></p>\
                                         <p class = 'busDetail'> The bus fare is: <span class ='keyValue'>"+getBusFare(busRoutes, "adult")+"</span></p></div>")// Hi Daniel, the second parameter of the getBusFare() function is the age, age is a string and can be one of "adult", "student" or "child".
                 $("#forecastTime").attr("id", route);
-                displayTheForecastTime(route, result["routes"][route], walkingTime, resultTime);
+                displayTheForecastTime(route, result["routes"][route], walkingTime, resultTime).then(function(value){
+                    $(".fas").css("display", "none");
+                });
+        
             }
             
             var selectedRoute=[];//each time select button is clicked, this var will be refreshed.
@@ -505,10 +508,14 @@ function calcRoute(directionsService, directionsRenderer, map) {
  
         
 }
-function displayTheForecastTime (theRouteId, route, walkingTime, resultTime){
-    setTimeout(function(){$("#"+theRouteId).append("<span class ='keyValue'>"+getForecastTravelTime(route, walkingTime, resultTime)+" minutes</span>")}, 0);
+function displayTheForecastTime(theRouteId, route, walkingTime, resultTime){
+    return new Promise(function(resolve, reject){
+        setTimeout(function(){resolve($("#"+theRouteId).append("<span class ='keyValue'>"+getForecastTravelTime(route, walkingTime, resultTime)+" minutes</span>"))}, 0);
+    })
+    
     //console.log(theRoute);
 }
+
 
 function changeEmissionInfo(infoClass, bus, car){
     console.log("bus" + bus)
