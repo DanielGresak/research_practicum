@@ -162,4 +162,3 @@ class NotificationTests(ViewTests):
         self.assertEqual(delay, 5)
         self.assertEqual(notification, False)
         self.assertEqual(response.status_code, 200)
-        

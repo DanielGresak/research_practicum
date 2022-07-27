@@ -80,6 +80,7 @@ def delete_user(request):
     except Exception:
         return HttpResponse(status=401)
 
+
 def change_age(request):
     new_age = request.POST.get("age")
     if request.user.is_authenticated:
