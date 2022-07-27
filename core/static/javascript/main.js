@@ -138,7 +138,7 @@ function renderDirections(result, gmap){
 // and the number of stops this trip will cover.
 
 // routes is from result["routes"][index]
-function getBusInfo(routes, startTime){
+function getBusInfo(routes){
     var busRoutes = [];
     var steps = routes["legs"][0]["steps"];
     var numberSteps = steps.length;
@@ -353,7 +353,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
                 if (result["routes"][route]["legs"][0]["steps"].length < 2){
                     continue;
                 }
-                var busRoutes = getBusInfo(result["routes"][route], resultTime); // an array of routes(transfer) or a route(one go)
+                var busRoutes = getBusInfo(result["routes"][route]); // an array of routes(transfer) or a route(one go)
                 // if no need to transfer a bus, only one key will be in this dict
                 var busNumString = "";
                 var busArrivingString="";
@@ -427,7 +427,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
                 directionRenderers[busIndex].setMap(map);
 
                 // get the selected route
-                selectedRoute=getBusInfo(result["routes"][busIndex], resultTime);
+                selectedRoute=getBusInfo(result["routes"][busIndex]);
 
                 $(".selectRoute").css("background-color","white");
                 $(".selectRoute").css("color", "black");
