@@ -7,6 +7,7 @@ from users.views import loginUser, logoutUser, registerUser
 from weather.views import weather_data_json
 from notifications.views import add_route_for_notification
 from notifications.views import change_delay, notification_toggle
+from notifications.views import returningNotificationData
 # from django.contrib.auth import login
 # from django.contrib.auth.models import User
 # Test each page in urlpatterns
@@ -54,6 +55,10 @@ class TestUrls(SimpleTestCase):
     def test_notification_settings_url_is_resolved(self):
         url = reverse("toggle_notify")
         self.assertEquals(resolve(url).func, notification_toggle)
+
+    def test_update_notificaiton_url_is_resolved(self):
+        url = reverse("update_notifications")
+        self.assertEquals(resolve(url).func, returningNotificationData)
 
     # def test_delete_user_url_is_resolved(self):
     #     user = {
