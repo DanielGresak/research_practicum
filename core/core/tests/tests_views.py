@@ -163,13 +163,13 @@ class NotificationTests(ViewTests):
         self.assertEqual(delay, 5)
         self.assertEqual(notification, False)
         self.assertEqual(response.status_code, 200)
-    
+
     def test_age_change(self):
         """ Test Age is Changed """
         url = self.age_change_url
         request = self.client.post(self.register_url,
-                            self.user,
-                            format="text/html")
+                                   self.user,
+                                   format="text/html")
         request["age"] = "child"
         response = self.client.post(url, request, format="text/html")
         user = User.objects.get(username=self.user["userEmail"])
