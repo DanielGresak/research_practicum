@@ -20,6 +20,7 @@ class ViewTests(TestCase):
         self.notification_setting_url = reverse("toggle_notify")
         self.notification_delay_url = reverse("change_delay")
         self.update_notification_url = reverse("update_notifications")
+        self.age_change_url = reverse("update_age")
         self.user = {
             "userEmail": "testemail@email.com",
             "userPassword": "password123",
@@ -162,3 +163,15 @@ class NotificationTests(ViewTests):
         self.assertEqual(delay, 5)
         self.assertEqual(notification, False)
         self.assertEqual(response.status_code, 200)
+    
+    def test_age_change(self):
+        """ Test Age is Changed """
+        url = self.age_change_url
+        request = self.client.post(self.register_url,
+                            self.user,
+                            format="text/html")
+        request["age"] = "child"
+        response = self.client.post(url, request, format="text/html")
+        user = User.objects.get(username=self.user["userEmail"])
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(user.profile.age, "child")
