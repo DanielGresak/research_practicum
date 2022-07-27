@@ -17,6 +17,17 @@ html, main {
   display: flex;
 }
 
+#alert {
+  z-index: 1;
+  position: fixed;
+  display: inline-block;
+  right: 2.5vw;
+  top: 2.5vh;
+  right: 5%;
+  top: 11%;
+  transform: translate(-80%, -89%);
+}
+
 /* Header/logo area CSS */
 
 .heading {
@@ -188,7 +199,7 @@ margin: 4px;
   height: 4vh;
   width: 10vw;
 }
-.alert{
+.alert-info{
   display: none;
   position:relative;
   top: 3%;
@@ -426,5 +437,12 @@ input:valid + span::before {
   .oneBus {
     width: 35%;
     float: left;
+  }
+
+  #alert {
+    z-index: 5;
+    left: 50%;
+    top: 70%;
+    transform: translate(-50%, -30%);
   }
 }
