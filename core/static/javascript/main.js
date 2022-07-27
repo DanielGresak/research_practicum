@@ -617,6 +617,7 @@ function updateNotifications(){
         }
 
         $("#user-email").text(data["email"])
+        $("#" + data["age"]).prop("checked", true);
     })
 }
 updateNotifications();
@@ -740,7 +741,6 @@ $("#register-button").click(function(){
 }})
 
 $("#logout-button").click(function(){
-    console.log("clicked")
     $.ajax({
         type: "GET",
         url: "logout",
@@ -758,6 +758,7 @@ $("#logout-button").click(function(){
         $(".logout").hide()
         $(".login").show()
         updateEmissions()
+        $("#adult").prop("checked", true);
         
     })
 })
@@ -896,3 +897,60 @@ $("#change-notification-delay").change(function() {
        console.log("delay changed")
     })
 });
+
+
+/* CHANGE AGE */
+
+$("input.age").on("change click", function(){
+    
+    var new_age = $("input.age:checked").val()
+    var data = {
+        age: new_age
+    }
+    $.ajax({
+        type: "POST",
+        url: "update_age",
+        data: data,
+        dataType: "json",
+        encode: true,
+        headers: {
+            'X-CSRFToken': csrfToken
+        },
+        success: function(msg) {
+            console.log("age changed to: " + new_age )
+        },
+    }) 
+    })
+
+/* PASSWORD SHOW */
+
+$("#login-pwd-show").mousedown(function(){
+    if ($("#login-password").attr("type") == "text"){
+        $("#login-pwd-show").removeClass("fa-eye-slash")
+        $("#login-pwd-show").addClass("fa-eye")
+
+        $("#login-password").attr('type', 'password'); 
+    }
+    else{
+        $("#login-password").attr('type', 'text'); 
+        $("#login-pwd-show").addClass("fa-eye-slash")
+        $("#login-pwd-show").removeClass("fa-eye")
+
+    }
+})
+
+$("#register-pwd-show").mousedown(function(){
+    if ($("#register-password").attr("type") == "text"){
+        $("#register-pwd-show").removeClass("fa-eye-slash")
+        $("#register-pwd-show").addClass("fa-eye")
+        $("#register-password").attr('type', 'password'); 
+    }
+    else{
+        $("#register-pwd-show").addClass("fa-eye-slash")
+        $("#register-pwd-show").removeClass("fa-eye")
+        $("#register-password").attr('type', 'text'); 
+
+    }
+})
+
+

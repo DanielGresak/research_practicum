@@ -117,10 +117,12 @@ def returningNotificationData(request):
         current_user = request.user.profile
         delay = current_user.notification_delay
         notification_setting = current_user.notifications
+        age = current_user.age
         responseData = {
             "delay": delay,
             "notificationOnOff": notification_setting,
             "email": request.user.email,
+            "age": age,
         }
         return JsonResponse(responseData)
     else:
