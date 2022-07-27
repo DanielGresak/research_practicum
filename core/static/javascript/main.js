@@ -884,8 +884,6 @@ $("#notify-box").change(function() {
             alertUser("error", "", false)
             }
         }
-    }).then(function(){
-        $("#notify-box").toggle();
     })
 });
 
