@@ -13,34 +13,34 @@
     <label for="exampleFormControlSelect1" class="notify-label">How many minutes before would you like to be notified?</label>
     <select class="form-control" id="change-notification-delay">
 {% if loggedIn == True and delay == 5 %}
-      <option selected="selected">5 minutes</option>
-      <option>10 minutes</option>
-      <option>15 minutes</option>
-      <option>30 minutes</option>
+      <option id="five" selected="selected">5 minutes</option>
+      <option id="ten">10 minutes</option>
+      <option id="fifteen">15 minutes</option>
+      <option id="thirty">30 minutes</option>
     </select>
 {% elif loggedIn == True and delay == 10 %}
-      <option>5 minutes</option>
-      <option selected="selected">10 minutes</option>
-      <option>15 minutes</option>
-      <option>30 minutes</option>
+      <option id="five">5 minutes</option>
+      <option id="ten" selected="selected">10 minutes</option>
+      <option id="fifteen">15 minutes</option>
+      <option id="thirty">30 minutes</option>
     </select>
 {% elif loggedIn == True and delay == 15 %}
       <option>5 minutes</option>
-      <option>10 minutes</option>
-      <option selected="selected">15 minutes</option>
-      <option>30 minutes</option>
+      <option id="ten">10 minutes</option>
+      <option id="fifteen" selected="selected">15 minutes</option>
+      <option id="thirty">30 minutes</option>
     </select>
 {% elif loggedIn == True and delay == 30 %}
-      <option>5 minutes</option>
-      <option>10 minutes</option>
-      <option>15 minutes</option>
-      <option selected="selected">30 minutes</option>
+      <option id="five">5 minutes</option>
+      <option id="ten">10 minutes</option>
+      <option id="fifteen">15 minutes</option>
+      <option id="thirty" selected="selected">30 minutes</option>
     </select>
 {% else %}
-      <option>5 minutes</option>
-      <option>10 minutes</option>
-      <option>15 minutes</option>
-      <option selected="selected">30 minutes</option>
+      <option id="five">5 minutes</option>
+      <option id="ten">10 minutes</option>
+      <option id="fifteen">15 minutes</option>
+      <option id="thirty" selected="selected">30 minutes</option>
     </select>
 {% endif %}
 

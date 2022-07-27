@@ -9,3 +9,4 @@ class Profile(models.Model):
     emissions = models.IntegerField(default=0)
     notifications = models.BooleanField(default=False)
     notification_delay = models.IntegerField(default=5)
+    age = models.TextField(default="adult")
