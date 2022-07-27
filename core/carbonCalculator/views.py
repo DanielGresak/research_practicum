@@ -25,7 +25,7 @@ transport land work.
 def CarbonCalculator(request):
     if request.method == 'POST':
         bus_distance = int(request.POST.get('bus_distance', False)) / 1000
-        dist = int(request.POST.get('driving_distance', False))
+        dist = float(request.POST.get('driving_distance', False))
         driving_distance = dist / 1000
         saved_emissions = calculate_emissions(bus_distance, driving_distance)
         if request.user.is_authenticated:
