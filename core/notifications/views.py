@@ -16,14 +16,14 @@ def add_route_for_notification(request):
            request.user.profile.notifications):
             user_profile = request.user.profile
             email = request.user.email
-            delay = user_profile.notification_delay * 60
+            delay = user_profile.notification_delay
 
             scheduler = BackgroundScheduler()
             bus = request.POST.get("bus")
             time = int(float(request.POST.get("time"))) / 1000
-            sending_time = time - delay
-            # For testing purposes
-            sending_time += 360
+            sending_time = time - (delay * 60)
+            print(f"Time: {time} Delay: {delay} sneding time: {sending_time}")
+            print(f"from date_time: {datetime.fromtimestamp(sending_time)}")
             sending_time = int(sending_time)
             scheduler.add_job(send_notification,
                               "date",
@@ -98,8 +98,11 @@ def notification_toggle(request):
 def change_delay(request):
     if request.method == "POST":
         if request.user.is_authenticated:
+            request_delay = request.POST.get("delay")
+            delay = [int(s) for s in request_delay.split() if s.isdigit()]
+            delay = delay[0]
             current_user = request.user.profile
-            current_user.notification_delay = int(request.POST.get("delay"))
+            current_user.notification_delay = delay
             current_user.save()
             return HttpResponse(status=204)
 
