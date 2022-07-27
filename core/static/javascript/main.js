@@ -382,7 +382,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
                                         <p class = 'busHeader'>"+"Bus route "+(route+1)+": "+busNumString+"<button class='selectRoute'>Select</button></p>\
                                         <p class = 'busDetail'>Arriving time: <span class ='keyValue'>"+ busArrivingString+"</span></p>\
                                         <p class = 'busDetail' id = 'forecastTime'>Total travel time: <i class='fas fa-spinner fa-pulse' id = 'spinner'></i> </p>\
-                                        <p class = 'busDetail' id = 'carbonEmissionSaved'>Carbon emission saved: <span class ='keyValue carbon-" + route +"'>Loading</span></p>\
+                                        <p class = 'busDetail' id = 'carbonEmissionSaved'>Carbon emission saved: <span class ='keyValue carbon-" + route +"'><i class='fas fa-spinner fa-pulse' id='spinner-co2'></i></span></p>\
                                         <p class = 'busDetail'> The bus fare is: <span class ='keyValue'>"+getBusFare(busRoutes, new_age)+"</span></p></div>");
                 $("#forecastTime").attr("id", route);
                 $("#spinner").attr("id", 'spinner'+route);
@@ -392,6 +392,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
                 myPromise.then(
                     
                     function(value) {
+                        $("#spinner-co2").hide()
                         changeEmissionInfo(route, busRouteDistances[route], value);
                     },
                     function(error){console.log(error)}
