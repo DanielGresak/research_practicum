@@ -7,4 +7,5 @@ urlpatterns = [
          views.notification_toggle,
          name="toggle_notify"),
     path("change_delay", views.change_delay, name="change_delay"),
+    path("update_notifications", views.returningNotificationData, name="update_notifications"),
 ]

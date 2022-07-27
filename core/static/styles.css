@@ -116,6 +116,19 @@ sub {
   padding: 7px;
 }
 
+#email-h2 {
+  padding-bottom: 20vh;
+}
+
+.logout {
+  text-align: center;
+}
+
+.auth-btn {
+  margin: 5vh;
+
+}
+
 .notify-check {
   /* text-align: center; */
   padding-left: 70px;

@@ -18,15 +18,21 @@ def home(request):
         current_user = request.user.profile
         notifications = current_user.notifications
         notification_delay = current_user.notification_delay
+        age = current_user.age
     else:
         logged_in = False
         notifications = False
         notification_delay = 0
+        if 'age' in request.session:
+            age = request.session["age"]
+        else:
+            age = "adult"
     return render(request, "core/index.html",
                   context={"GOOGLE_MAPS_KEY": os.environ.get("GOOGLE_MAPS_KEY"),  # noqa
                   "loggedIn": logged_in,
                   "notifications": notifications,
-                  "delay": notification_delay})
+                  "delay": notification_delay,
+                  "age": age})
 
 
 def data(request):

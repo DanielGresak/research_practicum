@@ -4,7 +4,7 @@ import os
 import smtplib
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from twilio.rest import Client
 from django.views.decorators.csrf import csrf_exempt
 
@@ -110,3 +110,20 @@ def change_delay(request):
             return HttpResponse(status=401)
     else:
         return HttpResponse(status=400)
+
+
+def returningNotificationData(request):
+    if request.user.is_authenticated:
+        current_user = request.user.profile
+        delay = current_user.notification_delay
+        notification_setting = current_user.notifications
+        age = current_user.age
+        responseData = {
+            "delay": delay,
+            "notificationOnOff": notification_setting,
+            "email": request.user.email,
+            "age": age,
+        }
+        return JsonResponse(responseData)
+    else:
+        return HttpResponse(status=401)
