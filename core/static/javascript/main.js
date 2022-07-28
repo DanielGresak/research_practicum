@@ -7,6 +7,7 @@
 let cookie = document.cookie
 let csrfToken = cookie.substring(cookie.indexOf('=') + 1)
 
+
 /* HIDING COMPONENTS ON LOAD */
 
 $(".appbar").hide(); 
@@ -847,6 +848,8 @@ $("#delete-button").click(function(){
 // newNotification(15, 5)
 
 function sendNotificaiton(time, bus){
+    let cookie = document.cookie
+    let csrfToken = cookie.substring(cookie.indexOf('=') + 1)
     var chosenRoute = {
         bus: bus ,
         time: time,
@@ -893,6 +896,8 @@ $("#notify-box").change(function() {
 // NOTIFICATION DELAY CHANGE
 
 $("#change-notification-delay").change(function() {
+    let cookie = document.cookie
+    let csrfToken = cookie.substring(cookie.indexOf('=') + 1)
     var newDelay = {
         delay: $('#change-notification-delay').find(":selected").text(),
     }
@@ -923,7 +928,8 @@ $("#change-notification-delay").change(function() {
 /* CHANGE AGE */
 
 $("input.age").on("change click", function(){
-    
+    let cookie = document.cookie
+    let csrfToken = cookie.substring(cookie.indexOf('=') + 1)
     var new_age = $("input.age:checked").val()
     var data = {
         age: new_age
