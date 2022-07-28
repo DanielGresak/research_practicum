@@ -1,6 +1,6 @@
 from django.core.exceptions import BadRequest
 from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+# from django.views.decorators.csrf import csrf_exempt
 # csrf is checking if cookies have been accepted.
 # We can add a cookie pop up later
 
@@ -21,7 +21,7 @@ transport land work.
 """
 
 
-@csrf_exempt
+# @csrf_exempt
 def CarbonCalculator(request):
     if request.method == 'POST':
         bus_distance = int(request.POST.get('bus_distance', False)) / 1000
