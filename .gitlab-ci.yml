@@ -42,6 +42,6 @@ deploy:
     only:
         - master
         - developement
-        - testing
+        - dan_changes
     script:
         - docker-compose -f docker-compose-deploy.yml up --build -d
