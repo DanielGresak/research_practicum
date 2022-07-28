@@ -34,7 +34,15 @@
 </div>
 <script>
   var offset = (new Date()).getTimezoneOffset() * 60000;
+  console.log((new Date()).getTimezoneOffset());
+  console.log(offset);
   var defaultTimeString = (new Date(Date.now() - offset)).toISOString().slice(0, -5);
+  var fourDaysDifference=(60*24*4)*60000;
+  var maxDate=(new Date(Date.now() - offset + fourDaysDifference)).toISOString().slice(0, -5);
   $("#time_of_travel").val(defaultTimeString);
+  $("#time_of_travel").attr({
+    "max" : maxDate,        
+    "min" : defaultTimeString          
+ });
 </script>
 

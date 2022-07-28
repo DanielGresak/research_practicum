@@ -295,9 +295,13 @@ function calcRoute(directionsService, directionsRenderer, map) {
     var originString = $("#search_start").val();
     var destString = $("#search_destination").val();
     var startTime = $("#time_of_travel").val();
-
     var mydate = new Date(startTime);
     var resultTime = mydate.getTime();// in form of timestamp
+    currentTime = new Date().getTime();
+    console.log("startTime: "+startTime);
+    console.log("new date:  "+new Date());
+    console.log("resultTime: "+resultTime);
+    console.log("currenttime:"+currentTime);
     var request = {
         origin: originString, // start location, now is ucd
         destination: destString, // end location, now is temple bar
