@@ -46,7 +46,7 @@ def predict_travel_time(request, line_id, direction, traveltime):
         # the time format from milliseconds into seconds
         utc_timestamp_req = round(traveltime / 1000)
         # Convert UTC timestamp into local time
-        dt_local = convert_utc_to_local_datetime(utc_timestamp_req)
+        dt_local_req = convert_utc_to_local_datetime(utc_timestamp_req)
 
         # ***************** Input Validiation ************************
         # 1) Validate requested line id by checking it against
@@ -104,7 +104,7 @@ def predict_travel_time(request, line_id, direction, traveltime):
             weather_details['wind_speed'],
             weather_details['rain_1h'],
             weather_details['clouds'],
-            dt_local)
+            dt_local_req)
 
         # ***************** Prepare the Response ***************
 
@@ -112,7 +112,7 @@ def predict_travel_time(request, line_id, direction, traveltime):
         resp_request_info = {}
         resp_request_info['line_id'] = req_line_id
         resp_request_info['direction'] = req_direction
-        resp_request_info['datetime'] = dt_local
+        resp_request_info['datetime'] = dt_local_req
         resp_request_info['UTC_timestamp'] = utc_timestamp_req
 
         # Weather related information
