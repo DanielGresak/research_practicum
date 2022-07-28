@@ -1,5 +1,6 @@
 import json
 import os
+import pytz
 from datetime import datetime, timezone
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -17,14 +18,24 @@ from .algorithms import Prediction
 # INT, e.g. Date.now()
 
 
+def convert_utc_to_local_datetime(utc_timestamp):
+    """Function that converts UTC into a local datetime object"""
+    dt_naive = datetime.fromtimestamp(utc_timestamp)
+    # Convert naive into aware datetime object that includes timezone info
+    dt_aware = dt_naive.replace(tzinfo=pytz.UTC)
+    # Set local timezone
+    dt_local = dt_aware.astimezone(pytz.timezone('Europe/London'))
+    return dt_local
+
+
 @api_view(['GET'])
 def predict_travel_time(request, line_id, direction, traveltime):
 
     # The weather forecast is for 5 days in the future.
     # We will provide 4 days as the maximum traveltime from the now on.
     # This is equal to 345,000 seconds
-    TIME_DELTA_FUTURE_SEC = 345600  # [sec]
-    TIME_DELTA_PAST_SEC = 120  # [sec]
+    TIME_DELTA_FUTURE = 345600  # [sec]
+    TIME_DELTA_PAST = 120  # [sec]
 
     if request.method == "GET":
         # ***************** Prepare Input Arguments ***************
@@ -33,9 +44,9 @@ def predict_travel_time(request, line_id, direction, traveltime):
         req_direction = str(direction)
         # Get UTC timestamp from REST API and divide it by 1000 to convert
         # the time format from milliseconds into seconds
-        req_timestamp = round(traveltime / 1000)
-        # Create datetime (YYYY-MM-DD HH:MM:SS) from timestamp
-        req_datetime = datetime.fromtimestamp(req_timestamp)
+        utc_timestamp_req = round(traveltime / 1000)
+        # Convert UTC timestamp into local time
+        dt_local = convert_utc_to_local_datetime(utc_timestamp_req)
 
         # ***************** Input Validiation ************************
         # 1) Validate requested line id by checking it against
@@ -66,16 +77,16 @@ def predict_travel_time(request, line_id, direction, traveltime):
         # 3) Validate requested timestamp
         # Time needs to be in a reasonable time range
         dt = datetime.now(timezone.utc)
-        utc_time = dt.replace(tzinfo=timezone.utc)
-        utc_timestamp = utc_time.timestamp()
-        if (req_timestamp + TIME_DELTA_PAST_SEC < utc_timestamp) or\
-                (req_timestamp > utc_timestamp + TIME_DELTA_FUTURE_SEC):
+        utc_time_now = dt.replace(tzinfo=timezone.utc)
+        utc_timestamp_now = utc_time_now.timestamp()
+        if (utc_timestamp_req + TIME_DELTA_PAST < utc_timestamp_now) or\
+                (utc_timestamp_req > utc_timestamp_now + TIME_DELTA_FUTURE):
             print("Error - provided timestamp is invalid.")
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         # ***************** Retrieve Weather Info ***************
         # Retrieve weather details that are closest to the requested timestamp
-        weather_details = retrieve_weather_details(req_timestamp)
+        weather_details = retrieve_weather_details(utc_timestamp_req)
 
         # ***************** Feed ML model with Inputs ***************
         # Use either Linear Regression or Random Forest Model,
@@ -93,7 +104,7 @@ def predict_travel_time(request, line_id, direction, traveltime):
             weather_details['wind_speed'],
             weather_details['rain_1h'],
             weather_details['clouds'],
-            req_datetime)
+            dt_local)
 
         # ***************** Prepare the Response ***************
 
@@ -101,13 +112,13 @@ def predict_travel_time(request, line_id, direction, traveltime):
         resp_request_info = {}
         resp_request_info['line_id'] = req_line_id
         resp_request_info['direction'] = req_direction
-        resp_request_info['datetime'] = req_datetime
-        resp_request_info['UTC_timestamp'] = req_timestamp
+        resp_request_info['datetime'] = dt_local
+        resp_request_info['UTC_timestamp'] = utc_timestamp_req
 
         # Weather related information
         resp_weather_info = {}
         resp_weather_info['db_name'] = weather_details['db_name']
-        resp_weather_info['datetime'] = datetime.fromtimestamp(
+        resp_weather_info['datetime'] = convert_utc_to_local_datetime(
                 weather_details['dt'])
         resp_weather_info['UTC_timestamp'] = weather_details['dt']
         resp_weather_info['clouds'] = weather_details['clouds']
@@ -117,7 +128,7 @@ def predict_travel_time(request, line_id, direction, traveltime):
         # Response details
         resp_info = {}
         resp_info['model'] = model.name
-        resp_info['time_execution'] = prediction[1]
+        resp_info['time_execution'] = round(prediction[1], 2)
 
         # Wrap details and time prediction up in response data
         resp_data = {}
