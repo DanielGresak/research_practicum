@@ -7,6 +7,7 @@
 let cookie = document.cookie
 let csrfToken = cookie.substring(cookie.indexOf('=') + 1)
 
+
 /* HIDING COMPONENTS ON LOAD */
 
 $(".appbar").hide(); 
@@ -520,7 +521,9 @@ function calcRoute(directionsService, directionsRenderer, map) {
                 })
         }
         else{
-            console.log(status);
+            $(".searchbar").show();
+            alertUser("ERROR", "No route found!", false)
+            
         }
         });
  
@@ -853,6 +856,8 @@ $("#delete-button").click(function(){
 // newNotification(15, 5)
 
 function sendNotificaiton(time, bus){
+    let cookie = document.cookie
+    let csrfToken = cookie.substring(cookie.indexOf('=') + 1)
     var chosenRoute = {
         bus: bus ,
         time: time,
@@ -899,6 +904,8 @@ $("#notify-box").change(function() {
 // NOTIFICATION DELAY CHANGE
 
 $("#change-notification-delay").change(function() {
+    let cookie = document.cookie
+    let csrfToken = cookie.substring(cookie.indexOf('=') + 1)
     var newDelay = {
         delay: $('#change-notification-delay').find(":selected").text(),
     }
@@ -929,7 +936,8 @@ $("#change-notification-delay").change(function() {
 /* CHANGE AGE */
 
 $("input.age").on("change click", function(){
-    
+    let cookie = document.cookie
+    let csrfToken = cookie.substring(cookie.indexOf('=') + 1)
     var new_age = $("input.age:checked").val()
     var data = {
         age: new_age
@@ -996,7 +1004,7 @@ function alertUser(title, message, isSuccess){
 
     var fullMessage = "<span style='text-transform:uppercase;'>" + title + ":</span> " + message;
     alert.html(fullMessage)
-    alert.fadeIn(1000)
+    alert.fadeIn(300)
     setTimeout(
         function() 
         {

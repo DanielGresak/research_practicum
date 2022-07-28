@@ -20,12 +20,10 @@ html, main {
 #alert {
   z-index: 1;
   position: fixed;
-  display: inline-block;
-  right: 2.5vw;
-  top: 2.5vh;
-  right: 5%;
-  top: 11%;
-  transform: translate(-80%, -89%);
+  top: 10%;
+  left: 70%;
+  margin-top: -50px;
+  margin-left: -100px;
 }
 
 /* Header/logo area CSS */
@@ -434,9 +432,9 @@ input:valid + span::before {
   }
 
   #alert {
-    z-index: 5;
+    top: 8.5%;
     left: 50%;
-    top: 70%;
-    transform: translate(-50%, -30%);
+    margin-top: -50px;
+    margin-left: -100px;
   }
 }

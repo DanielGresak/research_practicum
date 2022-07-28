@@ -1,14 +1,8 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-# from django.contrib.staticfiles import finders
-# import json
 import os
-from django.views.decorators.csrf import csrf_exempt
-# csrf is checking if cookies have been accepted.
-# We can add a cookie pop up later
 
 
-@csrf_exempt
 def home(request):
     # return render(request, "core/index.html",
     # ontext={"GOOGLE_MAPS_KEY": os.environ.get("GOOGLE_MAPS_KEY")})
