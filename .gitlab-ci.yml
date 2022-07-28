@@ -44,4 +44,5 @@ deploy:
         - developement
         - dan_changes
     script:
+        - docker system prune --force
         - docker-compose -f docker-compose-deploy.yml up --build -d
