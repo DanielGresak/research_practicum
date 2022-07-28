@@ -192,29 +192,23 @@ padding-left: 3px;
 margin: 4px;
 }
 
-#busInfoBtn{
+#backToSearch{
   position:relative;
   top: 2%;
   left: 20%;
   height: 4vh;
   width: 10vw;
 }
+
 .alert-info{
   display: none;
-  position:relative;
-  top: 3%;
-  left: 7%;
-  font-size: smaller;
-  color: red;
-  background-color: whitesmoke;
-  padding: 0;
-}
-#selectRouteError{
-  position: absolute;
+  position: relative;
   margin-top: 7%;
   margin-left: 7%;
   width: 250px;
   height: 30px;
+  color: red;
+  background-color: whitesmoke;
 }
 
 #confirm{

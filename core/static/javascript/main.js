@@ -91,17 +91,11 @@ function initMap() {
     zoom: 11,
     });
     directionsRenderer.setMap(map);
-    document.getElementById("btn").addEventListener('click', event =>{
-        $(".loadingAnimation").css("display", "block");
-        $("#totalTravelTime").ready(function(){
-            $(".loadingAnimation").css("display", "none");
-            console.log("the page is loaded");
-        })
+    $("#btn").click(function(){
         $(".busInfo").css("display", "inline");
         calcRoute(directionsService, directionsRenderer, map);
         $(".searchbar").css("display", "none");
     });
-    
 }
 
 /* DIRECTIONS FUNCTIONALITY */
@@ -390,9 +384,11 @@ function calcRoute(directionsService, directionsRenderer, map) {
                                         <p class = 'busDetail'> The bus fare is: <span class ='keyValue'>"+getBusFare(busRoutes, new_age)+"</span></p></div>");
                 $("#forecastTime").attr("id", route);
                 $("#spinner").attr("id", 'spinner'+route);
+                $(".fas").css("color", "black");
                 displayTheForecastTime(route, result["routes"][route], walkingTime, resultTime).then(function(value){
-                    $("#spinner"+route).css("display", "none");
+                $("#spinner"+route).css("display", "none");
                 });
+
                 myPromise.then(
                     
                     function(value) {
@@ -412,7 +408,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
             $("#confirm").css("display", "inline-block");
 
             //add a back button, go back to the search bar
-            $(".busInfo").append("<button type='button' id='busInfoBtn' class='btn btn-dark btn-sm'>Back</button>");
+            $(".busInfo").append("<button type='button' id='backToSearch' class='btn btn-dark btn-sm'>Back</button>");
             //error alert
             $(".busInfo").append("<div class='alert-info'> Please select a route first.</div>");
         
@@ -470,19 +466,27 @@ function calcRoute(directionsService, directionsRenderer, map) {
             });
 
             //when back is clicked, clear the map and render the new results on it.
-            $("#busInfoBtn").click(function(){
+            $("#backToSearch").click(function(){
                 for (let stroke = 0; stroke < directionRenderers.length; stroke++){
                     directionRenderers[stroke].setOptions({map:null});
                 }// clear the previous map render
+
                 $(".busInfo").empty();//clear all the child element, so user can search again
                 $(".searchbar").css("display", "block");//show the searchbar
                 $(".busInfo").hide();
                 $(".searchbar").show();
+
+                //clear the forms in the search bar
+                $("#search_start").val("");
+                $("#search_destination").val("");
+
+                //clear the confirmed route
+                confirmedRoute = [];
             });
 
             /* the bus fare calculation */
             
-            $("#inlineRadio1").click(function(){
+            $("#adult").click(function(){
                 if(getBusFare(confirmedRoute, "adult") != 0){
                     const money=getBusFare(confirmedRoute, "adult");
                     $(".answerContent").text(" ");
@@ -493,7 +497,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
                 }
             })
         
-            $("#inlineRadio2").click(function(){
+            $("#student").click(function(){
                 if(getBusFare(confirmedRoute, "student") != 0){
                     console.log("gaga"+getBusFare(confirmedRoute, "student"));
                     const money=getBusFare(confirmedRoute, "student");
@@ -504,7 +508,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
                     $(".answerContent").text("Please select a route first.");
                 }
                 })
-            $("#inlineRadio3").click(function(){
+            $("#child").click(function(){
                 if(getBusFare(confirmedRoute, "child") != 0){
                     const money=getBusFare(confirmedRoute, "child");
                     $(".answerContent").text(" ");
