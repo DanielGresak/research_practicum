@@ -512,7 +512,9 @@ function calcRoute(directionsService, directionsRenderer, map) {
                 })
         }
         else{
-            console.log(status);
+            $(".searchbar").show();
+            alertUser("ERROR", "No route found!", false)
+            
         }
         });
  
@@ -988,7 +990,7 @@ function alertUser(title, message, isSuccess){
 
     var fullMessage = "<span style='text-transform:uppercase;'>" + title + ":</span> " + message;
     alert.html(fullMessage)
-    alert.fadeIn(1000)
+    alert.fadeIn(300)
     setTimeout(
         function() 
         {
