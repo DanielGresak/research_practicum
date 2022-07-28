@@ -81,6 +81,7 @@ def delete_user(request):
         return HttpResponse(status=401)
 
 
+@csrf_exempt
 def change_age(request):
     new_age = request.POST.get("age")
     if request.user.is_authenticated:

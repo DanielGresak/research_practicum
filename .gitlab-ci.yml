@@ -10,6 +10,9 @@ stages:
 test:
     stage: test
     image: python:3.9-alpine
+    only:
+        - master
+        - developement
     before_script:
         - docker system prune --force
         - pip install docker-compose

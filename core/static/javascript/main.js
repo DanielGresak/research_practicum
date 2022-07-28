@@ -386,7 +386,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
                                         <p class = 'busHeader'>"+"Bus route "+(route+1)+": "+busNumString+"<button class='selectRoute'>Select</button></p>\
                                         <p class = 'busDetail'>Arriving time: <span class ='keyValue'>"+ busArrivingString+"</span></p>\
                                         <p class = 'busDetail' id = 'forecastTime'>Total travel time: <i class='fas fa-spinner fa-pulse' id = 'spinner'></i> </p>\
-                                        <p class = 'busDetail' id = 'carbonEmissionSaved'>Carbon emission saved: <span class ='keyValue carbon-" + route +"'>Loading</span></p>\
+                                        <p class = 'busDetail' id = 'carbonEmissionSaved'>Carbon emission saved: <span class ='keyValue carbon-" + route +"'><i class='fas fa-spinner fa-pulse' id='spinner-co2'></i></span></p>\
                                         <p class = 'busDetail'> The bus fare is: <span class ='keyValue'>"+getBusFare(busRoutes, new_age)+"</span></p></div>");
                 $("#forecastTime").attr("id", route);
                 $("#spinner").attr("id", 'spinner'+route);
@@ -396,6 +396,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
                 myPromise.then(
                     
                     function(value) {
+                        $("#spinner-co2").hide()
                         changeEmissionInfo(route, busRouteDistances[route], value);
                     },
                     function(error){console.log(error)}
@@ -413,7 +414,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
             //add a back button, go back to the search bar
             $(".busInfo").append("<button type='button' id='busInfoBtn' class='btn btn-dark btn-sm'>Back</button>");
             //error alert
-            $(".busInfo").append("<div class='alert'> Please select a route first.</div>");
+            $(".busInfo").append("<div class='alert-info'> Please select a route first.</div>");
         
             //select button selects route and renders the related route on the  map
             // and get the selected route, when clicking the confirm button, the last selected route will be stored in the confirmRoute;
@@ -444,9 +445,9 @@ function calcRoute(directionsService, directionsRenderer, map) {
             //confirm button confirms the route selected, and use the route array to calculate the co2 and set the notiffication
             $("#confirm").click(function(){
                 if(selectedRoute.length === 0){
-                    $(".alert").css("display", "block");
+                    $(".alert-info").css("display", "block");
                 }else{
-                    $(".alert").css("display", "none");
+                    $(".alert-info").css("display", "none");
                     confirmedRoute=selectedRoute;// confirmedRoute will be the last clicked route
                     var busDrivingDistance=0;// the bus drving distance
                     var counter = 0
@@ -657,7 +658,7 @@ updateEmissions();
 /* FUNCTION FOR POST REQUEST TO ADD CO2 INFORMATION */
 function postCO2(busDistance, drivingDistance){
     $.post("carbon/", {'driving_distance': drivingDistance, "bus_distance": busDistance}).done(function(response){
-        alert("Your trip has been added to your emmisions saved")
+        alertUser("Success", "Your trip has been added to your emmisions saved", true)
     }).then(function(){
         updateEmissions()
     })
@@ -689,11 +690,11 @@ $("#login-button").click(function(){
                 'X-CSRFToken': csrfToken
             },
             success: function(msg) {
-                alert("You have suvccfully logged in :) .")
+                alertUser("Success", "You are logged in.", true)
             },
             "statusCode": {
                 401: function (xhr, error, thrown) {
-                alert("Email or Password Incorrect")
+                alertUser("Error", "Incorrect email or password.", false)
                 }
             }
         }).then(function(){
@@ -741,11 +742,11 @@ $("#register-button").click(function(){
                 'X-CSRFToken': csrfToken
             },
             success: function(msg) {
-                alert("You have successfully registered and been logged in. ")
+                alertUser("Success", "You are logged in!", true)
             },
             "statusCode": {
                 401: function (xhr, error, thrown) {
-                alert("Email already exists on our system and password is incorrect.")
+                alertUser("Woops" + "Email already exists on our system and password is incorrect.", false)
                 }
             }
         }).then(function(){
@@ -774,7 +775,7 @@ $("#logout-button").click(function(){
             'X-CSRFToken': csrfToken
         },
         success: function(msg) {
-            alert("You have successfully logged out.")
+            alertUser("Success", "You have logged out!", true)
         },
         
     }).then(function(){
@@ -813,11 +814,11 @@ $("#delete-button").click(function(){
                 'X-CSRFToken': csrfToken
             },
             success: function(msg) {
-                alert("Account is deleted!")
+                alertUser("Success", "Account is deleted!", true)
             },
             "statusCode": {
                 404: function (xhr, error, thrown) {
-                alert("Account not found.")
+                alertUser("Woops", "Account not found.", false)
                 }
             }
         }).then(function(){
@@ -829,7 +830,7 @@ $("#delete-button").click(function(){
         })
     }
     else {
-        alert("Account not deleted.")
+        alertUser("Woops", "Account not deleted.", false)
     }
 })
 
@@ -861,14 +862,14 @@ function sendNotificaiton(time, bus){
             headers: {
                 'X-CSRFToken': csrfToken
             },
-            success: function(msg) {
-                alert("SUCCESS")
-            },
-            "statusCode": {
-                404: function (xhr, error, thrown) {
-                alert("Account not found.")
-                }
-            }
+            // success: function(msg) {
+            //     alertUser("SUCCESS", "")
+            // },
+            // "statusCode": {
+            //     404: function (xhr, error, thrown) {
+            //     alertUser("Account not found.")
+            //     }
+            // }
         }).then(function(){
            console.log("success?")
         })
@@ -881,16 +882,13 @@ $("#notify-box").change(function() {
         type: "GET",
         url: "change_notification_settings",
         success: function(msg) {
-            alert("Settings changed")
+            alertUser("Success", "Notification preference changed", true)
         },
         "statusCode": {
             401: function (xhr, error, thrown) {
-            alert("error." + error)
+            alertUser("error", "", false)
             }
         }
-    }).then(function(){
-        $("#notify-box").toggle();
-       console.log("setting changed")
     })
 });
 
@@ -911,11 +909,11 @@ $("#change-notification-delay").change(function() {
             'X-CSRFToken': csrfToken
         },
         success: function(msg) {
-            alert("SUCCESS")
+            alertUser("Success", "Notification preference changed", true)
         },
         "statusCode": {
             401: function (xhr, error, thrown) {
-            alert("Not Authorized")
+            alertUser("Error", "Not Authorized", false)
             }
         }
     }).then(function(){
@@ -978,4 +976,27 @@ $("#register-pwd-show").mousedown(function(){
     }
 })
 
+$("#alert").hide();
+
+function alertUser(title, message, isSuccess){
+    var alert = $("#alert")
+    if (isSuccess){
+        alert.removeClass("alert-danger")
+        alert.addClass("alert-success")
+        
+    }
+    else {
+        alert.removeClass("alert-success")
+        alert.addClass("alert-danger")
+    }
+
+    var fullMessage = "<span style='text-transform:uppercase;'>" + title + ":</span> " + message;
+    alert.html(fullMessage)
+    alert.fadeIn(1000)
+    setTimeout(
+        function() 
+        {
+            alert.fadeOut(1000)
+        }, 4000);
+}
 
