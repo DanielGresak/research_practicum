@@ -350,6 +350,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
             for(let route = 0; route < totalNumberOfRoutes; route++){
                 //console.log(result["routes"][route]);
                 if (result["routes"][route]["legs"][0]["steps"].length < 2){
+                    busRouteDistances.push(busDrivingDistance);
                     continue;
                 }
                 var busRoutes = getBusInfo(result["routes"][route]); // an array of routes(transfer) or a route(one go)
@@ -394,6 +395,9 @@ function calcRoute(directionsService, directionsRenderer, map) {
                     
                     function(value) {
                         $("#spinner-co2").hide()
+                        if (typeof busRouteDistances[route] == "undefined"){
+                            busRouteDistances[route] = 0;
+                        }
                         changeEmissionInfo(route, busRouteDistances[route], value);
                     },
                     function(error){console.log(error)}
@@ -539,9 +543,7 @@ function displayTheForecastTime(theRouteId, route, walkingTime, resultTime){
 
 
 function changeEmissionInfo(infoClass, bus, car){
-    console.log("bus" + bus)
-    console.log("car " + car)
-    console.log(infoClass)
+
     $(".carbon-" + infoClass).text(calculateCo2(bus, car) + "kgs")
 }
 //
@@ -554,10 +556,19 @@ function changeEmissionInfo(infoClass, bus, car){
 
 /* Calculate co2 savings */
 
-function calculateCo2(busDistance, carDisstance){
-    var carEmission = (carDisstance / 1000) * .17152;
+function calculateCo2(busDistance, carDistance){
+    if (typeof busDistance == "undefined"){
+        busDistance = 0;
+    }
+    if (typeof carDistance == "undefined"){
+        carDisstance = 0;
+    }
+    var carEmission = (carDistance / 1000) * .17152;
     var busEmission =  (busDistance / 1000) * .10391;
     var saved = (carEmission - busEmission).toFixed(2)
+    if (saved == "NaN"){
+        saved = 0;
+    }
     return saved
 
 

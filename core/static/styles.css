@@ -447,6 +447,7 @@ input:valid + span::before {
     margin-left: 0;
     width: 100vw;
     height: 10vh;
+    text-align: center;
   }
 
   .location-mobile {
