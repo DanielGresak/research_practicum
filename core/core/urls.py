@@ -30,6 +30,7 @@ urlpatterns = [
     path('', views.home, name='homepage'),
     path('', include('weather.urls')),
     path('data/', views.data, name='stopsData'),
+    path('data/stopsJson/', views.stops_json, name='stopsJson'),
     path('', include('carbonCalculator.urls')),
     path('', include("users.urls")),
     path('', include("notifications.urls")),

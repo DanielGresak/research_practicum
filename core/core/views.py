@@ -35,6 +35,11 @@ def home(request):
                   "age": age})
 
 
+def stops_json():
+    stopsJson = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data/stops.json")
+    return JsonResponse(stopsJson)
+
+
 def data(request):
     # json_path=finders.find('df_final_stops_dic.json')
     # f =open(json_path)
