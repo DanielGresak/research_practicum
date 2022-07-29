@@ -1,3 +1,7 @@
+/* Styles for displaying the weather */
+
+/* Desktop Version */
+
 *{
     box-sizing: border-box;
     margin:0;
@@ -8,7 +12,7 @@
     text-align: center;
 }
 .current-weather-container{
-    padding: 10px 10px;
+    padding: 5px 5px;
     color:#fff;
 }
 
@@ -30,12 +34,13 @@
 .current-info .details{
     display: flex;
     flex-direction: column;
+    width: 20vw;
     background: rgb(73, 73, 73);
-    min-width: 250px;
     padding: 10px;
     border-radius: 10px;
     margin: auto;
     border: 1px solid #eee;
+    font-size: medium;
 }
 
 .current-info .condition{
@@ -57,16 +62,29 @@
 }
 
 .forecast-element{
-    min-width: 100px;
-    min-height: 200px;
     text-align: center;
     background-color: rgb(152, 152, 152);
     margin-right: 10px;
     margin-bottom: 10px;
     margin-top: 10px;
     border-radius: 5px;
+    font-size: medium;
 }
 
 .forecast-element:first-child{
     margin-left: 10px;
+}
+
+@media screen and (max-width: 1000px) {
+    .current-info .details{
+        display: flex;
+        flex-direction: column;
+        min-width: 65vw;
+        background: rgb(73, 73, 73);
+        padding: 10px;
+        border-radius: 10px;
+        margin: auto;
+        border: 1px solid #eee;
+        font-size: medium;
+    }    
 }
