@@ -543,9 +543,7 @@ function displayTheForecastTime(theRouteId, route, walkingTime, resultTime){
 
 
 function changeEmissionInfo(infoClass, bus, car){
-    console.log("bus" + bus)
-    console.log("car " + car)
-    console.log(infoClass)
+
     $(".carbon-" + infoClass).text(calculateCo2(bus, car) + "kgs")
 }
 //
