@@ -238,12 +238,8 @@ padding-left: 3px;
 margin: 4px;
 }
 
-<<<<<<< HEAD
-#backToSearch{
-=======
 
-#busInfoBtn{
->>>>>>> refs/remotes/origin/fix/bus_info_alignment
+#backToSearch{
   position:relative;
   top: 2%;
   left: 20%;
@@ -266,8 +262,6 @@ margin: 4px;
   position:relative;
   top: 2%;
   left: 7%;
-  height: 4vh;
-  width: 10vw;
 }
 .loadingAnimation{
   display: none;

@@ -160,7 +160,7 @@ function getBusInfo(routes){
 }
 
 function getForecastTravelTime(option, walkingTime, startTime){
-    console.log(option);
+    //console.log(option);
     var forecastTravelTime = 0;
     var trip = option["legs"][0]["steps"];
     for(const route of trip){
@@ -377,15 +377,15 @@ function calcRoute(directionsService, directionsRenderer, map) {
                 busArrivingString = busArrivingString.slice(0, -2);
                 
                 $(".busInfo-items-container").append("<div class = 'busInfo-item'>\
-                                        <p class = 'busHeader'>"+"Bus: "+busNumString+"<button class='selectRoute btn btn-light'>Select</button></p>\
+                                        <p class = 'busHeader'>"+"Bus: "+busNumString+"<button class='selectRoute btn btn-light' id='selectBtn'>Select</button></p>\
                                         <p class = 'busDetail'>Arrival time: <span class ='keyValue'>"+ busArrivingString+"</span></p>\
                                         <p class = 'busDetail' id = 'forecastTime'>Travel time: <i class='fas fa-spinner fa-pulse' id = 'spinner'></i> </p>\
                                         <p class = 'busDetail' id = 'carbonEmissionSaved'>CO2 saved: <span class ='keyValue carbon-" + route +"'><i class='fas fa-spinner fa-pulse' id='spinner-co2'></i></span></p>\
                                         <p class = 'busDetail'> Bus fare: <span class ='keyValue'>"+getBusFare(busRoutes, new_age)+"</span></p></div>");
 
-
+                $("#selectBtn").attr("id", "selectBtn"+route);
                 $("#forecastTime").attr("id", route);
-                $("#spinner").attr("id", 'spinner'+route);
+                $("#spinner").attr("id", "spinner"+route);
                 $(".fas").css("color", "black");
                 displayTheForecastTime(route, result["routes"][route], walkingTime, resultTime).then(function(value){
                 $("#spinner"+route).css("display", "none");
@@ -410,20 +410,20 @@ function calcRoute(directionsService, directionsRenderer, map) {
             $("#confirm").css("display", "inline-block");
 
             //add a back button, go back to the search bar
-<<<<<<< HEAD
-            $(".busInfo").append("<button type='button' id='backToSearch' class='btn btn-dark btn-sm'>Back</button>");
-=======
-            $(".busInfo-controls-container").append("<button type='button' id='busInfoBtn' class='btn btn-dark btn-sm'>Back</button>");
->>>>>>> refs/remotes/origin/fix/bus_info_alignment
+            $(".busInfo-controls-container").append("<button type='button' id='backToSearch' class='btn btn-dark btn-sm'>Back</button>");
             //error alert
             $(".busInfo").append("<div class='alert-info'> Please select a route first.</div>");
         
             //select button selects route and renders the related route on the  map
             // and get the selected route, when clicking the confirm button, the last selected route will be stored in the confirmRoute;
             $(".selectRoute").mousedown(function(){
-                var stringToArray = $(this).parent().text().match(/\b(\w+)\b/g);
-                var busIndex = stringToArray[2]-1;//extracting the route index
+                //var stringToArray = $(this).parent().text().match(/\b(\w+)\b/g);
+                //var busIndex = stringToArray[2]-1;//extracting the route index
 
+                var busIndex = $(this).attr("id").slice(-1);
+                console.log("this "+$(this));
+                //console.log($(this).parent());
+                console.log(busIndex);
             
                 // only show the selected route
                 //1. disable all the routes
@@ -432,6 +432,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
                 }
                 //2. show the corresponding route
                 directionRenderers[busIndex].setMap(map);
+                //console.log("directionRander"+busIndex);
 
                 // get the selected route
                 selectedRoute=getBusInfo(result["routes"][busIndex]);
@@ -542,9 +543,9 @@ function displayTheForecastTime(theRouteId, route, walkingTime, resultTime){
 
 
 function changeEmissionInfo(infoClass, bus, car){
-    console.log("bus" + bus)
-    console.log("car " + car)
-    console.log(infoClass)
+    //console.log("bus" + bus)
+    //console.log("car " + car)
+    //console.log(infoClass)
     $(".carbon-" + infoClass).text(calculateCo2(bus, car) + "kgs")
 }
 //
