@@ -314,7 +314,6 @@ function calcRoute(directionsService, directionsRenderer, map) {
     };
     directionsService.route(request, function(result, status){
         if(status == "OK"){
-
             var service = new google.maps.DistanceMatrixService();
             let myPromise = new Promise(function(myResolve, myReject) {
                 service.getDistanceMatrix(
@@ -376,7 +375,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
                 busRouteDistances.push(busDrivingDistance);
                 busNumString = busNumString.slice(0, -3);
                 busArrivingString = busArrivingString.slice(0, -2);
-                
+                console.log("getting here dan")
                 $(".busInfo-items-container").append("<div class = 'busInfo-item'>\
                                         <p class = 'busHeader'>"+"Bus: "+busNumString+"<button class='selectRoute btn btn-light' id='selectBtn'>Select</button></p>\
                                         <p class = 'busDetail'>Arrival time: <span class ='keyValue'>"+ busArrivingString+"</span></p>\
@@ -413,7 +412,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
             //add a back button, go back to the search bar
             $(".busInfo-controls-container").append("<button type='button' id='backToSearch' class='btn btn-dark btn-sm'>Back</button>");
             //error alert
-            $(".busInfo").append("<div class='alert-info'> Please select a route first.</div>");
+            // $(".busInfo").append("<div class='alert-info'> Please select a route first.</div>");
         
             //select button selects route and renders the related route on the  map
             // and get the selected route, when clicking the confirm button, the last selected route will be stored in the confirmRoute;
@@ -480,7 +479,9 @@ function calcRoute(directionsService, directionsRenderer, map) {
                     directionRenderers[stroke].setOptions({map:null});
                 }// clear the previous map render
 
-                $(".busInfo").empty();//clear all the child element, so user can search again
+                $(".busInfo-items-container").empty();//clear all the child element, so user can search again
+                $("#backToSearch").remove();
+                $("#confirm").remove()
                 $(".searchbar").css("display", "block");//show the searchbar
                 $(".busInfo").hide();
                 $(".searchbar").show();
