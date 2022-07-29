@@ -96,7 +96,8 @@ html, main {
 
 .appbar {
   height: 85vh;
-  width: 30vw;
+  width: 100%;
+  max-width: 30vw;
   background-color: darkgrey;
   margin: 0;
   padding: 0;
@@ -446,7 +447,8 @@ input:valid + span::before {
   }
 
   .appbar {
-    width: 80vw;
+    width: 100%;
+    max-width: 80vw;
     height: 90vh;
     z-index: 1;
     position: absolute;
