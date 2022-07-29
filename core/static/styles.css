@@ -18,7 +18,7 @@ html, main {
 }
 
 #alert {
-  z-index: 1;
+  z-index: 4;
   position: fixed;
   top: 10%;
   left: 70%;
@@ -84,6 +84,7 @@ html, main {
   .vertical-menu a:hover {
     background-color: #ccc;
   }
+
 }
 
 .vertical-menu a.active {
@@ -311,6 +312,14 @@ input:valid + span::before {
   position: relative;
 }
 
+.location-mobile {
+  display: none;
+}
+
+/* .location-desktop{
+  display: none;
+} */
+
 /* MOBILE WEBSITE */
 
 @media screen and (max-width: 1000px) {
@@ -401,11 +410,11 @@ input:valid + span::before {
     position: absolute;
   }
 
-  .location-btn {
+  /* .location-btn {
     position:absolute;
     top: 43vh;
     left: 10px;
-  }
+  } */
   
   .search-text {
     flex: 0 0 30%;
@@ -432,9 +441,20 @@ input:valid + span::before {
   }
 
   #alert {
-    top: 8.5%;
-    left: 50%;
-    margin-top: -50px;
-    margin-left: -100px;
+    top: 0;
+    left: 0;
+    margin-top: 0;
+    margin-left: 0;
+    width: 100vw;
+    height: 10vh;
+  }
+
+  .location-mobile {
+    display: block;
+    margin-left: 15px;;
+  }
+
+  .location-desktop{
+    display: none;
   }
 }
