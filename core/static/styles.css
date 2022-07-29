@@ -169,6 +169,7 @@ sub {
 .busInfo-container{
   display: flex;
   flex-direction: column;
+  height: 78vh;
 }
 
 .busInfo-items-container{
@@ -177,6 +178,7 @@ sub {
   overflow-y: auto;
   width: auto;
   min-height: auto;
+
   /* background-color: darkgrey;  */
   color:#fff;
 }
