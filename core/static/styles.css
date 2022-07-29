@@ -204,6 +204,11 @@ sub {
   margin: 5px;
 }
 
+.fa-spinner {
+  color: white;
+}
+
+
 /* .oneBus{
   font-size:x-small;
   margin: 2px 5px 2px 5px;
