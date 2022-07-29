@@ -13,17 +13,19 @@ LONGITUDE = -6.266155  # Longitude of Dublin
 FORECAST_URL = "http://api.openweathermap.org/data/2.5/forecast?"
 WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather?"
 UNITS = "metric"  # Units in metrics to get temperature in Celcius
-TIMESTAMP_CNT = 40  # The number of timestamps which will be returned in the API response (every 3 hours for 5 days makes up 40 timestamps)
+TIMESTAMP_CNT = 40  # The number of timestamps which will be returned in the
+# API response (every 3 hours for 5 days makes up 40 timestamps)
 
 
 def query_weather_data(url, **kwargs):
     """Function that calls the OpenWeather API and returns the result as JSON
 
-    It can be used for either querying the current weather or the 5 day forecast.
+    It can be used for either querying the current weather forecast.
     For querying the 5 day forecast, pass the optional argument 'cnt'.
-    
+
     OPTIONAL ARGUMENTS: 
-    cnt = The number of forecast timestamps, which will be returned in the API response.
+    cnt = The number of forecast timestamps, which will be returned in the
+    API response.
     """
 
     # Get API key for OpenWeather API
@@ -78,47 +80,49 @@ def update_weather_forecast():
         # we need to declare that variable using 'nonlocal'. This allows to modify nonlocal 
         # variables within nested functions.
         nonlocal new_timestamp
-        # Iterate over received forecast objects and update/save them sequentially in the database
-        # Remember: If TIMESTAMP_CNT == 40 then we'll receive 40 weather objects, 
-        # representing the forecast for 5 days with an interval of 3 hours.
-        # e.g. 24 hours / 3 hours  * 5 days = 40
-        for i, entity in enumerate(forecast_json["list"]):
-            # For each entity create a dictionary and store the extraxt values that are desired
-            entity_dict = {}
-            entity_dict["dt"] = entity["dt"]  # datetime as integer in UTC format (seconds) 
-            entity_dict["dt_txt"] = entity["dt_txt"]  # datetime as string
-            entity_dict["temp"] = entity["main"]["temp"]
-            entity_dict["temp_min"] = entity["main"]["temp_min"]
-            entity_dict["temp_max"] = entity["main"]["temp_max"]
-            entity_dict["humidity"] = entity["main"]["humidity"]
-            entity_dict["weather_main"] = entity["weather"][0]["main"]
-            entity_dict["weather_description"] = entity["weather"][0]["description"]
-            entity_dict["weather_icon"] = entity["weather"][0]["icon"]
-            entity_dict["clouds"] = entity["clouds"]["all"]
-            entity_dict["pop"] = entity["pop"]
-            if "wind" in entity:
-                entity_dict["wind_speed"] = entity["wind"]["speed"]
-            else:
-                entity_dict["wind_speed"] = 0
+        try:
+            # Iterate over received forecast objects and update/save them sequentially in the database
+            # Remember: If TIMESTAMP_CNT == 40 then we'll receive 40 weather objects, 
+            # representing the forecast for 5 days with an interval of 3 hours.
+            # e.g. 24 hours / 3 hours  * 5 days = 40
+            for i, entity in enumerate(forecast_json["list"]):
+                # For each entity create a dictionary and store the extraxt values that are desired
+                entity_dict = {}
+                entity_dict["dt"] = entity["dt"]  # datetime as integer in UTC format (seconds) 
+                entity_dict["dt_txt"] = entity["dt_txt"]  # datetime as string
+                entity_dict["temp"] = entity["main"]["temp"]
+                entity_dict["temp_min"] = entity["main"]["temp_min"]
+                entity_dict["temp_max"] = entity["main"]["temp_max"]
+                entity_dict["humidity"] = entity["main"]["humidity"]
+                entity_dict["weather_main"] = entity["weather"][0]["main"]
+                entity_dict["weather_description"] = entity["weather"][0]["description"]
+                entity_dict["weather_icon"] = entity["weather"][0]["icon"]
+                entity_dict["clouds"] = entity["clouds"]["all"]
+                entity_dict["pop"] = entity["pop"]
+                if "wind" in entity:
+                    entity_dict["wind_speed"] = entity["wind"]["speed"]
+                else:
+                    entity_dict["wind_speed"] = 0
 
-            # Store the timestamp of the first entity received so that we can later delete older 
-            # forecast entities
-            # which have become obsolete.
-            if i == 0:
-                new_timestamp = entity_dict["dt"]
+                # Store the timestamp of the first entity received so that we can later delete older 
+                # forecast entities
+                # which have become obsolete.
+                if i == 0:
+                    new_timestamp = entity_dict["dt"]
 
-            # Update object in database if it already exists, otherwise create a new one
-            # It 'dt' - timestamp - already exists, then udpate with object with the latest forecast information 
-            obj, created = Forecast.objects.update_or_create(
-                dt=entity_dict["dt"], defaults=entity_dict)
+                # Update object in database if it already exists, otherwise create a new one
+                # It 'dt' - timestamp - already exists, then udpate with object with the latest forecast information 
+                # Returns a tuple of (object, created), 
+                # where object is the created or updated object and created is a boolean specifying 
+                # whether a new object was created.
+                obj, created = Forecast.objects.update_or_create(
+                    dt=entity_dict["dt"], defaults=entity_dict)
 
-            # Returns a tuple of (object, created), 
-            # where object is the created or updated object and created is a boolean specifying 
-            # whether a new object was created.
-
-            print("Object:", obj) # 
-            print("Object was created:", created)
-
+            print("Weather Forecast database has been updated")
+        except Exception as e:
+            # TODO: Error logging
+            print("Error - Updating weather forecast information has failed!")
+            print("Error details:", e)
 
     def delete_outdated_forecast():
         """Sub-function to delete outdated forecast datasets"""
@@ -128,10 +132,11 @@ def update_weather_forecast():
             # particular date and January 1, 1970 at UTC
             # https://www.programiz.com/python-programming/datetime
             objects_deleted = Forecast.objects.filter(dt__lt=new_timestamp).delete()
-            print("Objects deleted:", objects_deleted)
-        except:
-            # Todo: Error logging
-            print("Error - Deleting outdated forecast entities failed!\n")
+            print("Outdated weather forecast objects were deleted:", objects_deleted)
+        except Exception as e:
+            # TODO: Error logging
+            print("Error - Deleting outdated forecast entities failed!")
+            print("Error details:", e)
 
     # Query latest weather forecast data 
     forecast_json = query_weather_data(FORECAST_URL, cnt=TIMESTAMP_CNT)
@@ -183,8 +188,8 @@ def update_current_weather():
             obj, created = CurrentWeather.objects.update_or_create(
                 dt=entity_dict["dt"], defaults=entity_dict)
 
-            print("Object:", obj) # 
-            print("Object was created:", created)
-        except:
-            # Todo: Error logging
-            print("Error - Writing current weather information to database has failed!\n")
+            print("Current weather database has been updated.")
+        except Exception as e:
+            # TODO: Error logging
+            print("Error - Updating current weather information has failed!")
+            print("Error details:", e)
