@@ -336,14 +336,14 @@ function calcRoute(directionsService, directionsRenderer, map) {
         });
     });
 
-            console.log(result["routes"]);
+            //console.log(result["routes"]);
             // display all the possible routes on the map in different colors
             const directionRenderers = renderDirections(result, map);
 
             // total number of possible routes
             var totalNumberOfRoutes = result["routes"].length// total number of routes
-            $(".busInfo").show();
-            $(".searchbar").hide();
+            //$(".busInfo").show();
+            //$(".searchbar").hide();
             let busRouteDistances = []
             // for all the suggested ways(routes) the google map provides:
             for(let route = 0; route < totalNumberOfRoutes; route++){
@@ -478,7 +478,8 @@ function calcRoute(directionsService, directionsRenderer, map) {
                     directionRenderers[stroke].setOptions({map:null});
                 }// clear the previous map render
 
-                $(".busInfo").empty();//clear all the child element, so user can search again
+                $(".busInfo-items-container").empty();//clear all the child element, so user can search again
+                $(".busInfo-controls-container").empty();
                 $(".searchbar").css("display", "block");//show the searchbar
                 $(".busInfo").hide();
                 $(".searchbar").show();
