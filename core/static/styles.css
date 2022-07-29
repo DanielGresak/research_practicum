@@ -240,10 +240,7 @@ margin: 4px;
 
 #backToSearch{
   position:relative;
-  top: 2%;
-  left: 20%;
-  height: 4vh;
-  width: 10vw;
+  margin-top: 1.5vh;
 }
 
 .alert-info{
@@ -259,8 +256,8 @@ margin: 4px;
 
 #confirm{
   position:relative;
-  top: 2%;
-  left: 7%;
+  margin-top: 1.5vh;
+
 }
 .loadingAnimation{
   display: none;
@@ -402,7 +399,7 @@ input:valid + span::before {
 
   .busInfo {
     height: 45vh;
-    width: 85vw;
+    width: 100vw;
   }
 
   #map {
@@ -501,7 +498,7 @@ input:valid + span::before {
     padding: 10px;
     display: none;
     height: 45vh;
-    width: 70vw;
+    /* width: 70vw; */
     background-color: whitesmoke;
   }
   
@@ -516,7 +513,7 @@ input:valid + span::before {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    height: 40vh;
+    height: 35vh;
     width: 70vw;
     background-color: darkgray;
     color: #fff;

@@ -380,8 +380,8 @@ function calcRoute(directionsService, directionsRenderer, map) {
                 $(".busInfo-items-container").append("<div class = 'busInfo-item'>\
                                         <p class = 'busHeader'>"+"Bus: "+busNumString+"<button class='selectRoute btn btn-light' id='selectBtn'>Select</button></p>\
                                         <p class = 'busDetail'>Arrival time: <span class ='keyValue'>"+ busArrivingString+"</span></p>\
-                                        <p class = 'busDetail' id = 'forecastTime'>Travel time: <i class='fas fa-spinner fa-pulse' id = 'spinner'></i> </p>\
-                                        <p class = 'busDetail' id = 'carbonEmissionSaved'>CO2 saved: <span class ='keyValue carbon-" + route +"'><i class='fas fa-spinner fa-pulse' id='spinner-co2'></i></span></p>\
+                                        <p class = 'busDetail' id = 'forecastTime'>Travel time: <i class='fas fa-spinner fa-pulse' id = 'spinner' style='color: white'></i> </p>\
+                                        <p class = 'busDetail' id = 'carbonEmissionSaved'>CO2 saved: <span class ='keyValue carbon-" + route +"'><i class='fas fa-spinner fa-pulse' id='spinner-co2' style='color: white'></i></span></p>\
                                         <p class = 'busDetail'> Bus fare: <span class ='keyValue'>"+getBusFare(busRoutes, new_age)+"</span></p></div>");
 
                 $("#selectBtn").attr("id", "selectBtn"+route);
@@ -449,7 +449,8 @@ function calcRoute(directionsService, directionsRenderer, map) {
             //confirm button confirms the route selected, and use the route array to calculate the co2 and set the notiffication
             $("#confirm").click(function(){
                 if(selectedRoute.length === 0){
-                    $(".alert-info").css("display", "block");
+                    // $(".alert-info").css("display", "block");
+                    alertUser("error", "Please select a route first.", false)
                 }else{
                     $(".alert-info").css("display", "none");
                     confirmedRoute=selectedRoute;// confirmedRoute will be the last clicked route
