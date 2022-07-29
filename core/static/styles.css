@@ -155,44 +155,95 @@ sub {
 
 .searchbar {
   height: 85vh;
-  width: 30vw;
+  width: 25vw;
   background-color: whitesmoke;
 }
 .busInfo{
   padding: 10px;
   display: none;
   height: 85vh;
-  width: 30vw;
+  width: 25vw;
   background-color: whitesmoke;
 }
-.oneBus{
+
+.busInfo-container{
+  display: flex;
+  flex-direction: column;
+}
+
+.busInfo-items-container{
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  width: auto;
+  min-height: auto;
+  /* background-color: darkgrey;  */
+  color:#fff;
+}
+
+.busInfo-item{
+  width: auto;
+  height: auto;
+  text-align: left;
+  background: rgb(73, 73, 73);
+  margin: 2px 5px 5px 5px;
+  border-radius: 5px;
+  font-size: small;
+}
+
+.busInfo-controls-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  text-align: center;
+}
+
+.busInfo-controls-element{
+  display: flex;
+  flex-direction: row;
+  margin: 5px;
+}
+
+/* .oneBus{
   font-size:x-small;
   margin: 2px 5px 2px 5px;
   border:1px solid #ccc;
-}
+  width: 35%;
+  float: left;
+} */
 
 .busHeader{
-  font-size: small;
-  color: #161;
-  background-color: #ccc;
+  font-size: medium;
+  color: black;
+  background: rgb(134, 134, 134);
   width: 100%;
   padding: 5px 10px 5px 10px;
   margin:0px;
+  border-radius: 5px;
 }
 
 .selectRoute{
   float: right;
-  font-size: smaller;
+  font-size: small;
   padding:2px;
+  margin-bottom: 3px;
 }
 
+.selectRoute:focus{
+  background-color: greenyellow;
+}
 
 .busDetail{
 padding-left: 3px;
 margin: 4px;
 }
 
+<<<<<<< HEAD
 #backToSearch{
+=======
+
+#busInfoBtn{
+>>>>>>> refs/remotes/origin/fix/bus_info_alignment
   position:relative;
   top: 2%;
   left: 20%;
@@ -223,7 +274,7 @@ margin: 4px;
 }
 
 .keyValue{
-  color: red;
+  color: yellow;
 }
 
 form {
@@ -381,7 +432,7 @@ input:valid + span::before {
     padding-left: 10px;
   }
 
-  .flex-item:nth-of-type(2) { 
+  .flex-item:nth-of-type(2) {
     order: 4; 
   }
 
@@ -428,15 +479,56 @@ input:valid + span::before {
     float: left;
   }
 
-  .oneBus {
-    width: 35%;
-    float: left;
-  }
-
   #alert {
     z-index: 5;
     left: 50%;
     top: 70%;
     transform: translate(-50%, -30%);
+  }
+  .busInfo{
+    padding: 10px;
+    display: none;
+    height: 45vh;
+    width: 70vw;
+    background-color: whitesmoke;
+  }
+  
+  .busInfo-container{
+    display: flex;
+    height: 45vh;
+    width: 70vw;
+    flex-direction: column;
+  }
+  
+  .busInfo-items-container{
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    height: 40vh;
+    width: 70vw;
+    background-color: darkgray;
+    color: #fff;
+  }
+  
+  .busInfo-item{
+    height: auto;
+    width: 70vw;
+    text-align: left;
+    background: rgb(73, 73, 73);
+    margin: 2px 5px 2px 5px;
+    border-radius: 5px;
+    font-size: small;
+  }
+  
+  .busInfo-controls-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+  
+  .busInfo-controls-element{
+    display: flex;
+    flex-direction: row;
+    margin: 5%;
   }
 }
