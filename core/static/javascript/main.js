@@ -556,14 +556,14 @@ function changeEmissionInfo(infoClass, bus, car){
 
 /* Calculate co2 savings */
 
-function calculateCo2(busDistance, carDisstance){
+function calculateCo2(busDistance, carDistance){
     if (typeof busDistance == "undefined"){
         busDistance = 0;
     }
-    if (typeof carDisstance == "undefined"){
+    if (typeof carDistance == "undefined"){
         carDisstance = 0;
     }
-    var carEmission = (carDisstance / 1000) * .17152;
+    var carEmission = (carDistance / 1000) * .17152;
     var busEmission =  (busDistance / 1000) * .10391;
     var saved = (carEmission - busEmission).toFixed(2)
     if (saved == "NaN"){
