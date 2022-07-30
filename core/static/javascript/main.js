@@ -373,7 +373,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
                         
                     }
                 }
-                var new_age = $("input.age:checked").val()
+                var new_age = $("input.age:checked").val();
                 busRouteDistances.push(busDrivingDistance);
                 busNumString = busNumString.slice(0, -3);
                 busArrivingString = busArrivingString.slice(0, -2);
@@ -421,9 +421,12 @@ function calcRoute(directionsService, directionsRenderer, map) {
             //select button selects route and renders the related route on the  map
             // and get the selected route, when clicking the confirm button, the last selected route will be stored in the confirmRoute;
             $(".selectRoute").mousedown(function(){
-                var stringToArray = $(this).parent().text().match(/\b(\w+)\b/g);
-                var busIndex = stringToArray[2]-1;//extracting the route index
-
+                // var stringToArray = $(this).parent().text().match(/\b(\w+)\b/g);
+                // var busIndex = stringToArray[2]-1;//extracting the route index
+                var busIndex = $(this).attr("id").slice(-1);
+                console.log("this "+$(this));
+                //console.log($(this).parent());
+                console.log(busIndex);
             
                 // only show the selected route
                 //1. disable all the routes
@@ -447,7 +450,8 @@ function calcRoute(directionsService, directionsRenderer, map) {
             //confirm button confirms the route selected, and use the route array to calculate the co2 and set the notiffication
             $("#confirm").click(function(){
                 if(selectedRoute.length === 0){
-                    $(".alert-info").css("display", "block");
+                    // $(".alert-info").css("display", "block");
+                    alertUser("error", "Please select a route first.", false)
                 }else{
                     $(".alert-info").css("display", "none");
                     confirmedRoute=selectedRoute;// confirmedRoute will be the last clicked route
