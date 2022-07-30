@@ -184,6 +184,7 @@ sub {
 }
 
 .busInfo-item{
+  
   width: auto;
   height: auto;
   text-align: left;
