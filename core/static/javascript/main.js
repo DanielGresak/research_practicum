@@ -160,13 +160,13 @@ function getBusInfo(routes){
 }
 
 function getForecastTravelTime(option, walkingTime, startTime){
-    console.log(option);
     var forecastTravelTime = 0;
     var trip = option["legs"][0]["steps"];
     for(const route of trip){
         if(route["transit"] !== undefined){
-            var direction = getDirection(route["transit"]["line"]["short_name"],route["transit"]["departure_stop"]["name"], route["transit"]["arrival_stop"]["name"]);        
-            forecastTravelTime = forecastTravelTime + travelTime(route, direction, startTime, route["transit"]["num_stops"], getTotalNumberOfStops(route["transit"]["line"]["short_name"], direction));
+            var direction = getDirection(route["transit"]["line"]["short_name"],route["transit"]["departure_stop"]["name"], route["transit"]["arrival_stop"]["name"]); 
+            var porprotion = getStopPorprotion(route["transit"]["line"]["short_name"], route["transit"]["departure_stop"]["name"], route["transit"]["arrival_stop"]["name"], direction);       
+            forecastTravelTime = forecastTravelTime + travelTime(route, direction, startTime, route["transit"]["num_stops"], getTotalNumberOfStops(route["transit"]["line"]["short_name"],direction), porprotion);
         }
     }
     return Math.ceil((forecastTravelTime+walkingTime)/60);
@@ -179,7 +179,7 @@ function getDirection(line, departure, arrival){
     var arrivalStop = ""+arrival.replace(/[^0-9.]/g, "");
     var bound="";
     $.ajax({
-        url: "./data",
+        url: "./data/stops/",
         async: false,
         dataType: "json",
         success: function(json){
@@ -197,6 +197,9 @@ function getDirection(line, departure, arrival){
             else{
                 bound="noMatch";
             }
+        },
+        error: function(){
+            console.log("/data/stops/ didn't find");
         }
     })
     return bound;
@@ -208,34 +211,69 @@ function getDirection(line, departure, arrival){
 
 function getTotalNumberOfStops(line, direction){
     console.log("direction: "+direction+"line: "+line);
-    var totalNumberOfRoutes = 0
+    var totalNumberOfStops = 0
     $.ajax({
-        url: "./data",
+        url: "./data/stops/",
         async: false,
         dataType: "json",
         success: function(json){
             if(line in json){
                 if (direction === "inbound" || direction === "outbound"){
-                    totalNumberOfRoutes = json[line][direction].length;
+                    totalNumberOfStops = json[line][direction].length;
             }
                 else{
                     console.log("no direction is found, direction: "+direction);
-                    totalNumberOfRoutes = "notFoundTotalStopNumbers"
+                    totalNumberOfStops = "notFoundTotalStopNumbers"
             } 
         }
             else{
                 console.log("didn't find the line id "+line+" in the dataset of 2018, direction: "+direction);
-                totalNumberOfRoutes = "notFoundTotalStopNumbers";
+                totalNumberOfStops = "notFoundTotalStopNumbers";
             }
         }
     })
-    console.log(totalNumberOfRoutes);
-    return totalNumberOfRoutes;
+    console.log(totalNumberOfStops);
+    return totalNumberOfStops;
 
 }
 
+function getStopPorprotion(line, startStop, destStop, direction){
+    stopPorprotion = 0;
+    var start_Stop = ""+startStop.replace(/[^0-9.]/g, "");
+    var dest_Stop = ""+destStop.replace(/[^0-9.]/g, "");
+    $.ajax({
+        url: "./data/travelTimeProportion/",
+        async: false,
+        dataType: "json",
+        success: function(json){
+            if(line in json){
+                if (direction === "inbound" || direction === "outbound"){
+                    if(start_Stop in json[line][direction] && dest_Stop in json[line][direction]){
+                        stopPorprotion = json[line][direction][dest_Stop]-json[line][direction][start_Stop];
+                    }
+                    else{
+                        console.log("line: "+line+", direction: "+direction+", missing start stop or destination stop or both, startStop: "+start_Stop+", destStop: "+dest_Stop);
+                        stopPorprotion = "noPorprotionFound";
+                    }
+            }
+                else{
+                    console.log("no direction is found, direction: "+direction);
+                    stopPorprotion = "noPorprotionFound";
+            } 
+        }
+            else{
+                console.log("didn't find the line id "+line+" in the dataset of 2018, direction: "+direction);
+                stopPorprotion = "noPorprotionFound";
+            }
+        }
+    })
+    return stopPorprotion;
+}
+
+
+
 // return the forecast travel time for each trip
-function travelTime(route, direction, departureTime, numOfStops, totalNumOfStops){
+function travelTime(route, direction, departureTime, numOfStops, totalNumOfStops, porprotion){
     //console.log("the direction in the travelTime is: "+direction);
     var timePrediction=0;
     // if can't find the direction of this trip from the data set, just return the result of google map.
@@ -279,7 +317,11 @@ function travelTime(route, direction, departureTime, numOfStops, totalNumOfStops
         console.log(error);
         }
     });
-    
+    if(porprotion != "noPorprotionFound"){
+        console.log("returning the porprotion based result, porprotion: "+porprotion);
+        return timePrediction*porprotion;
+    }
+    console.log("returning the stop number based result");
     return timePrediction*(numOfStops/totalNumOfStops);
 }
 
@@ -324,8 +366,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
                   },(response, status) =>{
                     if(status =="OK"){
                         carDrivingDistance = response["rows"][0]["elements"][0]["distance"]["value"];
-                        console.log(response)
-                        console.log("car in function " + carDrivingDistance)
+                        console.log("car in function " + carDrivingDistance);
             }
             if(carDrivingDistance > 0){
                 myResolve(carDrivingDistance)
@@ -526,9 +567,9 @@ function calcRoute(directionsService, directionsRenderer, map) {
  
         
 }
-function displayTheForecastTime(theRouteId, route, walkingTime, resultTime){
+function displayTheForecastTime(theRouteId, route, walkingTime, resultTime, startStop, destStop){
     return new Promise(function(resolve, reject){
-        setTimeout(function(){resolve($("#"+theRouteId).append("<span class ='keyValue'>"+getForecastTravelTime(route, walkingTime, resultTime)+" minutes</span>"))}, 0);
+        setTimeout(function(){resolve($("#"+theRouteId).append("<span class ='keyValue'>"+getForecastTravelTime(route, walkingTime, resultTime, startStop, destStop)+" minutes</span>"))}, 0);
     })
     
     //console.log(theRoute);
