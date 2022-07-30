@@ -1010,7 +1010,7 @@ function alertUser(title, message, isSuccess){
         alert.removeClass("alert-success")
         alert.addClass("alert-danger")
     }
-
+    
     var fullMessage = "<span style='text-transform:uppercase;'>" + title + ":</span> " + message;
     alert.html(fullMessage)
     alert.fadeIn(300)
