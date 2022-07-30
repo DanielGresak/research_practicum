@@ -155,14 +155,15 @@ sub {
 
 .searchbar {
   height: 85vh;
-  width: 25vw;
+  width: 30vw;
   background-color: whitesmoke;
 }
+
 .busInfo{
   padding: 10px;
   display: none;
   height: 85vh;
-  width: 25vw;
+  width: 30vw;
   background-color: whitesmoke;
 }
 
@@ -184,7 +185,6 @@ sub {
 }
 
 .busInfo-item{
-  
   width: auto;
   height: auto;
   text-align: left;
@@ -216,40 +216,35 @@ sub {
   font-size:x-small;
   margin: 2px 5px 2px 5px;
   border:1px solid #ccc;
-  width: 35%;
-  float: left;
-} */
+}
 
 .busHeader{
-  font-size: medium;
-  color: black;
-  background: rgb(134, 134, 134);
+  font-size: small;
+  color: #161;
+  background-color: #ccc;
   width: 100%;
   padding: 5px 10px 5px 10px;
   margin:0px;
-  border-radius: 5px;
 }
 
 .selectRoute{
   float: right;
-  font-size: small;
+  font-size: smaller;
   padding:2px;
-  margin-bottom: 3px;
 }
 
-.selectRoute:focus{
-  background-color: greenyellow;
-}
 
 .busDetail{
 padding-left: 3px;
 margin: 4px;
 }
 
-
 #backToSearch{
   position:relative;
-  margin-top: 1.5vh;
+  top: 2%;
+  left: 20%;
+  height: 4vh;
+  width: 10vw;
 }
 
 .alert-info{
@@ -265,15 +260,17 @@ margin: 4px;
 
 #confirm{
   position:relative;
-  margin-top: 1.5vh;
-
+  top: 2%;
+  left: 7%;
+  height: 4vh;
+  width: 10vw;
 }
 .loadingAnimation{
   display: none;
 }
 
 .keyValue{
-  color: yellow;
+  color: red;
 }
 
 form {
@@ -408,7 +405,7 @@ input:valid + span::before {
 
   .busInfo {
     height: 45vh;
-    width: 100vw;
+    width: 85vw;
   }
 
   #map {
@@ -487,6 +484,11 @@ input:valid + span::before {
     float: left;
   }
 
+  .oneBus {
+    width: 35%;
+    float: left;
+  }
+
   #alert {
     top: 0;
     left: 0;
@@ -494,6 +496,7 @@ input:valid + span::before {
     margin-left: 0;
     width: 100vw;
     height: 10vh;
+    text-align: center;
   }
 
   .location-mobile {
@@ -504,7 +507,7 @@ input:valid + span::before {
   .location-desktop{
     display: none;
   }
-  .busInfo{
+    .busInfo{
     padding: 10px;
     display: none;
     height: 45vh;
@@ -551,3 +554,5 @@ input:valid + span::before {
     margin: 5%;
   }
 }
+
+
