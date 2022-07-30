@@ -349,6 +349,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
             for(let route = 0; route < totalNumberOfRoutes; route++){
                 //console.log(result["routes"][route]);
                 if (result["routes"][route]["legs"][0]["steps"].length < 2){
+                    busRouteDistances.push(busDrivingDistance);
                     continue;
                 }
                 var busRoutes = getBusInfo(result["routes"][route]); // an array of routes(transfer) or a route(one go)
@@ -375,7 +376,6 @@ function calcRoute(directionsService, directionsRenderer, map) {
                 busRouteDistances.push(busDrivingDistance);
                 busNumString = busNumString.slice(0, -3);
                 busArrivingString = busArrivingString.slice(0, -2);
-                console.log("getting here dan")
                 $(".busInfo-items-container").append("<div class = 'busInfo-item'>\
                                         <p class = 'busHeader'>"+"Bus: "+busNumString+"<button class='selectRoute btn btn-light' id='selectBtn'>Select</button></p>\
                                         <p class = 'busDetail'>Arrival time: <span class ='keyValue'>"+ busArrivingString+"</span></p>\
