@@ -158,6 +158,7 @@ sub {
   width: 30vw;
   background-color: whitesmoke;
 }
+
 .busInfo{
   padding: 10px;
   display: none;
@@ -165,7 +166,53 @@ sub {
   width: 30vw;
   background-color: whitesmoke;
 }
-.oneBus{
+
+.busInfo-container{
+  display: flex;
+  flex-direction: column;
+  height: 78vh;
+}
+
+.busInfo-items-container{
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  width: auto;
+  min-height: auto;
+
+  /* background-color: darkgrey;  */
+  color:#fff;
+}
+
+.busInfo-item{
+  width: auto;
+  height: auto;
+  text-align: left;
+  background: rgb(73, 73, 73);
+  margin: 2px 5px 5px 5px;
+  border-radius: 5px;
+  font-size: small;
+}
+
+.busInfo-controls-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  text-align: center;
+}
+
+.busInfo-controls-element{
+  display: flex;
+  flex-direction: row;
+  margin: 5px;
+}
+
+.fa-spinner {
+  color: white;
+}
+
+
+/* .oneBus{
   font-size:x-small;
   margin: 2px 5px 2px 5px;
   border:1px solid #ccc;
@@ -389,7 +436,7 @@ input:valid + span::before {
     padding-left: 10px;
   }
 
-  .flex-item:nth-of-type(2) { 
+  .flex-item:nth-of-type(2) {
     order: 4; 
   }
 
@@ -460,4 +507,52 @@ input:valid + span::before {
   .location-desktop{
     display: none;
   }
+    .busInfo{
+    padding: 10px;
+    display: none;
+    height: 45vh;
+    /* width: 70vw; */
+    background-color: whitesmoke;
+  }
+  
+  .busInfo-container{
+    display: flex;
+    height: 45vh;
+    width: 70vw;
+    flex-direction: column;
+  }
+  
+  .busInfo-items-container{
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    height: 35vh;
+    width: 70vw;
+    background-color: darkgray;
+    color: #fff;
+  }
+  
+  .busInfo-item{
+    height: auto;
+    width: 70vw;
+    text-align: left;
+    background: rgb(73, 73, 73);
+    margin: 2px 5px 2px 5px;
+    border-radius: 5px;
+    font-size: small;
+  }
+  
+  .busInfo-controls-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+  
+  .busInfo-controls-element{
+    display: flex;
+    flex-direction: row;
+    margin: 5%;
+  }
 }
+
+
