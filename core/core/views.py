@@ -10,7 +10,6 @@ from requests import Response
 # We can add a cookie pop up later
 
 
-@csrf_exempt
 def home(request):
     # return render(request, "core/index.html",
     # ontext={"GOOGLE_MAPS_KEY": os.environ.get("GOOGLE_MAPS_KEY")})

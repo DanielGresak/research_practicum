@@ -18,14 +18,12 @@ html, main {
 }
 
 #alert {
-  z-index: 1;
+  z-index: 4;
   position: fixed;
-  display: inline-block;
-  right: 2.5vw;
-  top: 2.5vh;
-  right: 5%;
-  top: 11%;
-  transform: translate(-80%, -89%);
+  top: 10%;
+  left: 70%;
+  margin-top: -50px;
+  margin-left: -100px;
 }
 
 /* Header/logo area CSS */
@@ -86,6 +84,7 @@ html, main {
   .vertical-menu a:hover {
     background-color: #ccc;
   }
+
 }
 
 .vertical-menu a.active {
@@ -97,7 +96,8 @@ html, main {
 
 .appbar {
   height: 85vh;
-  width: 30vw;
+  width: 100%;
+  max-width: 30vw;
   background-color: darkgrey;
   margin: 0;
   padding: 0;
@@ -155,49 +155,94 @@ sub {
 
 .searchbar {
   height: 85vh;
-  width: 30vw;
+  width: 25vw;
   background-color: whitesmoke;
 }
 .busInfo{
   padding: 10px;
   display: none;
   height: 85vh;
-  width: 30vw;
+  width: 25vw;
   background-color: whitesmoke;
 }
-.oneBus{
+
+.busInfo-container{
+  display: flex;
+  flex-direction: column;
+}
+
+.busInfo-items-container{
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  width: auto;
+  min-height: auto;
+  /* background-color: darkgrey;  */
+  color:#fff;
+  max-height: 70vh;
+}
+
+.busInfo-item{
+  width: auto;
+  height: auto;
+  text-align: left;
+  background: rgb(73, 73, 73);
+  margin: 2px 5px 5px 5px;
+  border-radius: 5px;
+  font-size: small;
+}
+
+.busInfo-controls-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  text-align: center;
+}
+
+.busInfo-controls-element{
+  display: flex;
+  flex-direction: row;
+  margin: 5px;
+}
+
+/* .oneBus{
   font-size:x-small;
   margin: 2px 5px 2px 5px;
   border:1px solid #ccc;
-}
+  width: 35%;
+  float: left;
+} */
 
 .busHeader{
-  font-size: small;
-  color: #161;
-  background-color: #ccc;
+  font-size: medium;
+  color: black;
+  background: rgb(134, 134, 134);
   width: 100%;
   padding: 5px 10px 5px 10px;
   margin:0px;
+  border-radius: 5px;
 }
 
 .selectRoute{
   float: right;
-  font-size: smaller;
+  font-size: small;
   padding:2px;
+  margin-bottom: 3px;
 }
 
+.selectRoute:focus{
+  background-color: greenyellow;
+}
 
 .busDetail{
 padding-left: 3px;
 margin: 4px;
 }
 
+
 #backToSearch{
   position:relative;
-  top: 2%;
-  left: 20%;
-  height: 4vh;
-  width: 10vw;
+  margin-top: 1.5vh;
 }
 
 .alert-info{
@@ -213,17 +258,15 @@ margin: 4px;
 
 #confirm{
   position:relative;
-  top: 2%;
-  left: 7%;
-  height: 4vh;
-  width: 10vw;
+  margin-top: 1.5vh;
+
 }
 .loadingAnimation{
   display: none;
 }
 
 .keyValue{
-  color: red;
+  color: yellow;
 }
 
 form {
@@ -313,6 +356,14 @@ input:valid + span::before {
   position: relative;
 }
 
+.location-mobile {
+  display: none;
+}
+
+/* .location-desktop{
+  display: none;
+} */
+
 /* MOBILE WEBSITE */
 
 @media screen and (max-width: 1000px) {
@@ -350,7 +401,7 @@ input:valid + span::before {
 
   .busInfo {
     height: 45vh;
-    width: 85vw;
+    width: 100vw;
   }
 
   #map {
@@ -381,7 +432,7 @@ input:valid + span::before {
     padding-left: 10px;
   }
 
-  .flex-item:nth-of-type(2) { 
+  .flex-item:nth-of-type(2) {
     order: 4; 
   }
 
@@ -397,17 +448,18 @@ input:valid + span::before {
   }
 
   .appbar {
-    width: 80vw;
+    width: 100%;
+    max-width: 80vw;
     height: 90vh;
     z-index: 1;
     position: absolute;
   }
 
-  .location-btn {
+  /* .location-btn {
     position:absolute;
     top: 43vh;
     left: 10px;
-  }
+  } */
   
   .search-text {
     flex: 0 0 30%;
@@ -428,15 +480,67 @@ input:valid + span::before {
     float: left;
   }
 
-  .oneBus {
-    width: 35%;
-    float: left;
+  #alert {
+    top: 0;
+    left: 0;
+    margin-top: 0;
+    margin-left: 0;
+    width: 100vw;
+    height: 10vh;
   }
 
-  #alert {
-    z-index: 5;
-    left: 50%;
-    top: 70%;
-    transform: translate(-50%, -30%);
+  .location-mobile {
+    display: block;
+    margin-left: 15px;;
+  }
+
+  .location-desktop{
+    display: none;
+  }
+  .busInfo{
+    padding: 10px;
+    display: none;
+    height: 45vh;
+    /* width: 70vw; */
+    background-color: whitesmoke;
+  }
+  
+  .busInfo-container{
+    display: flex;
+    height: 45vh;
+    width: 70vw;
+    flex-direction: column;
+  }
+  
+  .busInfo-items-container{
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    height: 35vh;
+    width: 70vw;
+    background-color: darkgray;
+    color: #fff;
+  }
+  
+  .busInfo-item{
+    height: auto;
+    width: 70vw;
+    text-align: left;
+    background: rgb(73, 73, 73);
+    margin: 2px 5px 2px 5px;
+    border-radius: 5px;
+    font-size: small;
+  }
+  
+  .busInfo-controls-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+  
+  .busInfo-controls-element{
+    display: flex;
+    flex-direction: row;
+    margin: 5%;
   }
 }

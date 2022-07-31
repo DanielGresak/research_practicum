@@ -8,7 +8,7 @@
             
             <div class="input">
               <input id="search_start" type="text" class="form-control search-input" placeholder="Enter your position" >
-              <button type="button" class="btn btn-outline-secondary btn-sm location-btn" onclick="getLocation()">Get My Location</button>
+              <button type="button" class="btn btn-outline-secondary btn-sm location-btn location-desktop" onclick="getLocation()">Get My Location</button>
            </div>
           </div>
 
@@ -30,12 +30,11 @@
 
 
     <button id="btn" class="btn btn-dark form-btn">Find Best Routes</button>
+    <button type="button" class="btn btn-outline-secondary btn-sm location-btn location-mobile" onclick="getLocation()">Get My Location</button>
 
 </div>
 <script>
   var offset = (new Date()).getTimezoneOffset() * 60000;
-  console.log((new Date()).getTimezoneOffset());
-  console.log(offset);
   var defaultTimeString = (new Date(Date.now() - offset)).toISOString().slice(0, -5);
   var fourDaysDifference=(60*24*4)*60000;
   var maxDate=(new Date(Date.now() - offset + fourDaysDifference)).toISOString().slice(0, -5);
