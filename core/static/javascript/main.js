@@ -598,7 +598,6 @@ function calculateCo2(busDistance, carDisstance){
     var saved = (carEmission - busEmission).toFixed(2)
     return saved
 
-
 }
 window.initMap = initMap;
 
