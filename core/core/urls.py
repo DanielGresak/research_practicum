@@ -31,7 +31,7 @@ urlpatterns = [
     path('', include('weather.urls')),
     path('data/stops/', views.stops_json, name='stopsData'),
     path('data/travelTimeProportion/', views.travelTime_json,
-            name='travelTimeProportionJson'),
+        name='travelTimeProportionJson'),
     path('', include('carbonCalculator.urls')),
     path('', include("users.urls")),
     path('', include("notifications.urls")),
