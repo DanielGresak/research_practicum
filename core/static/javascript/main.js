@@ -350,6 +350,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
             for(let route = 0; route < totalNumberOfRoutes; route++){
                 //console.log(result["routes"][route]);
                 if (result["routes"][route]["legs"][0]["steps"].length < 2){
+                    busRouteDistances.push(busDrivingDistance);
                     continue;
                 }
                 var busRoutes = getBusInfo(result["routes"][route]); // an array of routes(transfer) or a route(one go)
@@ -367,7 +368,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
                     }
                     else{
                         busNumString = busNumString+routeNumber+" -> ";
-                        busArrivingString=busArrivingString+r[routeNumber]["arriving_time"]+"; ";
+                        busArrivingString=busArrivingString+r[routeNumber]["arriving_time"]+" -> ";
                         busDrivingDistance=busDrivingDistance+r[routeNumber]["driving_distance"];
                         
                     }
@@ -375,19 +376,20 @@ function calcRoute(directionsService, directionsRenderer, map) {
                 var new_age = $("input.age:checked").val();
                 busRouteDistances.push(busDrivingDistance);
                 busNumString = busNumString.slice(0, -3);
-                busArrivingString = busArrivingString.slice(0, -2);
+                busArrivingString = busArrivingString.slice(0, -4);
+
                 
                 $(".busInfo-items-container").append("<div class = 'busInfo-item'>\
                                         <p class = 'busHeader'>"+"Bus: "+busNumString+"<button class='selectRoute btn btn-light' id='selectBtn'>Select</button></p>\
                                         <p class = 'busDetail'>Arrival time: <span class ='keyValue'>"+ busArrivingString+"</span></p>\
-                                        <p class = 'busDetail' id = 'forecastTime'>Travel time: <i class='fas fa-spinner fa-pulse' id = 'spinner' style='color: white'></i> </p>\
-                                        <p class = 'busDetail' id = 'carbonEmissionSaved'>CO2 saved: <span class ='keyValue carbon-" + route +"'><i class='fas fa-spinner fa-pulse' id='spinner-co2' style='color: white'></i></span></p>\
+                                        <p class = 'busDetail' id = 'forecastTime'>Travel time: <i class='fas fa-spinner fa-pulse' id = 'spinner' style='font-color: white;'></i> </p>\
+                                        <p class = 'busDetail' id = 'carbonEmissionSaved'>CO2 saved: <span class ='keyValue carbon-" + route +"'><i class='fas fa-spinner fa-pulse' id='spinner-co2' style='color: white;'></i></span></p>\
                                         <p class = 'busDetail'> Bus fare: <span class ='keyValue'>"+getBusFare(busRoutes, new_age)+"</span></p></div>");
 
                 $("#selectBtn").attr("id", "selectBtn"+route);
                 $("#forecastTime").attr("id", route);
                 $("#spinner").attr("id", "spinner"+route);
-                $(".fas").css("color", "black");
+                $(".fas").css("color", "white");
                 displayTheForecastTime(route, result["routes"][route], walkingTime, resultTime).then(function(value){
                 $("#spinner"+route).css("display", "none");
                 });
@@ -480,7 +482,8 @@ function calcRoute(directionsService, directionsRenderer, map) {
                     directionRenderers[stroke].setOptions({map:null});
                 }// clear the previous map render
 
-                $(".busInfo").empty();//clear all the child element, so user can search again
+                $(".busInfo-items-container").empty();//clear all the child element, so user can search again
+                $(".busInfo-controls-container").empty();
                 $(".searchbar").css("display", "block");//show the searchbar
                 $(".busInfo").hide();
                 $(".searchbar").show();

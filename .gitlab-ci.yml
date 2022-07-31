@@ -12,21 +12,13 @@ test:
     image: python:3.9-alpine
     only:
         - master
-        - developement
+        - development
     before_script:
         - docker system prune --force
         - pip install docker-compose
         - docker-compose up -d --build
     script:
         - docker exec researchpracticum_app_1 sh -c "python manage.py test --keepdb"
-
-# Type-test:
-#     stage: test
-#     image: python:3.9-alpine
-#     script:
-#         - bash -c "pip3 install mypy"
-#         - bash -c "mypy core"
-#     allow_failure: true
     
 Lint-test:
     stage: test
@@ -41,8 +33,6 @@ deploy:
     stage: deploy
     only:
         - master
-        - developement
-        - dan_changes
     script:
         - docker system prune --force
         - docker-compose -f docker-compose-deploy.yml up --build -d
