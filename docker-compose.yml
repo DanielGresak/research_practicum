@@ -1,0 +1,24 @@
+version: '3.7'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./core:/core
+    command: sh -c "python manage.py runserver 0.0.0.0:8000"
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=${SECRET_KEY}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+      - GOOGLE_MAPS_KEY=${GOOGLE_MAPS_KEY}
+      - DATABASE_NAME=${DATABASE_NAME}
+      - DATABASE_USER=${DATABASE_USER}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - OPEN_WEATHER_API=${OPEN_WEATHER_API}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+      - TWILIO_AUTH=${TWILIO_AUTH}
+      - TWILIO_SID=${TWILIO_SID}
+      - USE_LINEAR_REGRESSION=${USE_LINEAR_REGRESSION}

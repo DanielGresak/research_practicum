@@ -1,0 +1,42 @@
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'weather/styles.css' %}">
+{% endblock css %}
+
+
+<div class="app-bar-app weather">
+    <header class="weather-header">
+        <div class="header-section">
+            <h1 class="page-title app-bar-header">Dublin Weather</h1>
+        </div>
+    </header>
+    
+    <!-- Section for dynamically displaying the current weather information -->
+    <div class="current-weather-container">
+        <div class="current-info">
+            <!-- Display weather icon -->
+            <div class="icon" id="current-weather-icon"></div>
+            <!-- Display weather description -->
+            <div class="condition"></div>
+            <!-- Display weather details -->
+            <div class="details" id="current-weather-details"></div>
+        </div>
+    </div>
+
+    <!-- Flexbox for dynamically displaying weather forecast as sort of media scroller -->
+    <div class="forecast-container"></div>
+</div>
+
+{% block javascript %}
+<script src="{% static 'weather/javascript/weather.js' %}"></script>
+<script>
+    // Wait for DOM being fully loaded before fetching the weather data
+    $(document).ready(function (){
+        const URL = "{% url 'ajax_weather' %}";
+        showWeatherData(URL);
+    });
+</script>
+{% endblock javascript %}
+
+

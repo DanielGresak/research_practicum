@@ -1,0 +1,34 @@
+version: '3.7'
+
+services:
+  app:
+    build:
+      context: .
+    volumes:
+      - static_data:/vol/web
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+      - GOOGLE_MAPS_KEY=${GOOGLE_MAPS_KEY}
+      - DATABASE_NAME=${DATABASE_NAME}
+      - DATABASE_USER=${DATABASE_USER}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - OPEN_WEATHER_API=${OPEN_WEATHER_API}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+      - TWILIO_AUTH=${TWILIO_AUTH}
+      - TWILIO_SID=
+      - USE_LINEAR_REGRESSION=${USE_LINEAR_REGRESSION}
+
+  proxy:
+    build:
+      context: ./proxy
+    volumes:
+      - static_data:/vol/static
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - app
+
+volumes:
+  static_data:

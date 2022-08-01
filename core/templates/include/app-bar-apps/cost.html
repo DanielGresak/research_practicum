@@ -1,0 +1,54 @@
+<div class="app-bar-app cost">
+<h1 class="app-bar-header">Travel Cost</h1>
+<table class="table table-bordered">
+  <thead class="thead thead-dark">
+    <tr>
+      <th >TFI Fares(euro)</th>
+      <th >Adult</th>
+      <th >19-23/student</th>
+      <th >5-15 and 16-18</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>short trip</th>
+      <th>1.30</th>
+      <th>0.65</th>
+      <th>0.65</th>
+    </tr>
+    <tr>
+      <th>TFI 90 Minute</th>
+      <th>2.00 </th>
+      <th>1.00 </th>
+      <th>0.65 </th>
+    </tr>
+  </tbody>
+</table>
+<p>Input your category below for a more accurate cost calculation</p>
+<p>Age:</p>
+<div class="form-check form-check-inline">
+  <input class="form-check-input age" type="radio" name="age" id="adult" value="adult">
+  <label class="form-check-label" for="inlineRadio1">Adult</label>
+</div>
+<div class="form-check form-check-inline">
+  <input class="form-check-input age" type="radio" name="age" id="student" value="student">
+  <label class="form-check-label" for="inlineRadio2">19-23 or Student</label>
+</div>
+<div class="form-check form-check-inline">
+  <input class="form-check-input age" type="radio" name="age" id="child" value="child">
+  <label class="form-check-label" for="inlineRadio3">Child</label>
+</div>
+<div class="answerBlock">
+  <p class="answerContent"></p>
+</div>
+<div class=""></div>
+<a href="https://www.leapcard.ie/en/NavigationPages/LoginSelection.aspx" class="leap-anchor"><button type="button" class="btn btn-success btn-lg" href="https://www.leapcard.ie/en/NavigationPages/LoginSelection.aspx">Leap Card Top Up</button></a>
+
+
+</div>
+
+<script>
+{% with age=age %}
+$("#{{ age }}").prop("checked", true);
+{% endwith %}
+</script>

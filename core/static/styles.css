@@ -1,0 +1,546 @@
+html, main {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    font-weight: 900;
+    max-width: 100%;
+  }
+  
+#map {
+  height: 85vh;
+  width: 65vw;
+  }
+  
+.flex-container {
+  display: flex;
+}
+
+#alert {
+  z-index: 4;
+  position: fixed;
+  top: 10%;
+  left: 70%;
+  margin-top: -50px;
+  margin-left: -100px;
+}
+
+/* Header/logo area CSS */
+
+.heading {
+  width: 100vw;
+  height: 15vh;
+  background-color: rgb(73, 73, 73);
+}
+
+.heading-text{
+  font-family: 'Indie Flower', cursive;
+  color: white;
+  font-weight: 600;
+  /* padding: 25px; */
+  display: inline-block;
+  padding-left: 7vw;
+  padding-top: 3vh;
+}
+
+.dot-div {
+  float: right;
+  width: 15vw;
+  height: 15vh;
+  
+}
+
+.dots {
+  display: none;
+}
+
+/* Toolbar CSS */
+
+.vertical-menu {
+  display: flex;
+  flex-direction:column;
+  align-items:stretch;
+  height: 85vh;
+  width: 8vw;
+}
+
+.vertical-menu a {
+  background-color: #eee; 
+  color: black; 
+  padding: 12px; 
+  text-decoration: none; 
+  text-align: center;
+  flex: 1;
+}
+
+.vertical-menu a i {
+  font-size: xx-large;
+  line-height: 12vh;
+  vertical-align: middle;
+}
+
+@media screen and (min-width: 1000px) {
+  .vertical-menu a:hover {
+    background-color: #ccc;
+  }
+
+}
+
+.vertical-menu a.active {
+  background-color: black; 
+  color: white;
+}
+
+/* Appbar CSS */
+
+.appbar {
+  height: 85vh;
+  width: 100%;
+  max-width: 30vw;
+  background-color: darkgrey;
+  margin: 0;
+  padding: 0;
+}
+
+.app-bar-app {
+  padding-top: 3vh;
+}
+
+.app-bar-header {
+  text-align: center;
+  font-size: 30px;
+  font-weight: 600;
+  padding-bottom: 1.5vh;
+}
+
+.app-bar-body {
+  padding: 7px;
+  text-align: center;
+}
+
+sub {
+  font-size: 14px;
+}
+
+#auth {
+  padding: 7px;
+}
+
+#email-h2 {
+  padding-bottom: 20vh;
+}
+
+.logout {
+  text-align: center;
+}
+
+.auth-btn {
+  margin: 5vh;
+
+}
+
+.notify-check {
+  /* text-align: center; */
+  padding-left: 70px;
+  padding-bottom: 30px;
+}
+
+.notify-label {
+  padding-bottom: 20px;
+  text-align: center;
+}
+
+/* Searchbar CSS */
+
+.searchbar {
+  height: 85vh;
+  width: 25vw;
+  background-color: whitesmoke;
+}
+.busInfo{
+  padding: 10px;
+  display: none;
+  height: 85vh;
+  width: 25vw;
+  background-color: whitesmoke;
+}
+
+.busInfo-container{
+  display: flex;
+  flex-direction: column;
+}
+
+.busInfo-items-container{
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  width: auto;
+  min-height: auto;
+  /* background-color: darkgrey;  */
+  color:#fff;
+  max-height: 70vh;
+}
+
+.busInfo-item{
+  width: auto;
+  height: auto;
+  text-align: left;
+  background: rgb(73, 73, 73);
+  margin: 2px 5px 5px 5px;
+  border-radius: 5px;
+  font-size: small;
+}
+
+.busInfo-controls-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  text-align: center;
+}
+
+.busInfo-controls-element{
+  display: flex;
+  flex-direction: row;
+  margin: 5px;
+}
+
+/* .oneBus{
+  font-size:x-small;
+  margin: 2px 5px 2px 5px;
+  border:1px solid #ccc;
+  width: 35%;
+  float: left;
+} */
+
+.busHeader{
+  font-size: medium;
+  color: black;
+  background: rgb(134, 134, 134);
+  width: 100%;
+  padding: 5px 10px 5px 10px;
+  margin:0px;
+  border-radius: 5px;
+}
+
+.selectRoute{
+  float: right;
+  font-size: small;
+  padding:2px;
+  margin-bottom: 3px;
+}
+
+.selectRoute:focus{
+  background-color: greenyellow;
+}
+
+.busDetail{
+padding-left: 3px;
+margin: 4px;
+}
+
+
+#backToSearch{
+  position:relative;
+  margin-top: 1.5vh;
+}
+
+.alert-info{
+  display: none;
+  position: relative;
+  margin-top: 7%;
+  margin-left: 7%;
+  width: 250px;
+  height: 30px;
+  color: red;
+  background-color: whitesmoke;
+}
+
+#confirm{
+  position:relative;
+  margin-top: 1.5vh;
+
+}
+.loadingAnimation{
+  display: none;
+}
+
+.keyValue{
+  color: yellow;
+}
+
+form {
+    padding: 15px;
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
+
+.form-btn {
+  margin-left: 15px;
+}
+
+.location-btn {
+  margin: 10px;
+}
+
+/* Weather CSS */
+
+.weather-icon {
+  color: white;
+}
+
+
+/* Auth CSS */
+
+.btn-auth-change {
+  float: right;
+  margin-right: 3vw;
+}
+
+/* input:valid {
+  background-color: ivory;
+  border: none;
+  outline: 2px solid deepskyblue;
+  border-radius: 5px;
+  accent-color: gold;
+}
+
+input + span {
+  position: relative;
+}
+
+input + span::before {
+  position: absolute;
+  right: -20px;
+  top: 5px;
+}
+
+input:invalid {
+  border: 2px solid red;
+}
+
+input:invalid + span::before {
+  content: '✖';
+  color: red;
+}
+
+input:valid + span::before {
+  content: '✓';
+  color: green;
+} */
+.table{
+  border:1px, solid, rgb(3, 15, 3);
+  font-size: smaller;
+  margin: auto;
+  margin-bottom: 10px;
+}
+.thead{
+  font-size: smaller;
+}
+
+.cost {
+  margin: 15px;
+  text-align: center;
+}
+
+.answerBlock{
+  padding-top: 10px;
+  font-size: large;
+}
+
+.leap-anchor button {
+  top: 13vh;
+  margin: auto;
+  position: relative;
+}
+
+.location-mobile {
+  display: none;
+}
+
+/* .location-desktop{
+  display: none;
+} */
+
+/* MOBILE WEBSITE */
+
+@media screen and (max-width: 1000px) {
+  html main {
+    max-width: 100vw;
+  }
+  .heading {
+    height: 10vh;
+    width: 100vw;
+  }
+
+  .heading-text{
+    font-family: 'Indie Flower', cursive;
+    color: white;
+    font-weight: 300;
+    padding: 5vw;
+    padding-top: 2.5vh;
+    display: inline-block;
+    font-size: x-large;
+  }
+
+  .searchbar {  
+    width: 100vw;
+    background-color: whitesmoke;
+  }
+
+  .vertical-menu {
+    width: 20vw;
+    position: fixed;
+    right: 0%;
+    height: 100vh;
+    z-index: 2;
+    background-color:  #eee;
+  }
+
+  .busInfo {
+    height: 45vh;
+    width: 100vw;
+  }
+
+  #map {
+    height: 45vh;
+    width: 100vw;
+    position: fixed !important; 
+    bottom:0%;
+    max-width: 100%;
+  }
+
+  .vertical-menu a i {
+    font-size: 2rem;
+    vertical-align: middle;
+  }
+
+  .vertical-menu a.active:hover {
+    color: white;
+  }
+
+  .vertical-menu a {
+    max-height: 11vh;
+  }
+
+  .dots {
+    display: inline-block;
+    color: white;
+    padding-top: 26px;
+    padding-left: 10px;
+  }
+
+  .flex-item:nth-of-type(2) {
+    order: 4; 
+  }
+
+  .flex-container {
+    flex-direction: column;
+    height: 90vh;
+  }
+
+  .search-input {
+    display: block;
+    float: right;
+    flex: 0 0 70%;
+  }
+
+  .appbar {
+    width: 100%;
+    max-width: 80vw;
+    height: 90vh;
+    z-index: 1;
+    position: absolute;
+  }
+
+  /* .location-btn {
+    position:absolute;
+    top: 43vh;
+    left: 10px;
+  } */
+  
+  .search-text {
+    flex: 0 0 30%;
+    float: left;
+  }
+  
+  .search-div {
+    display: flex;
+    height: 30px;
+    margin: 10px;
+    justify-content:space-between
+  }
+
+  #form1 {
+    display: flex;
+    flex-direction: column;
+    width: 80vw;
+    float: left;
+  }
+
+  #alert {
+    top: 0;
+    left: 0;
+    margin-top: 0;
+    margin-left: 0;
+    width: 100vw;
+    height: 10vh;
+  }
+
+  .location-mobile {
+    display: block;
+    margin-left: 15px;;
+  }
+
+  .location-desktop{
+    display: none;
+  }
+  .busInfo{
+    padding: 10px;
+    display: none;
+    height: 45vh;
+    /* width: 70vw; */
+    background-color: whitesmoke;
+  }
+  
+  .busInfo-container{
+    display: flex;
+    height: 45vh;
+    width: 70vw;
+    flex-direction: column;
+  }
+  
+  .busInfo-items-container{
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    height: 35vh;
+    width: 70vw;
+    background-color: darkgray;
+    color: #fff;
+  }
+  
+  .busInfo-item{
+    height: auto;
+    width: 70vw;
+    text-align: left;
+    background: rgb(73, 73, 73);
+    margin: 2px 5px 2px 5px;
+    border-radius: 5px;
+    font-size: small;
+  }
+  
+  .busInfo-controls-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+  
+  .busInfo-controls-element{
+    display: flex;
+    flex-direction: row;
+    margin: 5%;
+  }
+}

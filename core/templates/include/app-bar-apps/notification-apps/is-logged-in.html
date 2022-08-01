@@ -1,0 +1,51 @@
+<div id="auth">
+<div class="form-check form-switch notify-check">
+{% if loggedIn == True and notifications %}
+  <input class="form-check-input" type="checkbox" id="notify-box" checked>
+  <label class="form-check-label" for="flexSwitchCheckDefault">Notifications On/Off</label>
+{% else %}
+  <input class="form-check-input" type="checkbox" id="notify-box">
+  <label class="form-check-label" for="flexSwitchCheckDefault">Notifications On/Off</label>
+{% endif %}
+
+</div>
+<div class="form-group">
+    <label for="exampleFormControlSelect1" class="notify-label">How many minutes before would you like to be notified?</label>
+    <select class="form-control" id="change-notification-delay">
+{% if loggedIn == True and delay == 5 %}
+      <option id="five" selected="selected">5 minutes</option>
+      <option id="ten">10 minutes</option>
+      <option id="fifteen">15 minutes</option>
+      <option id="thirty">30 minutes</option>
+    </select>
+{% elif loggedIn == True and delay == 10 %}
+      <option id="five">5 minutes</option>
+      <option id="ten" selected="selected">10 minutes</option>
+      <option id="fifteen">15 minutes</option>
+      <option id="thirty">30 minutes</option>
+    </select>
+{% elif loggedIn == True and delay == 15 %}
+      <option>5 minutes</option>
+      <option id="ten">10 minutes</option>
+      <option id="fifteen" selected="selected">15 minutes</option>
+      <option id="thirty">30 minutes</option>
+    </select>
+{% elif loggedIn == True and delay == 30 %}
+      <option id="five">5 minutes</option>
+      <option id="ten">10 minutes</option>
+      <option id="fifteen">15 minutes</option>
+      <option id="thirty" selected="selected">30 minutes</option>
+    </select>
+{% else %}
+      <option id="five">5 minutes</option>
+      <option id="ten">10 minutes</option>
+      <option id="fifteen">15 minutes</option>
+      <option id="thirty" selected="selected">30 minutes</option>
+    </select>
+{% endif %}
+
+
+
+</div>
+
+</div>
