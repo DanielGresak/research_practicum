@@ -3,9 +3,6 @@ from django.http import JsonResponse
 # from django.contrib.staticfiles import finders
 import json
 import os
-from django.views.decorators.csrf import csrf_exempt
-from django.core.files import File
-from requests import Response
 # csrf is checking if cookies have been accepted.
 # We can add a cookie pop up later
 
@@ -37,14 +34,15 @@ def home(request):
 
 
 def travelTime_json(request):
-    travelTimeJsonFile = os.path.join(os.getcwd(), "static", "data", "travelTimeProportion.json")
+    travelTimeJsonFile = os.path.join(
+            os.getcwd(), "static", "data", "travelTimeProportion.json")
     with open(travelTimeJsonFile) as json_file:
         travelTimeProportion_dic = json.load(json_file)
         return JsonResponse(travelTimeProportion_dic)
 
 
 def stops_json(request):
-    stopsJsonFile=os.path.join(os.getcwd(), "static", "data", "stops.json")
+    stopsJsonFile = os.path.join(os.getcwd(), "static", "data", "stops.json")
     with open(stopsJsonFile) as json_file:
         stops_dic = json.load(json_file)
         return JsonResponse(stops_dic)
