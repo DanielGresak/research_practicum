@@ -6,8 +6,10 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime
 from django.http import HttpResponse, JsonResponse
 from twilio.rest import Client
+from django.views.decorators.csrf import csrf_exempt
 
 
+@csrf_exempt
 def add_route_for_notification(request):
     if request.method == "POST":
         if (request.user.is_authenticated and
@@ -92,6 +94,7 @@ def notification_toggle(request):
         return HttpResponse(status=401)
 
 
+@csrf_exempt
 def change_delay(request):
     if request.method == "POST":
         if request.user.is_authenticated:
