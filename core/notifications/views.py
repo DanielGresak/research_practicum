@@ -8,6 +8,7 @@ from django.http import HttpResponse, JsonResponse
 from twilio.rest import Client
 from django.views.decorators.csrf import csrf_exempt
 
+
 @csrf_exempt
 def add_route_for_notification(request):
     if request.method == "POST":
