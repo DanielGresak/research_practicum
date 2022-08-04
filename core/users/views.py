@@ -1,7 +1,5 @@
-from email import contentmanager
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, logout, login
-from django.template import RequestContext
 from users.models import Profile
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
