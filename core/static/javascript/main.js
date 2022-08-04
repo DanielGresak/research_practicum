@@ -1,11 +1,25 @@
 
 /* dynamic main page component behaviour. */
 
-
-
-/* https://stackoverflow.com/questions/54835849/django-how-to-send-csrf-token-with-ajax */
-let cookie = document.cookie
-let csrfToken = cookie.substring(cookie.indexOf('=') + 1)
+/* CSRF-TOKEN */
+// Cross Site Request Forgery protection
+// Source: https://docs.djangoproject.com/en/dev/howto/csrf/
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+const CSRF_TOKEN = 'csrftoken';
 
 
 /* HIDING COMPONENTS ON LOAD */
@@ -716,12 +730,35 @@ updateEmissions();
 
 /* FUNCTION FOR POST REQUEST TO ADD CO2 INFORMATION */
 function postCO2(busDistance, drivingDistance){
-    $.post("carbon/", {'driving_distance': drivingDistance, "bus_distance": busDistance}).done(function(response){
-        alertUser("Success", "Your trip has been added to your emmisions saved", true)
+    emissionData = {'driving_distance': drivingDistance, "bus_distance": busDistance}
+    $.ajax({
+        type: "POST",
+        url: "carbon/",
+        data: emissionData,
+        dataType: "json",
+        encode: true,
+        headers: {
+            'X-CSRFToken': getCookie(CSRF_TOKEN)
+        },
+        success: function(msg) {
+            alertUser("Success", "Your trip has been added to your emmisions saved", true)
+        },
+        "statusCode": {
+            401: function (xhr, error, thrown) {
+            alertUser("Error", "Failed to add emissions!", false)
+            }
+        }
     }).then(function(){
-        updateEmissions()
+        updateEmissions();
     })
 }
+
+// $.post("carbon/", {'driving_distance': drivingDistance, "bus_distance": busDistance}).done(function(response){
+//     alertUser("Success", "Your trip has been added to your emmisions saved", true)
+// }).then(function(){
+//     updateEmissions()
+// })
+
 
 /* AUTHENTICATION */
 
@@ -733,8 +770,8 @@ $("#login-button").click(function(){
         $("#login-email-validation-text").show()
     } else {
         $("#login-email-validation-text").hide()
-        let cookie = document.cookie
-        let csrfToken = cookie.substring(cookie.indexOf('=') + 1)
+        // let cookie = document.cookie
+        // let csrfToken = cookie.substring(cookie.indexOf('=') + 1)
         var registerData = {
             userEmail: $("#login-email").val(),
             userPassword: $("#login-password").val()
@@ -746,7 +783,7 @@ $("#login-button").click(function(){
             dataType: "json",
             encode: true,
             headers: {
-                'X-CSRFToken': csrfToken
+                'X-CSRFToken': getCookie(CSRF_TOKEN)
             },
             success: function(msg) {
                 alertUser("Success", "You are logged in.", true)
@@ -785,8 +822,8 @@ $("#register-button").click(function(){
     else if ($("#register-password").val() == $("#confirm-register-password").val()){
         $("#register-email-validation-text").hide()
         $("#password-validation-text").hide()
-        let cookie = document.cookie
-        let csrfToken = cookie.substring(cookie.indexOf('=') + 1)
+        // let cookie = document.cookie
+        // let csrfToken = cookie.substring(cookie.indexOf('=') + 1)
         var registerData = {
             userEmail: $("#register-email").val(),
             userPassword: $("#register-password").val()
@@ -798,7 +835,7 @@ $("#register-button").click(function(){
             dataType: "json",
             encode: true,
             headers: {
-                'X-CSRFToken': csrfToken
+                'X-CSRFToken': getCookie(CSRF_TOKEN)
             },
             success: function(msg) {
                 alertUser("Success", "You are logged in!", true)
@@ -831,9 +868,9 @@ $("#logout-button").click(function(){
         url: "logout",
         dataType: 'json',
         headers: {
-            'X-CSRFToken': csrfToken
+            'X-CSRFToken': getCookie(CSRF_TOKEN)
         },
-        success: function(msg) {
+    success: function(msg) {
             alertUser("Success", "You have logged out!", true)
         },
         
@@ -870,7 +907,7 @@ $("#delete-button").click(function(){
             url: "delete",
             dataType: 'json',
             headers: {
-                'X-CSRFToken': csrfToken
+                'X-CSRFToken': getCookie(CSRF_TOKEN)
             },
             success: function(msg) {
                 alertUser("Success", "Account is deleted!", true)
@@ -908,8 +945,8 @@ $("#delete-button").click(function(){
 // newNotification(15, 5)
 
 function sendNotificaiton(time, bus){
-    let cookie = document.cookie
-    let csrfToken = cookie.substring(cookie.indexOf('=') + 1)
+    // let cookie = document.cookie
+    // let csrfToken = cookie.substring(cookie.indexOf('=') + 1)
     var chosenRoute = {
         bus: bus ,
         time: time,
@@ -921,7 +958,7 @@ function sendNotificaiton(time, bus){
             dataType: "json",
             encode: true,
             headers: {
-                'X-CSRFToken': csrfToken
+                'X-CSRFToken': getCookie(CSRF_TOKEN)
             },
             // success: function(msg) {
             //     alertUser("SUCCESS", "")
@@ -956,8 +993,8 @@ $("#notify-box").change(function() {
 // NOTIFICATION DELAY CHANGE
 
 $("#change-notification-delay").change(function() {
-    let cookie = document.cookie
-    let csrfToken = cookie.substring(cookie.indexOf('=') + 1)
+    // let cookie = document.cookie
+    // let csrfToken = cookie.substring(cookie.indexOf('=') + 1)
     var newDelay = {
         delay: $('#change-notification-delay').find(":selected").text(),
     }
@@ -969,7 +1006,7 @@ $("#change-notification-delay").change(function() {
         dataType: "json",
         encode: true,
         headers: {
-            'X-CSRFToken': csrfToken
+            'X-CSRFToken': getCookie(CSRF_TOKEN)
         },
         success: function(msg) {
             alertUser("Success", "Notification preference changed", true)
@@ -988,8 +1025,8 @@ $("#change-notification-delay").change(function() {
 /* CHANGE AGE */
 
 $("input.age").on("change click", function(){
-    let cookie = document.cookie
-    let csrfToken = cookie.substring(cookie.indexOf('=') + 1)
+    // let cookie = document.cookie
+    // let csrfToken = cookie.substring(cookie.indexOf('=') + 1)
     var new_age = $("input.age:checked").val()
     var data = {
         age: new_age
@@ -1001,7 +1038,7 @@ $("input.age").on("change click", function(){
         dataType: "json",
         encode: true,
         headers: {
-            'X-CSRFToken': csrfToken
+            'X-CSRFToken': getCookie(CSRF_TOKEN)
         },
         success: function(msg) {
             console.log("age changed to: " + new_age )

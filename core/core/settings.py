@@ -75,6 +75,9 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'core.urls'
 
 CSRF_TRUSTED_ORIGINS = ['https://transporttelepathy.online']
+CSRF_USE_SESSIONS = False
+CSRF_COOKIE_HTTPONLY = False
+
 
 TEMPLATES = [
     {
