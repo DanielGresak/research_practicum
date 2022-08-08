@@ -66,7 +66,7 @@ html, main {
 }
 
 .vertical-menu a {
-  background-color: #eee; 
+  background-color: #e3e3e3; 
   color: black; 
   padding: 12px; 
   text-decoration: none; 
@@ -178,7 +178,7 @@ sub {
   width: auto;
   min-height: auto;
   /* background-color: darkgrey;  */
-  color:#fff;
+  color:whitesmoke;
   max-height: 70vh;
 }
 
@@ -396,12 +396,13 @@ input:valid + span::before {
     right: 0%;
     height: 100vh;
     z-index: 2;
-    background-color:  #eee;
+    background-color:  #e3e3e3;
   }
 
   .busInfo {
     height: 45vh;
     width: 100vw;
+    background-color: white;
   }
 
   #map {
@@ -410,6 +411,10 @@ input:valid + span::before {
     position: fixed !important; 
     bottom:0%;
     max-width: 100%;
+  }
+  .vertical-menu a {
+    background-color: #e3e3e3;
+
   }
 
   .vertical-menu a i {
@@ -518,7 +523,7 @@ input:valid + span::before {
     overflow-y: auto;
     height: 35vh;
     width: 70vw;
-    background-color: darkgray;
+    background-color: whitesmoke;
     color: #fff;
   }
   

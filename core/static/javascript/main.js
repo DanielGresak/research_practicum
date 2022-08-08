@@ -609,7 +609,7 @@ function changeEmissionInfo(infoClass, bus, car){
     //console.log("bus" + bus)
     //console.log("car " + car)
     //console.log(infoClass)
-    $(".carbon-" + infoClass).text(calculateCo2(bus, car) + "kgs")
+    $(".carbon-" + infoClass).text(calculateCo2(bus, car) + "kg")
 }
 //
 //https://stackoverflow.com/questions/35050401/display-multiple-routes-between-two-points-on-google-maps
