@@ -215,7 +215,7 @@ function getDirection(line, departure, arrival){
             }
         },
         error: function(){
-            console.log("/data/stops/ didn't find");
+            //console.log("/data/stops/ didn't find");
         }
     })
     return bound;
@@ -226,7 +226,7 @@ function getDirection(line, departure, arrival){
 // pass in the route number and the direction, get the total number of the stops of this route
 
 function getTotalNumberOfStops(line, direction){
-    console.log("direction: "+direction+"line: "+line);
+    //console.log("direction: "+direction+"line: "+line);
     var totalNumberOfStops = 0
     $.ajax({
         url: "./data/stops/",
@@ -238,17 +238,17 @@ function getTotalNumberOfStops(line, direction){
                     totalNumberOfStops = json[line][direction].length;
             }
                 else{
-                    console.log("no direction is found, direction: "+direction);
+                    //console.log("no direction is found, direction: "+direction);
                     totalNumberOfStops = "notFoundTotalStopNumbers"
             } 
         }
             else{
-                console.log("didn't find the line id "+line+" in the dataset of 2018, direction: "+direction);
+                //console.log("didn't find the line id "+line+" in the dataset of 2018, direction: "+direction);
                 totalNumberOfStops = "notFoundTotalStopNumbers";
             }
         }
     })
-    console.log(totalNumberOfStops);
+    //console.log(totalNumberOfStops);
     return totalNumberOfStops;
 
 }
@@ -268,17 +268,17 @@ function getStopPorprotion(line, startStop, destStop, direction){
                         stopPorprotion = json[line][direction][dest_Stop]-json[line][direction][start_Stop];
                     }
                     else{
-                        console.log("line: "+line+", direction: "+direction+", missing start stop or destination stop or both, startStop: "+start_Stop+", destStop: "+dest_Stop);
+                        //console.log("line: "+line+", direction: "+direction+", missing start stop or destination stop or both, startStop: "+start_Stop+", destStop: "+dest_Stop);
                         stopPorprotion = "noPorprotionFound";
                     }
             }
                 else{
-                    console.log("no direction is found, direction: "+direction);
+                    //console.log("no direction is found, direction: "+direction);
                     stopPorprotion = "noPorprotionFound";
             } 
         }
             else{
-                console.log("didn't find the line id "+line+" in the dataset of 2018, direction: "+direction);
+                //console.log("didn't find the line id "+line+" in the dataset of 2018, direction: "+direction);
                 stopPorprotion = "noPorprotionFound";
             }
         }
@@ -294,23 +294,23 @@ function travelTime(route, direction, departureTime, numOfStops, totalNumOfStops
     var timePrediction=0;
     // if can't find the direction of this trip from the data set, just return the result of google map.
     if(direction === ""){
-        console.log("no direction is found, will return the result from the google map")
-        console.log("didn't forecast, return from the map");
+        //console.log("no direction is found, will return the result from the google map");
+        //console.log("didn't forecast, return from the map");
         return route["duration"]["value"];
     }
     // if the user didn't select a travel time, then the departure time will be set to default.
     if(isNaN(departureTime)){
-        console.log("the departure time is not selected");
+        //console.log("the departure time is not selected");
         departureTime=Date.now();
     }
     if(totalNumOfStops === "notFoundTotalStopNumbers"){
-        console.log("didn't forecast, return from the map");
+        //console.log("didn't forecast, return from the map");
         return route["duration"]["value"];
     }
     // if the selected travel time is out of the range, then return the trip time from the Google map.
     if(departureTime > Date.now()+345600000){
-        console.log("The selected time is out of the time range.");
-        console.log("didn't forecast, return from the map");
+        //console.log("The selected time is out of the time range.");
+        //console.log("didn't forecast, return from the map");
         return route["duration"]["value"];
     }
     var line_id = route["transit"]["line"]["short_name"];
@@ -327,17 +327,17 @@ function travelTime(route, direction, departureTime, numOfStops, totalNumOfStops
         dataType: "json",
         success: (data) => {
         timePrediction = data.time_prediction
-        console.log("forecasting.....");
+        //console.log("forecasting.....");
         },
         error: (error) => { 
         console.log(error);
         }
     });
     if(porprotion != "noPorprotionFound"){
-        console.log("returning the porprotion based result, porprotion: "+porprotion);
+        //console.log("returning the porprotion based result, porprotion: "+porprotion);
         return timePrediction*porprotion;
     }
-    console.log("returning the stop number based result");
+    //console.log("returning the stop number based result");
     return timePrediction*(numOfStops/totalNumOfStops);
 }
 
@@ -350,10 +350,10 @@ function calcRoute(directionsService, directionsRenderer, map) {
     var mydate = new Date(startTime);
     var resultTime = mydate.getTime();// in form of timestamp
     currentTime = new Date().getTime();
-    console.log("startTime: "+startTime);
-    console.log("new date:  "+new Date());
-    console.log("resultTime: "+resultTime);
-    console.log("currenttime:"+currentTime);
+    //console.log("startTime: "+startTime);
+    //console.log("new date:  "+new Date());
+    //console.log("resultTime: "+resultTime);
+    //console.log("currenttime:"+currentTime);
     var request = {
         origin: originString, // start location, now is ucd
         destination: destString, // end location, now is temple bar
@@ -382,7 +382,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
                   },(response, status) =>{
                     if(status =="OK"){
                         carDrivingDistance = response["rows"][0]["elements"][0]["distance"]["value"];
-                        console.log("car in function " + carDrivingDistance);
+                        //console.log("car in function " + carDrivingDistance);
             }
             if(carDrivingDistance > 0){
                 myResolve(carDrivingDistance)
@@ -393,7 +393,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
         });
     });
 
-            console.log(result["routes"]);
+            //console.log(result["routes"]);
             // display all the possible routes on the map in different colors
             const directionRenderers = renderDirections(result, map);
 
@@ -456,7 +456,9 @@ function calcRoute(directionsService, directionsRenderer, map) {
                         $("#spinner-co2").hide()
                         changeEmissionInfo(route, busRouteDistances[route], value);
                     },
-                    function(error){console.log(error)}
+                    function(error){
+                        console.log(error)
+                    }
                 );
         
             }
@@ -480,9 +482,9 @@ function calcRoute(directionsService, directionsRenderer, map) {
                 //var busIndex = stringToArray[2]-1;//extracting the route index
 
                 var busIndex = $(this).attr("id").slice(-1);
-                console.log("this "+$(this));
+                //console.log("this "+$(this));
                 //console.log($(this).parent());
-                console.log(busIndex);
+                //console.log(busIndex);
             
                 // only show the selected route
                 //1. disable all the routes
@@ -516,7 +518,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
                     var counter = 0
                     for (var r of confirmedRoute){
                         if (counter != confirmedRoute.length - 1){
-                            console.log(confirmedRoute.length)
+                            //console.log(confirmedRoute.length)
                             counter++;
                             var routeNumber = Object.keys(r);
                             busDrivingDistance=busDrivingDistance+r[routeNumber[0]]["driving_distance"];
@@ -567,7 +569,7 @@ function calcRoute(directionsService, directionsRenderer, map) {
         
             $("#student").click(function(){
                 if(getBusFare(confirmedRoute, "student") != 0){
-                    console.log("gaga"+getBusFare(confirmedRoute, "student"));
+                    //console.log("gaga"+getBusFare(confirmedRoute, "student"));
                     const money=getBusFare(confirmedRoute, "student");
                     $(".answerContent").text(" ");
                     $(".answerContent").text("Your bus fare for this trip is "+money);
@@ -696,39 +698,29 @@ function updateEmissions(){
 
 function updateNotifications(){
     $.get("update_notifications", function(data, status){
-        if (status == "nocontent"){
-            // console.log("here")
-        }else {
-            console.log(status)
-            if (data["notificationOnOff"] == true){
-                $("#notify-box").prop("checked", true);
-                console.log(data["notificationOnOff"])
-                
-            } else {
-                $("#notify-box").prop("checked", false);
-                console.log(data["notificationOnOff"])
-            }
-            $("option:selected").prop("selected", false);
-            if (data["delay"] == 5){
-                $("#five").prop("selected", true);
-            } else if (data["delay"] == 10){
-                $("#ten").prop("selected", true);
-            } else if (data["delay"] == 15){
-                $("#fifteen").prop("selected", true);
-            }else if (data["delay"] == 30){
-                $("#thirty").prop("selected", true);
-            }
-    
-            $("#user-email").text(data["email"])
-            $("#" + data["age"]).prop("checked", true);
+        if (data["notificationOnOff"] == true){
+            $("#notify-box").prop("checked", true);
+            //console.log(data["notificationOnOff"])
+        } else {
+            $("#notify-box").prop("checked", false);
+            //console.log(data["notificationOnOff"])
         }
+        $("option:selected").prop("selected", false);
+        if (data["delay"] == 5){
+            $("#five").prop("selected", true);
+        } else if (data["delay"] == 10){
+            $("#ten").prop("selected", true);
+        } else if (data["delay"] == 15){
+            $("#fifteen").prop("selected", true);
+        }else if (data["delay"] == 30){
+            $("#thirty").prop("selected", true);
+        }
+
+        $("#user-email").text(data["email"])
+        $("#" + data["age"]).prop("checked", true);
     })
 }
-
-
 updateNotifications();
-
-
 updateEmissions();
 // $.get("carbon/get/", function(data, status){
 //     $(".co2-saved").text(data["co2_saved"] + " grams of co2.")
@@ -978,7 +970,7 @@ function sendNotificaiton(time, bus){
             //     }
             // }
         }).then(function(){
-           console.log("success?")
+           //console.log("success?")
         })
 }
 
@@ -1026,7 +1018,7 @@ $("#change-notification-delay").change(function() {
             }
         }
     }).then(function(){
-       console.log("delay changed")
+       //console.log("delay changed")
     })
 });
 
@@ -1050,7 +1042,7 @@ $("input.age").on("change click", function(){
             'X-CSRFToken': getCookie(CSRF_TOKEN)
         },
         success: function(msg) {
-            console.log("age changed to: " + new_age )
+            //console.log("age changed to: " + new_age )
         },
     }) 
     })
