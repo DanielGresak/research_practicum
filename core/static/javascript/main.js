@@ -696,30 +696,39 @@ function updateEmissions(){
 
 function updateNotifications(){
     $.get("update_notifications", function(data, status){
-        if (data["notificationOnOff"] == true){
-            $("#notify-box").prop("checked", true);
-            console.log(data["notificationOnOff"])
-            
-        } else {
-            $("#notify-box").prop("checked", false);
-            console.log(data["notificationOnOff"])
+        if (status == "nocontent"){
+            // console.log("here")
+        }else {
+            console.log(status)
+            if (data["notificationOnOff"] == true){
+                $("#notify-box").prop("checked", true);
+                console.log(data["notificationOnOff"])
+                
+            } else {
+                $("#notify-box").prop("checked", false);
+                console.log(data["notificationOnOff"])
+            }
+            $("option:selected").prop("selected", false);
+            if (data["delay"] == 5){
+                $("#five").prop("selected", true);
+            } else if (data["delay"] == 10){
+                $("#ten").prop("selected", true);
+            } else if (data["delay"] == 15){
+                $("#fifteen").prop("selected", true);
+            }else if (data["delay"] == 30){
+                $("#thirty").prop("selected", true);
+            }
+    
+            $("#user-email").text(data["email"])
+            $("#" + data["age"]).prop("checked", true);
         }
-        $("option:selected").prop("selected", false);
-        if (data["delay"] == 5){
-            $("#five").prop("selected", true);
-        } else if (data["delay"] == 10){
-            $("#ten").prop("selected", true);
-        } else if (data["delay"] == 15){
-            $("#fifteen").prop("selected", true);
-        }else if (data["delay"] == 30){
-            $("#thirty").prop("selected", true);
-        }
-
-        $("#user-email").text(data["email"])
-        $("#" + data["age"]).prop("checked", true);
     })
 }
+
+
 updateNotifications();
+
+
 updateEmissions();
 // $.get("carbon/get/", function(data, status){
 //     $(".co2-saved").text(data["co2_saved"] + " grams of co2.")
