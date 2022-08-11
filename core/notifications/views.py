@@ -127,4 +127,4 @@ def returningNotificationData(request):
         }
         return JsonResponse(responseData)
     else:
-        return HttpResponse(status=401)
+        return HttpResponse(status=204)
