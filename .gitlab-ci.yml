@@ -32,7 +32,7 @@ deploy:
     image: python:3.9-alpine
     stage: deploy
     only:
-        - master
+        - development
     script:
         - docker system prune --force
         - docker-compose -f docker-compose-deploy.yml up --build -d
