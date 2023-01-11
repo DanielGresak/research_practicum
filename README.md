@@ -35,8 +35,8 @@ We use Django sessions to save the users total CO2 saved and their cost bracket 
 
 ### Application Design
 
-![Client Changing WoT Property](desktop.gif "Client Changing WoT Property"){width=75%}
-![Client Changing WoT Property](mobile.gif "Client Changing WoT Property"){width=75%}
+![Client Changing WoT Property](desktop.gif "Client Changing WoT Property")
+![Client Changing WoT Property](mobile.gif "Client Changing WoT Property")
 
 ### CI/CD
 We used Gitlab CI/CD with a gitlab runner which automated testing upon certain commits and deployment. This also included PEP8 compliance testing for all branches. 
