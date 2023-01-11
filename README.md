@@ -33,6 +33,11 @@ Other features include:
 
 We use Django sessions to save the users total CO2 saved and their cost bracket but the user can also make an account which will save this information.
 
+### Application Design
+
+![Client Changing WoT Property](desktop.gif "Client Changing WoT Property"){width=75%}
+![Client Changing WoT Property](mobile.gif "Client Changing WoT Property"){width=75%}
+
 ### CI/CD
 We used Gitlab CI/CD with a gitlab runner which automated testing upon certain commits and deployment. This also included PEP8 compliance testing for all branches. 
 
